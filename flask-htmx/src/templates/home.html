@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+</head>
+    <body>
+        <h2>Welcome, {{ username }}!</h2>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        
+        <h1>Game</h1>
+        <a href="{{ url_for('create_game') }}"><button>Create Game</button></a>
+        <a href="{{ url_for('join_game') }}"><button>Join Game</button></a>
+    </body>
+</html>
+
