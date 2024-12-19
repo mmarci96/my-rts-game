@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, session, current_app, g
 from bson import ObjectId
 
 game_bp = Blueprint('game', __name__)
@@ -6,8 +6,7 @@ game_bp = Blueprint('game', __name__)
 @game_bp.route('/create-game', methods=['GET', 'POST'])
 def create_game():
     if request.method == 'POST':
-        mongo = current_app.mongo
-
+        mongo = g.mongo 
         username = session["username"]
         user = mongo.db.users.find_one({"username": username})
         user_id = user["_id"]
@@ -35,17 +34,15 @@ def join_game():
     if request.method == 'POST':
         game_id = request.form['game_id']
         return redirect(url_for('game.lobby', game_id=game_id))
-
-    mongo = current_app.mongo
-
+        
+    mongo = g.mongo 
     games = mongo.db.games.find({"status": "waiting"})
     return render_template('join_game.html', games=games)
 
 
 @game_bp.route('/lobby/<game_id>', methods=['GET', 'POST'])
 def lobby(game_id):
-    mongo = current_app.mongo
-
+    mongo = g.mongo 
     game = mongo.db.games.find_one({"_id": ObjectId(game_id)})
 
     if request.method == 'POST':
@@ -73,8 +70,7 @@ def lobby(game_id):
 
 @game_bp.route('/update-player-status/<game_id>', methods=['POST'])
 def update_player_status(game_id):
-    mongo = current_app.mongo
-
+    mongo = g.mongo 
     username = session["username"]
     user = mongo.db.users.find_one({"username": username})
     user_id = user["_id"]
@@ -97,8 +93,7 @@ def update_player_status(game_id):
 @game_bp.route('/leave-game/<game_id>', methods=['POST'])
 def leave_game(game_id):
     username = session["username"]
-    mongo = current_app.mongo
-
+    mongo = g.mongo 
     user = mongo.db.users.find_one({"username": username})
     user_id = user["_id"]
 

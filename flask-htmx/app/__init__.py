@@ -3,6 +3,7 @@ from .routes.home import home_bp
 from .routes.auth import auth_bp
 from .routes.game import game_bp
 from flask_pymongo import PyMongo
+from flask import g
 import os
 
 mongo = PyMongo()
@@ -15,8 +16,9 @@ def create_app():
     app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/mydatabase")
     mongo.init_app(app)
 
-    # Attach mongo to app context
-    app.mongo = mongo
+    @app.before_request
+    def before_request():
+        g.mongo = mongo
 
     # Register blueprints
     app.register_blueprint(home_bp)
@@ -24,4 +26,3 @@ def create_app():
     app.register_blueprint(game_bp, url_prefix='/game')
 
     return app
-

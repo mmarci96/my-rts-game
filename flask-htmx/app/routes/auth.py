@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, g
 from werkzeug.security import generate_password_hash, check_password_hash
 
 auth_bp = Blueprint('auth', __name__)
@@ -9,7 +9,7 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
-        mongo = current_app.mongo
+        mongo = g.mongo
         
         if password != confirm_password:
             flash("Passwords do not match!", "danger")
@@ -33,7 +33,7 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        mongo = current_app.mongo
+        mongo = g.mongo
         
         user = mongo.db.users.find_one({"username": username})
         
