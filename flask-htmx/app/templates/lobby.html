@@ -10,7 +10,10 @@
     <h2>Players:</h2>
     <ul>
         {% for player in players %}
-            <li>{{ player['color'] }} - {% if player['isReady'] %} Ready {% else %} Not Ready {% endif %}</li>
+            <li>
+                {{ player['username'] }},
+                {{ player['color'] }} - {% if player['isReady'] %} Ready {% else %} Not Ready {% endif %}
+            </li>
         {% endfor %}
     </ul>
 
@@ -26,11 +29,11 @@
         <button type="submit">Join Lobby</button>
     </form>
 
-    <form method="POST" action="{{ url_for('update_player_status', game_id=game['_id']) }}">
+    <form method="POST" action="{{ url_for('game.update_player_status', game_id=game['_id']) }}">
         <button type="submit">Toggle Ready Status</button>
     </form>
 
-    <form method="POST" action="{{ url_for('leave_game', game_id=game['_id']) }}">
+    <form method="POST" action="{{ url_for('game.leave_game', game_id=game['_id']) }}">
         <button type="submit">Leave Game</button>
     </form>
 </body>

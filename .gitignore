@@ -131,3 +131,5 @@ dist
 
 # For the flask app
 venv/
+__pycache__
+*.py[cod]

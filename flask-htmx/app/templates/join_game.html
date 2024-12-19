@@ -16,7 +16,7 @@
     <ul>
         {% for game in games %}
             <li>
-                <a href="{{ url_for('lobby', game_id=game['_id']) }}">
+                <a href="{{ url_for('game.lobby', game_id=game['_id']) }}">
                     {{ game['name'] }} ({{ game['maxPlayers'] }} players)
                 </a>
             </li>
