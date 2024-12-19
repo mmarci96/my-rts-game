@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Game</title>
+</head>
+<body>
+    <h1>Create a Game</h1>
+    <form method="POST">
+        <label for="game_name">Game Name:</label>
+        <input type="text" name="game_name" required><br><br>
+
+        <label for="map_size">Map Size:</label>
+        <select name="map_size">
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+        </select><br><br>
+
+        <label for="max_players">Max Players:</label>
+        <select name="max_players">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select><br><br>
+
+        <button type="submit">Create Game</button>
+    </form>
+</body>
+</html>
+
