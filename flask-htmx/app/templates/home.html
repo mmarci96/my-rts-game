@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Home</title>
-</head>
-    <body>
-        <h2>Welcome, {{ username }}!</h2>
-        <a href="{{ url_for('auth.logout') }}">Logout</a>
-        
-        <h1>Game</h1>
-        <a href="{{ url_for('game.create_game') }}"><button>Create Game</button></a>
-        <a href="{{ url_for('game.join_game') }}"><button>Join Game</button></a>
-    </body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Home - RTS game{% endblock %}
+
+{% block content %}
+    <h2>Welcome, {{ username }}!</h2>
+    
+    <h1>Game</h1>
+    <a href="{{ url_for('game.create_game') }}"><button>Create Game</button></a>
+    <a href="{{ url_for('game.join_game') }}"><button>Join Game</button></a>
+{% endblock %}
 

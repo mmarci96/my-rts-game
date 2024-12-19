@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Join Game</title>
-</head>
-<body>
-    <h1>Join an Existing Game</h1>
+{% extends 'base.html' %}
+
+{% block title %}Join Game{% endblock %}
+
+{% block content %}   <h1>Join an Existing Game</h1>
     <form method="POST">
         <label for="game_id">Enter Game ID:</label>
         <input type="text" name="game_id" required><br><br>
@@ -22,6 +20,4 @@
             </li>
         {% endfor %}
     </ul>
-</body>
-</html>
-
+{% endblock %}

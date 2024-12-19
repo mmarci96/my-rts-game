@@ -1,9 +1,8 @@
-from flask import Flask
+from flask import Flask, g
 from .routes.home import home_bp
 from .routes.auth import auth_bp
 from .routes.game import game_bp
 from flask_pymongo import PyMongo
-from flask import g
 import os
 
 mongo = PyMongo()
@@ -21,7 +20,7 @@ def create_app():
         g.mongo = mongo
 
     # Register blueprints
-    app.register_blueprint(home_bp)
+    app.register_blueprint(home_bp, url_prefix='/home')
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(game_bp, url_prefix='/game')
 

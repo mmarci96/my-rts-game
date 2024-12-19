@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Game</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Create Game{% endblock %}
+
+{% block content %}
     <h1>Create a Game</h1>
     <form method="POST">
         <label for="game_name">Game Name:</label>
@@ -25,6 +24,5 @@
 
         <button type="submit">Create Game</button>
     </form>
-</body>
-</html>
+{% endblock %}
 

@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ game['name'] }} - Lobby</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}{{ game['name'] }} - Lobby{% endblock %}
+
+{% block content %}
     <h1>{{ game['name'] }} - Lobby</h1>
     <h3>Game ID: {{ game['_id'] }}</h3>
 
@@ -36,6 +35,4 @@
     <form method="POST" action="{{ url_for('game.leave_game', game_id=game['_id']) }}">
         <button type="submit">Leave Game</button>
     </form>
-</body>
-</html>
-
+{% endblock %}
