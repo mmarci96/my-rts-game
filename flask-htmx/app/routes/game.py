@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, current_app, g
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, g
 from bson import ObjectId
 
 game_bp = Blueprint('game', __name__)
@@ -103,3 +103,22 @@ def leave_game(game_id):
     )
     return redirect(url_for('home.home'))
 
+@game_bp.route('/lobby-data/<game_id>', methods=['GET'])
+def lobby_data(game_id):
+    mongo = g.mongo
+    game = mongo.db.games.find_one({"_id": ObjectId(game_id)})
+    players = game['players']
+    
+    # Check if all players are ready
+    all_ready = all(player["isReady"] for player in players)
+
+    update_data = []
+    for player in players:
+        update_data.append({
+            "username": player["username"],
+            "userId": str(player["userId"]),  # Convert ObjectId to string
+            "color": player["color"],
+            "isReady": player["isReady"]
+        })
+
+    return jsonify(players=update_data, allReady=all_ready)
