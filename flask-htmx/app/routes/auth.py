@@ -9,12 +9,16 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
-        mongo = g.mongo
         
+        if not password:
+            flash("Password is required!", "danger")
+            return redirect(url_for("auth.register"))
+
         if password != confirm_password:
             flash("Passwords do not match!", "danger")
             return redirect(url_for("auth.register"))
 
+        mongo = g.mongo
         if mongo.db.users.find_one({"username": username}):
             flash("Username already exists!", "danger")
             return redirect(url_for("auth.register"))
@@ -32,7 +36,12 @@ def register():
 def login():
     if request.method == "POST":
         username = request.form.get("username")
-        password = request.form.get("password")
+        password = request.form.get("password") 
+        
+        if not password:
+            flash("Password is required!", "danger")
+            return redirect(url_for("auth.register"))
+
         mongo = g.mongo
         
         user = mongo.db.users.find_one({"username": username})
