@@ -1,0 +1,30 @@
+/* static/css/styles.css */
+body {
+    font-family: "Hack Nerd Font", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #030423;
+}
+
+h1, h2, h3, h4 {
+    font-family: "Hack Nerd Font", monospace;
+    color: #FFF4D5;
+    padding: 2px;
+    margin: 2px;
+}
+
+p, span {
+    font-family: "Hack Nerd Font", sans-serif;
+    color: #FFF4D5;
+    padding: 2px;
+    margin: 2px;
+}
+
+div {
+    padding: 2px;
+    margin: 4px;
+}
+nav {
+    padding: 2px;
+    margin: 4px;
+}
