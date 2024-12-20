@@ -18,6 +18,10 @@ class Game {
         }
         this.#gameLogic = new GameLogic(map, assets, units, this.player, createCommand);
     }
+    getCurrentState(){
+        const units = this.#gameLogic.getUnitData();
+        return units;
+    }
 
     setupPain(){
         this.#gameLogic.setupGame();

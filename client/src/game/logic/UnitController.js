@@ -1,6 +1,7 @@
 import Unit from '../data/Unit.js';
 import Warrior from '../data/Warrior.js';
 import Worker from '../data/Worker.js';
+import Camera from '../ui/Camera.js';
 import GameMap from './GameMap.js';
 
 class UnitController {
@@ -22,19 +23,34 @@ class UnitController {
         this.#unitCanvas.zIndex = '3';
     }
 
+    /**
+    * @returns { Array<Unit> } 
+    */
     getAllUnits() {
-        return [...this.#units.values()];
+        return [...this.#units.values()]
+            .flatMap(unit => ({
+                id: unit.getId(),
+                x: unit.getX(),
+                y: unit.getY(),
+                color: unit.getColor(),
+                state: unit.getState(),
+                health: unit.getHealth(),
+            }));
     }
 
+    /**
+    * @param { string } color  
+    * @returns { Array<Unit>}
+    */
     getUnitsByColor(color) {
         return[ ...this.#units.values()]
             .filter(unit => unit.getColor() === color);
     }
 
     /**
-     * Merges together logic to animate the sprites state and movement
-     * @param camera
-     */
+    * Merges together logic to animate the sprites state and movement
+    * @param { Camera } camera 
+    */
     animationLoop(camera) {
         const canvas = this.#unitCanvas;
         const context = canvas.getContext('2d');
@@ -62,9 +78,9 @@ class UnitController {
     }
 
     /**
-     * They are still just js obj data with key / value pairs here
-     * @param { Array<unit>} data
-     */
+    * They are still just js obj data with key / value pairs here
+    * @param { Array<Unit>} data
+    */
     refreshUnits(data) {
         if (!Array.isArray(data)) {
             throw new TypeError('Expected an array of unit data');
@@ -73,7 +89,7 @@ class UnitController {
         const existingUnitIds = new Set(this.#units.keys());
 
         data.forEach(unitData => {
-            console.log(unitData)
+            //console.log(unitData)
             //console.log(this.#units.get(unitData.id))
             // this.loadUnit({...unitData});
             //console.log(unitData);
@@ -87,8 +103,12 @@ class UnitController {
         });
     }
 
+    /**
+    * @param {Object} param0 
+    */
     loadUnit({...props}) {
-        const {type, health, x, y, id, state, color, target} = props;
+        const {type, health, x, y, state, color, target} = props;
+        const id = props["_id"]
         if (!type || !id || !x || !y || !health) {
             throw new Error(`Missing data: name${type}, health: ${health}, position: x:${x},y:${y} id=${id}`);
         }

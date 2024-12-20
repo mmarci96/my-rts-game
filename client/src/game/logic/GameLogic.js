@@ -11,7 +11,6 @@ class GameLogic {
     #gameMap;
     #keyHandler;
     #mouseHandler;
-    #pendingChanges;
     #mapData;
     #selectionBox;
     #assets;
@@ -33,7 +32,6 @@ class GameLogic {
         this.#units = units
         this.#mapData = map;
         this.#camera = new Camera(12, 12, 12, 12);
-        this.#pendingChanges = new Set();
         this.#assets = assets;
         this.#gameMap = new GameMap(
             this.#mapData, this.#camera, this.#assets
@@ -73,11 +71,11 @@ class GameLogic {
         
         this.#mouseHandler.drawSelection(playerUnits, this.#commandHandler )
     }
-    
-	
-
-	
-
+    getUnitData(){
+        const units = this.#unitController.getAllUnits()
+        //console.log(units)
+        return units
+    }
 }
 
 export default GameLogic;
