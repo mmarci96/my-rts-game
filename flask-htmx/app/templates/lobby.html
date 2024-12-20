@@ -34,8 +34,8 @@
 
     <!-- Button for starting the game -->
     <form method="POST" action="{{ url_for('game.start') }}">
-        <input name="game_id" type="text" value="{{ game['_id'] }}" style="display: flex;"  />
-        <button id="start-game-button" style="display: none;" type="submit">Start Game</button>
+        <input name="game_id" type="text" value="{{ game['_id'] }}"   />
+        <button type="submit">Start Game</button>
     </form>
 
     <script>
