@@ -8,18 +8,19 @@ class Game {
 	  * An array of string will be the parameter we receive from endpoint/ws
 	  * @param { Array<string> } map
 	  */
-    constructor(map, assetManager) {
+    constructor(map, assets, units) {
         if (!(map instanceof Array)) {
             throw new TypeError('Map loader requires at least one map');
         }
-        this.#gameLogic = new GameLogic(map, assetManager);
+        this.#gameLogic = new GameLogic(map, assets, units);
     }
 
-    loadMap(){
-        this.#gameLogic.loadMap();
+    setupPain(){
+        this.#gameLogic.setupGame();
     }
-    loadGame(units) {
-        this.#gameLogic.loadStart(units)
+    
+    refreshUnitData(units) {
+        console.log(units)
     }
 }
 

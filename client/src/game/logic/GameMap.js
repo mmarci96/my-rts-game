@@ -72,7 +72,12 @@ class GameMap {
                 if (!name) continue
 
                 const tilesetImage = this.#assets.getImage(name);
-                ctx.drawImage(tilesetImage, px, py);
+                const position = { z: row[x].z*128 }
+                if(name !== 'water1'){
+                    position.z = position.z*2
+                }
+
+                ctx.drawImage(tilesetImage, px, py - position.z);
             }
         }
     }

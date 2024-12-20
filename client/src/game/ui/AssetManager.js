@@ -15,9 +15,7 @@ class AssetManager {
             img.onload = () => {
                 this.images.set(key, img);
                 resolve(img);
-                console.log(img)
             };
-
             img.onerror = (err) => {
             console.error(`Failed to load image: ${src}`, err);
             reject(err);

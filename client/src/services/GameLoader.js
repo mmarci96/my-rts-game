@@ -33,7 +33,6 @@ class GameLoader {
         this.assetManager = new AssetManager();
         const assets = await this.assetManager.loadAssets()
         
-        console.log(assets)
         return assets
     }
 }

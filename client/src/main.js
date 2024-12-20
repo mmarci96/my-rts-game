@@ -7,7 +7,7 @@ const socket = io();
 
 const units = {}
 
-const fetchData = async (userId, gameId) => {
+const loadGameData = async (userId, gameId) => {
     const gameData = await GameLoader.fetchGameById(gameId)
     
     const mapId = gameData["mapId"];
@@ -17,6 +17,9 @@ const fetchData = async (userId, gameId) => {
     const sessionData = await GameLoader.fetchSessionData(sessionId)
 
     const assets = await GameLoader.loadAssets();
+
+    const game = new Game(mapData.tiles, assets, sessionData.units)
+    game.setupPain();
     
     console.log("Assets: ", assets)
     console.log("Game: ",gameData)
@@ -41,7 +44,8 @@ const loadEvent = async () => {
     const path = window.location.pathname.split("/");
     const userId = path[3];
     const gameId = path[2];
-    fetchData(userId, gameId) 
+    loadGameData(userId, gameId)
+
 
 
 };
