@@ -1,21 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
-    <h2>Login</h2>
-    <form method="POST">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
-    <a href="{{ url_for('auth.register') }}">Don't have an account? Register</a>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% for category, message in messages %}
-        <p style="color: {{ 'red' if category == 'danger' else 'green' }}">{{ message }}</p>
-      {% endfor %}
-    {% endwith %}
-</body>
-</html>
+{% extends 'base.html' %}
 
+{% block title %} Login - RTS game{% endblock %}
+
+{% block content %}
+<h2>Login</h2>
+<form method="POST">
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+</form>
+<a href="{{ url_for('auth.register') }}">Don't have an account? Register</a>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <p style="color: {{ 'red' if category == 'danger' else 'green' }}">{{ message }}</p>
+    {% endfor %}
+{% endwith %}
+{% endblock %}

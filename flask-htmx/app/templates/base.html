@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Flask Game{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <!-- You can add a navigation bar or header here -->
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home.home') }}">Home</a></li>
+                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- This will be replaced by content specific to each page -->
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <!-- Global footer content -->
+        <p>© 2024 Flask Game</p>
+    </footer>
+
+</body>
+</html>
+
