@@ -138,6 +138,11 @@ def start():
 
     game_id = request.form['game_id']
     game = mongo.db.games.find_one({"_id": ObjectId(game_id)})
+    
+    if(game['status'] != "waiting"):
+            connection_url = "http://localhost:5173/play/" + str(game_id) + "/" + str(user_id)
+            return redirect(connection_url)
+
 
     colors = []
     for p in game["players"]:
@@ -169,7 +174,8 @@ def start():
             { "_id": ObjectId(game["_id"])},
             { "$set": { 
                        "mapId": ObjectId(map_id) ,
-                       "sessionId": ObjectId(session_id) 
+                       "sessionId": ObjectId(session_id),
+                       "status": "loading"
                        }
              }
             )
