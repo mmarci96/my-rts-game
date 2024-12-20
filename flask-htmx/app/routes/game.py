@@ -168,9 +168,7 @@ def start():
                 }
         }
     )
-    connection_url = "http://localhost:5173/play/"
+    connection_url = "http://localhost:5173/play/" + str(game_id) + "/" + str(user_id)
 
-
-    return jsonify(game_id=str(game_id), url_prefix=connection_url, user_id=str(user_id))
-
+    return redirect(connection_url)
 
