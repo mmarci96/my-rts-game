@@ -1,4 +1,5 @@
 const Session = require("../db/session.model")
+const Unit = require("../db/unit.model")
 const BadRequestError = require('../error/BadRequestError')
 
 
@@ -23,12 +24,18 @@ class SessionService {
             throw new BadRequestError("No session id provided", 403)
         }
         const session = await Session.findById(sessionId)
+        const unitIds = session["units"]
+        const units = await Unit.find({
+            "_id": { $in: [
+                ...unitIds
+            ]}
+        })
 
         if(!session){
             throw new BadRequestError(`No session with id: ${sessionId}`, 404)
         }
 
-        return session
+        return units;
     }
 }
 
