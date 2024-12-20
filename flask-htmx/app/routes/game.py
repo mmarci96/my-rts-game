@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, g
+from flask import Blueprint, render_template, request, redirect, sessions, url_for, session, jsonify, g
 from bson import ObjectId
+
+from app.service.random_map_generator import generate_random_map
 
 game_bp = Blueprint('game', __name__)
 
@@ -21,7 +23,7 @@ def create_game():
             "mapSize": map_size,
             "maxPlayers": max_players,
             "players": [],
-            "status": "waiting"
+            "status": "waiting",
         }
         game_id = mongo.db.games.insert_one(game).inserted_id
 
@@ -122,3 +124,49 @@ def lobby_data(game_id):
         })
 
     return jsonify(players=update_data, allReady=all_ready)
+
+@game_bp.route('/start', methods=['POST'])
+def start():
+    game_id = request.form['game_id']
+    mongo = g.mongo
+    game = mongo.db.games.find_one({"_id": ObjectId(game_id)})
+    players = game["players"]
+    print(players)
+    map = generate_random_map(game["mapSize"])
+    print(map)
+    length = len(map)
+    print(length)
+    game_map = {
+            "type": "random_map",
+            "tiles": map,
+            "size": game["mapSize"],
+        }
+    units = {
+            "worker": {
+                "x": 0,
+                "y": 0,
+                "color": "red"
+                    },
+            "warriot": {
+                "x": 0,
+                "y": 0,
+                "color": "red"
+                },
+        }
+
+    map_id = mongo.db.maps.insert_one(game_map).inserted_id
+    session_id = mongo.db.sessions.insert_one(units).inserted_id
+
+    mongo.db.games.update_one(
+        { "_id": ObjectId(game["_id"])},
+        { "$set": { 
+                    "mapId": ObjectId(map_id) ,
+                    "sessionId": ObjectId(session_id) 
+                }
+        }
+    )
+    connection_url = "http://localhost:5173/play/" + str(game_id)
+
+    return jsonify(redirect_path=connection_url)
+
+
