@@ -4,6 +4,7 @@ const gameRoutes = require("./routes/gameRoutes.js")
 const errorHandler = require("./middleware/errorHandler.js")
 const http = require('http');
 const {Server} = require('socket.io');
+const socketHandler = require('./websockets/socketHandler.js')
 require('dotenv').config();
 
 const { MONGO_URI, PORT } = process.env
@@ -12,8 +13,7 @@ const app = express()
 
 const server = http.createServer(app);
 const io = new Server(server);
-
-io.on("connect", (socket) => console.log(socket.io))
+socketHandler(io)
 
 app.use(express.json())
 
