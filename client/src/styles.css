@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #24292e;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+:root {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+button {
+    background: black;
+    color: white;
+    min-height: 24px;
+    min-width: 40px;
+    padding: 4px;
+    text-align: center;
+    margin: 4px auto;
+}
+input {
+    padding: 4px;
+    width: 280px;
+    margin: 4px auto;
+}
+canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid black;
+}
+form {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid black;
+    background-color: #42414d;
+    height: 280px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px;
+}
+#login-form {
+    top: 75%;
+}
+
+#join-session-form {
+    position: absolute;
+    top: 36%;
+}
+
+#create-session-form {
+    top: 75%;
+}
