@@ -1,50 +1,43 @@
 import { io } from 'socket.io-client';
 import GameLoader from './services/GameLoader';
-import Game from './game/Game';
-import AssetManager from './game/ui/AssetManager';
-import Player from './game/data/Player';
 
 const socket = io();
 const pendingCommands = []
 
 const createCommand = (commands) => {
-    for(let {key, values } in commands){
-        pendingCommands.push({unitId: key, ...values })
-    }
+    //console.log(commands)
+    pendingCommands.push(commands)
+    //console.log(pendingCommands)
 }
 
-const loadGameData = async (userId, gameId) => {
-    const gameData = await GameLoader.fetchGameById(gameId)
-    
-    const mapId = gameData["mapId"];
-    const mapData = await GameLoader.fetchGameMap(mapId)
 
-    const sessionId = gameData["sessionId"]
-    const sessionData = await GameLoader.fetchSessionData(sessionId)
-
-    const assets = await GameLoader.loadAssets();
-
-    const { color } = gameData.players.find(p => p.userId === userId)
-
-    const player = new Player(userId, color)
-    console.log(player)
-    const game = new Game(mapData.tiles, assets, sessionData.units, player, createCommand)
-    game.setupPain();
-    
-    console.log("Assets: ", assets)
-    console.log("Game: ",gameData)
-    console.log("Session: ", sessionData)
-    console.log("Map: ",mapData)
-}
-
-const socketHandler = socket => {
+const socketHandler = (socket, game, userId) => {
     socket.on('connect', ()=>{
         console.log('Hello socket! Connected as ', socket.id)
+        const units = game.getCurrentState();
+        console.log(units)
+        socket.emit('unitStatus', units)
     })
-    
+
     socket.on('unitUpdate', unitUpdates => {
-        console.log(unitUpdates)
+           console.log(unitUpdates)
     })
+
+    const droprate = 5
+    let c = 0
+    setInterval(() => {
+        if(pendingCommands.length > 0){
+            socket.emit('commandRequest', pendingCommands)
+            pendingCommands.filter(command => command === null)
+            console.log(pendingCommands)
+        }
+        if(c > 5){
+            c = 0
+            socket.emit('unitStatus', game.getCurrentState())
+        } else {
+            c++
+        }
+    }, 1000)
 }
    
 
@@ -54,8 +47,10 @@ const loadEvent = async () => {
     const path = window.location.pathname.split("/");
     const userId = path[3];
     const gameId = path[2];
-    loadGameData(userId, gameId)
-
+    
+    const game = await GameLoader.loadGame(userId, gameId, createCommand)
+    
+    socketHandler(socket, game, userId);
 };
 
 window.addEventListener('load', loadEvent);
