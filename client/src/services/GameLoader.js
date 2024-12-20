@@ -1,3 +1,5 @@
+import AssetManager from "../game/ui/AssetManager";
+
 class GameLoader {
     static async fetchGameById(gameId) {
         const res = await fetch('/api/games/' + gameId)
@@ -26,6 +28,13 @@ class GameLoader {
             return res
         }
         return session
+    }
+    static async loadAssets(){
+        this.assetManager = new AssetManager();
+        const assets = await this.assetManager.loadAssets()
+        
+        console.log(assets)
+        return assets
     }
 }
 
