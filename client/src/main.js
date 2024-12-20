@@ -2,6 +2,7 @@ import { io } from 'socket.io-client';
 import GameLoader from './services/GameLoader';
 import Game from './game/Game';
 import AssetManager from './game/ui/AssetManager';
+import Player from './game/data/Player';
 
 const socket = io();
 
@@ -18,7 +19,11 @@ const loadGameData = async (userId, gameId) => {
 
     const assets = await GameLoader.loadAssets();
 
-    const game = new Game(mapData.tiles, assets, sessionData.units)
+    const { color } = gameData.players.find(p => p.userId === userId)
+
+    const player = new Player(userId, color)
+    console.log(player)
+    const game = new Game(mapData.tiles, assets, sessionData.units, player)
     game.setupPain();
     
     console.log("Assets: ", assets)

@@ -89,15 +89,12 @@ class UnitController {
 	}
 
 	loadUnit({...props}) {
-		const {name, health, position, id, state, color, target} = props;
-		const {x, y} = position;
-		if (!name || !id || !position || !health) {
-			throw new Error(`Missing data: name${name}, health: ${health}, position: ${position}, id=${id}`);
+		const {type, health, x, y, id, state, color, target} = props;
+		if (!type || !id || !x || !y || !health) {
+			throw new Error(`Missing data: name${type}, health: ${health}, position: x:${x},y:${y} id=${id}`);
 		}
 		if (this.#units.has(id)) {
-      console.log("Units state: ", state)
-      console.log("Units target: ", target)
-      console.log("Unit position: ", position)
+
 			const unit = this.#units.get(id);
 			unit.setState(state);
 			if (target) {
@@ -107,7 +104,7 @@ class UnitController {
 			let unit = null
 			let spriteSheet = null;
 
-			switch (name.toLowerCase()) {
+			switch (type.toLowerCase()) {
 				case 'warrior':
 					spriteSheet = this.#assetManager.getImage(`warrior_${color}`);
 					unit = new Warrior(x, y, spriteSheet, id, state, health, color);
@@ -116,7 +113,7 @@ class UnitController {
 					spriteSheet = this.#assetManager.getImage(`worker_${color}`);
 					unit = new Worker(x, y, spriteSheet, id, state, health, color);
 					break;
-				default:console.warn(`Unknown unit type: ${name}`);
+				default:console.warn(`Unknown unit type: ${type}`);
 			}
 
 			if(!unit || !spriteSheet) return
