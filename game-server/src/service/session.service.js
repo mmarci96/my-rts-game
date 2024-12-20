@@ -28,7 +28,7 @@ class SessionService {
             throw new BadRequestError(`No session with id: ${sessionId}`, 404)
         }
 
-        return session.units
+        return session
     }
 }
 

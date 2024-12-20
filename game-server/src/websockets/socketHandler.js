@@ -1,39 +1,89 @@
-const sessions = {}
-const connections = {}
 
+const SessionService = require('../service/session.service.js');
+const { ObjectId } = require('mongodb'); // Correct usage of MongoDB ObjectId
 
-const addSession = ({ sessionId, playerId }) => {
-	console.log(playerId, sessionId);
-	if (!sessions[sessionId]) {
-		sessions[sessionId] = { [playerId]: { data: [] } };
-		///const game = new Game(sessionId);
-		//game.addPlayer(playerId);
-		//sessions[sessionId].game = game;
-	} else {
-		sessions[sessionId][playerId] = { data: [] };
-		//const { game } = sessions[sessionId];
-		//game.addPlayer(playerId);
-	}
-	console.log(sessions[sessionId]);
+// In-memory stores for sessions, connections, and units
+const sessions = {};
+const connections = {};
+const units = {};
+
+/**
+ * Add a session and initialize user data.
+ * @param {Object} sessionData - The session data containing gameId, userId, sessionId, mapId.
+ */
+const addSession = ({ gameId, userId, sessionId, mapId }, socketId) => {
+    //console.log('Adding session:', { gameId, sessionId, mapId });
+    sessions[sessionId] = {
+        gameId, [userId]: socketId, mapId,
+    }
+    //console.log(sessions)
+    //
+    //// Initialize the session if it doesn't exist
+    //if (!sessions[sessionId]) {
+    //    sessions[sessionId] = { users: {}, gameData: {} };
+    //}
+    //
+    //// Add or update user data in the session
+    //sessions[sessionId].users[userId] = { data: [] };
+    //
+    //console.log('Current sessions:', sessions[sessionId]);
+    //
+    //// Load units for the session asynchronously
+    //const loadedUnits = await unitLoader(sessionId);
+    //if (loadedUnits) {
+    //    units[sessionId] = loadedUnits; // Save loaded units in memory
+    //    console.log('Units for session updated:', units[sessionId]);
+    //    return units[sessionId]
+    //}
 };
 
-module.exports = io => {
-    io.on('connection', socket => {
-        console.log('New connection: ', socket.id)
+/**
+ * Socket.IO connection handler.
+ * @param {Object} io - The Socket.IO instance.
+ */
+module.exports = (io) => {
+    io.on('connection', (socket) => {
+        console.log('New connection:', socket.id);
 
-        socket.on('session', data => {
-            connections[socket.id] = data
-            console.log(data)
-            
-            addSession(data)
-            socket.join(data.sessionId)
-        })
+        // Handle session loading
+        socket.on('loadSession', (data) => {
+            connections[socket.id] = data; // Track the connection
+            //console.log('Session load :', data);
 
-        io.emit('updateSession', sessions)
-        
+            // Add session and join the user to the session's room
+            socket.join(data.sessionId);
+            addSession(data, socket.id)
+        });
+
+        // Handle session updates
+        socket.on('updateSession', (sessionData) => {
+            const sessionId = sessionData['_id']
+            sessionData.units.forEach(unit => {
+                console.log(unit)
+                units[unit.id] = { ...unit }
+            });
+
+            sessions[sessionId] = { units }
+            console.log(sessions)
+           
+        });
+
+        // Handle disconnection
         socket.on('disconnect', () => {
-            console.log('User disconnected: ', socket.id)
-            delete connections[socket.id]
-        })
-    })
-}
+            console.log('User disconnected:', socket.id);
+
+            // Clean up connection data
+            const sessionData = connections[socket.id];
+            if (sessionData) {
+                const { sessionId, userId } = sessionData;
+                delete sessions[sessionId];
+
+                // If no users remain in the session, clean it up
+               
+            }
+            delete connections[socket.id];
+        });
+    });
+};
+
+

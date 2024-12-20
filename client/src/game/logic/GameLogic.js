@@ -25,48 +25,44 @@ class GameLogic {
 	/**
 	 * @param { string [] } map
 	 */
-	constructor(map) {
-		this.#mapData = map;
-		this.#camera = new Camera(12, 12, 12, 12);
-		this.#pendingChanges = new Set();
-		this.#assetManager = new AssetManager();
-		this.#unitCanvas = new UnitCanvas(this.#camera);
+	constructor(map, assetManager) {
+        this.#mapData = map;
+        this.#camera = new Camera(12, 12, 12, 12);
+        this.#pendingChanges = new Set();
+        this.#assetManager = assetManager;
+        this.#unitCanvas = new UnitCanvas(this.#camera);
 
-		this.#keyHandler = new KeyEventHandler(this.#camera);
-		this.#selectionBox = new SelectionBox();
-		this.#mouseHandler = new MouseEventHandler(
-			this.#camera,
-			this.#selectionBox
-		);
-	}
-	loadStart(units) {
-		this.#assetManager.loadAssets()
-			.then((assets) => {
-				this.#unitCanvas.loadUnits(units, assets);
-			})
-			.then(() => this.loadMap())
-			.finally(() => this.isInitialized = true);
-	}
+        this.#keyHandler = new KeyEventHandler(this.#camera);
+        this.#selectionBox = new SelectionBox();
+        this.#mouseHandler = new MouseEventHandler(
+                this.#camera,
+                this.#selectionBox
+        );
+    }
+    loadStart(units) {
+        console.log(units)
+    }
 	
 
-	loadMap() {
-		this.#gameMap = new GameMap(
-			this.#mapData,
-			this.#camera,
-			this.#assetManager
-		);
-		this.#gameMap.drawMap()
+    loadMap() {
+        this.#gameMap = new GameMap(
+			      this.#mapData,
+			      this.#camera,
+			      this.#assetManager
+        );
 
-		this.#keyHandler = new KeyEventHandler(this.#camera);
-		this.#keyHandler.setupCameraControl(this.#gameMap)
+        this.#gameMap.drawMap()
+
+		    this.#keyHandler = new KeyEventHandler(this.#camera);
+		    this.#keyHandler.setupCameraControl(this.#gameMap)
 
 	}
-	drawUnits(units) {
-		console.log("From logic: ", units)
-		units.forEach((unit) => {
-			this.#unitCanvas.draw(unit);
-		})
-	}
+    drawUnits(units) {
+        console.log("From logic: ", units)
+        units.forEach((unit) => {
+            this.#unitCanvas.draw(unit)
+        })
+    }
 	
 
 	

@@ -20,6 +20,7 @@ class GameMap {
           throw new TypeError('Not a valid camera!');
         }
         this.#map = map;
+        console.log(map)
         this.#camera = camera;
         this.#assets = assets; // Store the AssetManager
 
