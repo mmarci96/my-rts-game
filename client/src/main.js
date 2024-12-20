@@ -5,8 +5,13 @@ import AssetManager from './game/ui/AssetManager';
 import Player from './game/data/Player';
 
 const socket = io();
+const pendingCommands = []
 
-const units = {}
+const createCommand = (commands) => {
+    for(let {key, values } in commands){
+        pendingCommands.push({unitId: key, ...values })
+    }
+}
 
 const loadGameData = async (userId, gameId) => {
     const gameData = await GameLoader.fetchGameById(gameId)
@@ -23,7 +28,7 @@ const loadGameData = async (userId, gameId) => {
 
     const player = new Player(userId, color)
     console.log(player)
-    const game = new Game(mapData.tiles, assets, sessionData.units, player)
+    const game = new Game(mapData.tiles, assets, sessionData.units, player, createCommand)
     game.setupPain();
     
     console.log("Assets: ", assets)
@@ -50,8 +55,6 @@ const loadEvent = async () => {
     const userId = path[3];
     const gameId = path[2];
     loadGameData(userId, gameId)
-
-
 
 };
 

@@ -24,11 +24,12 @@ class GameLogic {
     /**
     * @param { string [] } map 
     */ 
-    constructor(map, assets, units, player) {
+    constructor(map, assets, units, player, commandHandler) {
         if(!(player instanceof Player)){
             throw new TypeError('Invalid player')
         }
-        this.#player
+        this.#commandHandler = commandHandler
+        this.#player = player
         this.#units = units
         this.#mapData = map;
         this.#camera = new Camera(12, 12, 12, 12);
@@ -41,6 +42,7 @@ class GameLogic {
         this.#unitController = new UnitController(this.#assets);
 
         this.#keyHandler = new KeyEventHandler(this.#camera);
+
         this.#selectionBox = new SelectionBox();
         this.#mouseHandler = new MouseEventHandler(
                 this.#camera, this.#selectionBox
@@ -49,6 +51,7 @@ class GameLogic {
     setupGame(){
         this.loadMap();
         this.loadUnits();
+        this.setupControl();
     
     }
 
@@ -67,8 +70,8 @@ class GameLogic {
     setupControl(){
         const playerColor = this.#player.getColor()
         const playerUnits = this.#unitController.getUnitsByColor(playerColor)
-
-        this.#selectionBox.handleSelecting(playerUnits, this.#camera)
+        
+        this.#mouseHandler.drawSelection(playerUnits, this.#commandHandler )
     }
     
 	
