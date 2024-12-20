@@ -1,0 +1,66 @@
+class Movable {
+	#speed
+	#targetX
+	#targetY
+	#isMoving
+
+	/**
+	 * Just divide by 60 to get back the 60 fps thingy?
+	 * I think it makes sense but maybe passing down the framerate could be worth
+	 * @param { number } speed
+	 */
+	constructor(speed) {
+		this.#speed = speed / 60;
+		this.#isMoving = false;
+	}
+
+	/**
+	 * Pretty easy to figure out. Although lot of logic ha been built around target
+	 * being null but it should rather check states for that
+	 * @param x
+	 * @param y
+	 */
+	setTarget(x, y) {
+		this.#isMoving = true;
+
+		this.#targetX = x;
+		this.#targetY = y
+	}
+
+	/**
+	 * I'm just a chill guy, we love pythagoras and linear algebra middle school example.
+	 * I have zero clue about the angle sin / cos part but that is what Wikipedia is for
+	 * @param x
+	 * @param y
+	 * @returns {{x: (*|number), y: (*|number)}}
+	 */
+	move(x, y) {
+		this.x = x;
+		this.y = y;
+
+		const dx = this.#targetX - this.x;
+		const dy = this.#targetY - this.y;
+		const distance = Math.sqrt(dx * dx + dy * dy);
+
+		const threshold = 0.2;
+
+		if (distance > threshold) {
+			const angle = Math.atan2(dy, dx);
+
+			this.x += Math.cos(angle) * this.#speed;
+			this.y += Math.sin(angle) * this.#speed;
+
+		} else {
+			this.#isMoving = false;
+      return { x, y}
+		}
+		return {x: this.x, y: this.y};
+	}
+
+	isMoving() {
+		return this.#isMoving;
+	}
+
+}
+
+export default Movable;
