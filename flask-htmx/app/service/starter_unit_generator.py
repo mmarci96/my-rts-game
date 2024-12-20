@@ -1,5 +1,3 @@
-from bson import ObjectId
-
 def create_units(size, colors):
     start_x = 0
     start_y = 0
@@ -20,7 +18,6 @@ def create_units(size, colors):
             start_y = 2
         
         worker = {
-                "id": str(ObjectId()), 
                 "x": start_x,
                 "y": start_y,
                 "color": color,
@@ -31,7 +28,6 @@ def create_units(size, colors):
                 }
         units.append(worker)
         warrior = {
-                "id": str(ObjectId()),
                 "x": start_x+1,
                 "y": start_y+1,
                 "color": color,
