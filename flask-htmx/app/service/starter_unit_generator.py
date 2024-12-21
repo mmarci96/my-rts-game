@@ -5,17 +5,17 @@ def create_units(size, colors):
 
     for color in colors:
         if color == 'red':
-            start_x = 2
-            start_y = 2
+            start_x = 6
+            start_y = 5
         elif color == 'blue':
-            start_x = size - 2
-            start_y = size - 2
+            start_x = size - 8
+            start_y = size - 8
         elif color == 'yellow':
-            start_y = size - 2
-            start_x = 2
+            start_y = size - 8
+            start_x = 8
         elif color == 'purple':
-            start_x = size - 2
-            start_y = 2
+            start_x = size - 8
+            start_y = 6
         
         worker = {
                 "x": start_x,
@@ -28,8 +28,8 @@ def create_units(size, colors):
                 }
         units.append(worker)
         warrior = {
-                "x": start_x+1,
-                "y": start_y+1,
+                "x": start_x+3,
+                "y": start_y+3,
                 "color": color,
                 "state": "idle",
                 "health": 16,

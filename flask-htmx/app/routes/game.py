@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, g
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, g, Response
 from bson import ObjectId
 from datetime import datetime
+import json
+
 
 from app.service.random_map_generator import generate_random_map
 from app.service.starter_unit_generator import create_units
@@ -54,6 +56,11 @@ def lobby(game_id):
         username = session["username"]
         user = mongo.db.users.find_one({"username": username})
         user_id = user["_id"]
+
+        # Check if color is already taken
+        if any(player['color'] == player_color for player in game['players']):
+            return redirect(url_for('game.lobby', game_id=game_id))
+
         player = {
                 "username": username,
                 "userId": user_id,
@@ -69,8 +76,29 @@ def lobby(game_id):
         return redirect(url_for('game.lobby', game_id=game_id))
 
     players = game['players']
-    return render_template('lobby.html', game=game, players=players)
+    taken_colors = {player['color'] for player in players}
+    available_colors = ["red", "blue", "yellow", "purple"]
+    available_colors = [color for color in available_colors if color not in taken_colors]
 
+    return render_template('lobby.html', game=game, players=players, available_colors=available_colors)
+
+@game_bp.route('/lobby-stream/<game_id>', methods=['GET'])
+def lobby_stream(game_id):
+    def stream():
+        while True:
+            mongo = g.mongo
+            game = mongo.db.games.find_one({"_id": ObjectId(game_id)})
+            players = game['players']
+
+            all_ready = all(player["isReady"] for player in players)
+            data = {
+                    "players": [{"username": p["username"], "color": p["color"], "isReady": p["isReady"]} for p in players],
+                    "allReady": all_ready,
+                    }
+            yield f"data: {json.dumps(data)}\n\n"
+            time.sleep(2)  # Adjust frequency as needed
+
+    return Response(stream(), mimetype="text/event-stream")
 
 @game_bp.route('/update-player-status/<game_id>', methods=['POST'])
 def update_player_status(game_id):
@@ -138,10 +166,14 @@ def start():
 
     game_id = request.form['game_id']
     game = mongo.db.games.find_one({"_id": ObjectId(game_id)})
-    
+
+    # Verify all players are ready
+    if not all(player['isReady'] for player in game['players']):
+        return "Not all players are ready", 400
+
     if(game['status'] != "waiting"):
-            connection_url = "http://localhost:5173/play/" + str(game_id) + "/" + str(user_id)
-            return redirect(connection_url)
+        connection_url = "http://localhost:5173/play/" + str(game_id) + "/" + str(user_id)
+        return redirect(connection_url)
 
 
     colors = []
@@ -175,7 +207,7 @@ def start():
             { "$set": { 
                        "mapId": ObjectId(map_id) ,
                        "sessionId": ObjectId(session_id),
-                       "status": "loading"
+                       "status": "in-progress"
                        }
              }
             )

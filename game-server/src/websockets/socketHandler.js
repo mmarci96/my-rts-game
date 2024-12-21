@@ -54,6 +54,13 @@ module.exports = (io) => {
             socket.join(data.sessionId);
             addSession(data, socket.id)
         });
+        socket.on('unitStatus', data => {
+            console.log(data)
+        })
+
+        socket.on('commandRequest', commands => {
+            console.log(commands)
+        })
 
         // Handle session updates
         socket.on('updateSession', (sessionData) => {

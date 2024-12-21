@@ -3,73 +3,61 @@
 {% block title %}{{ game['name'] }} - Lobby{% endblock %}
 
 {% block content %}
-    <h1>{{ game['name'] }} - Lobby</h1>
-    <h3>Game ID: {{ game['_id'] }}</h3>
-    <h2>Players:</h2>
-    <ul id="players-list">
-        {% for player in players %}
-            <li>
-                {{ player['username'] }},
-                {{ player['color'] }} - {% if player['isReady'] %} Ready {% else %} Not Ready {% endif %}
-            </li>
+<h1>{{ game['name'] }} - Lobby</h1>
+<h3>Game ID: {{ game['_id'] }}</h3>
+<h2>Players:</h2>
+<ul id="players-list">
+    {% for player in players %}
+    <li>
+        {{ player['username'] }},
+        {{ player['color'] }} - {% if player['isReady'] %} Ready {% else %} Not Ready {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+<h2>Select Your Color:</h2>
+<form method="POST">
+
+    <select name="color" required>
+        {% for color in available_colors %}
+            <option value="{{ color }}">{{ color.capitalize() }}</option>
         {% endfor %}
-    </ul>
-    <h2>Select Your Color:</h2>
-    <form method="POST">
-        <select name="color" required>
-            <option value="red">Red</option>
-            <option value="blue">Blue</option>
-            <option value="yellow">Yellow</option>
-            <option value="purple">Purple</option>
-        </select><br><br>
-        <button type="submit">Join Lobby</button>
-    </form>
-    
-    <form method="POST" action="{{ url_for('game.update_player_status', game_id=game['_id']) }}">
-        <button type="submit">Toggle Ready Status</button>
-    </form>
-    <form method="POST" action="{{ url_for('game.leave_game', game_id=game['_id']) }}">
-        <button type="submit">Leave Game</button>
-    </form>
+    </select>
+    <button type="submit">Join Lobby</button>
+</form>
 
-    <!-- Button for starting the game -->
-    <form method="POST" action="{{ url_for('game.start') }}">
-        <input name="game_id" type="text" value="{{ game['_id'] }}"   />
-        <button type="submit">Start Game</button>
-    </form>
+<form method="POST" action="{{ url_for('game.update_player_status', game_id=game['_id']) }}">
+    <button type="submit">Toggle Ready Status</button>
+</form>
+<form method="POST" action="{{ url_for('game.leave_game', game_id=game['_id']) }}">
+    <button type="submit">Leave Game</button>
+</form>
 
-    <script>
-        function fetchLobbyData() {
-            fetch("{{ url_for('game.lobby_data', game_id=game['_id']) }}")
-                .then(response => response.json())
-                .then(data => {
-                    const playersList = document.querySelector("ul#players-list");
-                    playersList.innerHTML = ""; // Clear the current list
+<!-- Button for starting the game -->
+<form method="POST" action="{{ url_for('game.start') }}">
+    <input name="game_id" type="text" value="{{ game['_id'] }}"   />
+    <button type="submit">Start Game</button>
+</form>
 
-                    data.players.forEach(p => {
-                        const li = document.createElement("li");
-                        li.textContent = 
-                            `${p.username}, ${p.color} - ${p.isReady ? "Ready" : "Not Ready"}`;
-                        playersList.appendChild(li);
-                    });
+<script>
+    const eventSource = new EventSource("{{ url_for('game.lobby_stream', game_id=game['_id']) }}");
+    eventSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        const playersList = document.querySelector("ul#players-list");
+        playersList.innerHTML = ""; // Clear the current list
 
-                    // Show or hide the start game button based on allReady
-                    const startGameButton = document.getElementById("start-game-button");
-                    if (data.allReady) {
-                        startGameButton.style.display = "block";
-                    } else {
-                        startGameButton.style.display = "none";
-                    }
-                });
+        data.players.forEach(p => {
+            const li = document.createElement("li");
+            li.textContent = 
+                `${p.username}, ${p.color} - ${p.isReady ? "Ready" : "Not Ready"}`;
+            playersList.appendChild(li);
+        });
+
+        const startGameButton = document.getElementById("start-game-button");
+        if (data.allReady) {
+            startGameButton.style.display = "block";
+        } else {
+            startGameButton.style.display = "none";
         }
-
-        function startGame() {
-            // Placeholder function to handle starting the game
-            alert("Starting the game!");
-            // Replace with a POST request to a route that handles starting the game
-        }
-
-        // Fetch lobby data every 2 seconds
-        setInterval(fetchLobbyData, 2000);
-    </script>
+    };
+</script>
 {% endblock %}

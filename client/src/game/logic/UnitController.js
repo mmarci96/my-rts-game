@@ -127,7 +127,7 @@ class UnitController {
                     unit = new Warrior(x, y, spriteSheet, id, state, health, color);
                     break;
                 case 'worker':
-                    spriteSheet = this.#assetManager.getImage(`worker_${color}`);
+                    spriteSheet = this.#assetManager.getImage(`pawn_${color}`);
                     unit = new Worker(x, y, spriteSheet, id, state, health, color);
                     break;
                 default:console.warn(`Unknown unit type: ${type}`);

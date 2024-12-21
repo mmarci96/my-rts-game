@@ -32,6 +32,10 @@ class GameLogic {
         this.#units = units
         this.#mapData = map;
         this.#camera = new Camera(12, 12, 12, 12);
+
+        if(player.getColor() === 'blue'){
+            this.#camera.moveCamera(36,36)
+        }
         this.#assets = assets;
         this.#gameMap = new GameMap(
             this.#mapData, this.#camera, this.#assets
