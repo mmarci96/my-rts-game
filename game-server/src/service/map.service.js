@@ -1,4 +1,4 @@
-const Map = require('../db/map.model')
+const MapModel = require('../db/map.model')
 const BadRequestError = require('../error/BadRequestError')
 
 class MapService {
@@ -7,7 +7,7 @@ class MapService {
             throw new BadRequestError('Missing mapId in request!', 400)
         }
 
-        const map = await Map.findById(mapId)
+        const map = await MapModel.findById(mapId)
         if(!map){
             throw new BadRequestError(`No map found with id: ${mapId}`, 404)
         }
@@ -16,7 +16,7 @@ class MapService {
     }
 
    static async getAllMaps() {
-       const maps = await Map.find({}, { _id: 1, size: 1 }); 
+       const maps = await MapModel.find({}, { _id: 1, size: 1 }); 
 
        if (!maps || maps.length === 0) {
            throw new BadRequestError("No maps available", 404);

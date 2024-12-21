@@ -1,5 +1,5 @@
-const Session = require("../db/session.model")
-const Unit = require("../db/unit.model")
+const SessionModel = require("../db/session.model")
+const UnitModel = require("../db/unit.model")
 const BadRequestError = require('../error/BadRequestError')
 
 
@@ -8,7 +8,7 @@ class SessionService {
         if(!data.units){
             throw new BadRequestError("Missing data to create", 402)
         }
-        const session = new Session({
+        const session = new SessionModel({
             units: [...data.units]
         })
         const saved = await session.save()
@@ -23,9 +23,9 @@ class SessionService {
         if(!sessionId){
             throw new BadRequestError("No session id provided", 403)
         }
-        const session = await Session.findById(sessionId)
+        const session = await SessionModel.findById(sessionId)
         const unitIds = session["units"]
-        const units = await Unit.find({
+        const units = await UnitModel.find({
             "_id": { $in: [
                 ...unitIds
             ]}

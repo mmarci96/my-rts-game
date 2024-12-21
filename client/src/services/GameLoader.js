@@ -52,7 +52,7 @@ class GameLoader {
 
 
         const player = new Player(userId, color)
-        const game = new Game(mapData.tiles, assets, units, player, createCommand)
+        const game = new Game(mapData.tiles, assets, units, player, createCommand, sessionId)
         game.setupPain();
 
         return game;
