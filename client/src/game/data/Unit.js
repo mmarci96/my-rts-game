@@ -57,6 +57,9 @@ class Unit extends GameEntity {
 		this.animatedSprite.updateAnimation();
 	}
 
+    getHealth(){
+        return this.#health
+    }
 	/**
 	 *
 	 * @returns { string } state
