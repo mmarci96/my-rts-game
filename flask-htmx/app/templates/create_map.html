@@ -3,26 +3,63 @@
 {% block title %}Create Map{% endblock %}
 
 {% block content %}
-    <h1>Create a Game</h1>
-    <form method="POST">
-        <label for="map_name">Map Name:</label>
-        <input type="text" name="map_name" required><br><br>
 
-        <label for="map_size">Map Size:</label>
-        <select name="map_size">
-            <option value="small">Small</option>
-            <option value="medium">Medium</option>
-            <option value="large">Large</option>
-        </select><br><br>
+<h1>Create a Map</h1>
+<p>Use the form below to configure the Perlin noise parameters and create your map.</p>
+<form method="POST">
+    <!-- Map Name -->
+    <label for="map_name">Map Name:</label>
+    <input type="text" name="map_name" required>
+    <small>Enter a unique name for your map.</small>
+    <br><br>
 
-        <label for="max_players h">Max Players:</label>
-        <select name="max_players">
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-        </select><br><br>
+    <!-- Map Size -->
+    <label for="map_size">Map Size:</label>
+    <select name="map_size">
+        <option value="small">Small (64x64 tiles)</option>
+        <option value="medium">Medium (96x96 tiles)</option>
+        <option value="large">Large (128x128 tiles)</option>
+    </select>
+    <small>Select the overall size of the map.</small>
+    <br><br>
 
-        <button type="submit">Create Game</button>
-    </form>
+    <!-- Scale -->
+    <label for="scale">Scale:</label>
+    <input type="number" name="scale" step="0.1" placeholder="e.g., 40.0" required>
+    <small>
+        Larger values result in smoother terrain with broader features. 
+        Smaller values create finer details and more variation.
+    </small>
+    <br><br>
+
+    <!-- Octaves -->
+    <label for="octaves">Octaves:</label>
+    <input type="number" name="octaves" min="1" step="1" placeholder="e.g., 4" required>
+    <small>
+        Controls the number of noise layers added. 
+        More octaves result in increased detail, but at a performance cost.
+    </small>
+    <br><br>
+
+    <!-- Persistence -->
+    <label for="persistence">Persistence:</label>
+    <input type="number" name="persistence" step="0.1" min="0.1" placeholder="e.g., 0.5" required>
+    <small>
+        Determines the contribution of each subsequent octave. 
+        Lower values make higher-frequency noise less influential.
+    </small>
+    <br><br>
+
+    <!-- Lacunarity -->
+    <label for="lacunarity">Lacunarity:</label>
+    <input type="number" name="lacunarity" step="0.1" min="0.5" placeholder="e.g., 2.0" required>
+    <small>
+        Controls the frequency of detail between octaves. 
+        Higher values add more complexity to the noise.
+    </small>
+    <br><br>
+
+    <button type="submit">Create Map</button>
+</form>
 {% endblock %}
 
