@@ -45,7 +45,7 @@ const loadEvent = async () => {
 
     const path = window.location.pathname.split("/");
     const prefix = path[1];
-    if(prefix === 'map'){
+    if(prefix === 'mapview'){
         const mapId = path[2];
         const mapViewer = await GameLoader.loadMapViewer(mapId)
         if(mapViewer){

@@ -13,7 +13,7 @@ FROM nginx:alpine
 
 COPY --from=client /src/dist /usr/share/nginx/html
 
-COPY default.conf /etc/nginx/conf.d/default.conf
+COPY ../nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
