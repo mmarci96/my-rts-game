@@ -1,7 +1,6 @@
 import { io } from 'socket.io-client';
 import GameLoader from './services/GameLoader';
 
-const socket = io();
 const pendingCommands = []
 
 const createCommand = (commands) => {
@@ -45,12 +44,22 @@ const loadEvent = async () => {
     document.addEventListener('contextmenu', e => e.preventDefault());
 
     const path = window.location.pathname.split("/");
-    const userId = path[3];
-    const gameId = path[2];
-    
-    const game = await GameLoader.loadGame(userId, gameId, createCommand)
-    
-    socketHandler(socket, game, userId);
+    const prefix = path[1];
+    if(prefix === 'map'){
+        const mapId = path[2];
+        const mapViewer = await GameLoader.loadMapViewer(mapId)
+        if(mapViewer){
+            mapViewer.loadMap();
+        }
+    }else{
+        const userId = path[3];
+        const gameId = path[2];
+        
+        const game = await GameLoader.loadGame(userId, gameId, createCommand)
+        
+        const socket = io();
+        socketHandler(socket, game, userId);
+    }
 };
 
 window.addEventListener('load', loadEvent);

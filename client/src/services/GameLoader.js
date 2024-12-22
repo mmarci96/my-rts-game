@@ -1,6 +1,7 @@
 import AssetManager from "../game/ui/AssetManager";
 import Player from "../game/data/Player";
 import Game from "../game/Game";
+import MapViewer from "./MapViewer";
 
 class GameLoader {
     static async fetchGameById(gameId) {
@@ -55,6 +56,14 @@ class GameLoader {
         game.setupPain();
 
         return game;
+    }
+
+    static async loadMapViewer(mapId){
+        const mapData = await this.fetchGameMap(mapId);
+        const assets = await this.loadAssets();
+        
+        const mapViewer = new MapViewer(mapData, assets)
+        return mapViewer;
     }
 }
 
