@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Map{% endblock %}
+
+{% block content %}
+    <h1>Create a Game</h1>
+    <form method="POST">
+        <label for="map_name">Map Name:</label>
+        <input type="text" name="map_name" required><br><br>
+
+        <label for="map_size">Map Size:</label>
+        <select name="map_size">
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+        </select><br><br>
+
+        <label for="max_players h">Max Players:</label>
+        <select name="max_players">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select><br><br>
+
+        <button type="submit">Create Game</button>
+    </form>
+{% endblock %}
+
