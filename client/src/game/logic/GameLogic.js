@@ -56,6 +56,7 @@ class GameLogic {
         this.loadMap();
         this.loadUnits();
         this.setupControl();
+        this.drawHouse();
     
     }
 
@@ -88,6 +89,12 @@ class GameLogic {
     drawHouse(){
         const house = new House(5,5,128,127,'idhouse', 'red', this.#assets.getImage('dead'))
         console.log(house)
+        const buildingCanvas = document.createElement('canvas')
+        document.getElementById('root').appendChild(buildingCanvas)
+        buildingCanvas.height = window.innerHeight
+        buildingCanvas.width = window.innerWidth
+        const ctx = buildingCanvas.getContext('2d')
+        house.draw(ctx, this.#camera)
     }
 
 }
