@@ -22,12 +22,7 @@ class Building extends GameEntity {
             throw new TypeError('camera invalid')
         }
         const { px, py } = calculateScreenPos(camera, super.getX(), super.getY())
-        context.drawImage(this.#sprite, 
-            this.width, this.height,
-            this.width, this.height,
-            px, py,
-            64, 64
-        )
+        context.drawImage(this.#sprite, px, py )
         
     }
 }
