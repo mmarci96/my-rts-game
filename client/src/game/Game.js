@@ -28,7 +28,7 @@ class Game {
     }
     
     refreshUnitData(units) {
-        console.log(units)
+        this.#gameLogic.updateUnits(units)
     }
 }
 

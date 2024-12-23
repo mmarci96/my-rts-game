@@ -31,7 +31,7 @@ class GameLogic {
         this.#player = player
         this.#units = units
         this.#mapData = map;
-        this.#camera = new Camera(12, 12, 12, 12);
+        this.#camera = new Camera(0, 0, 12, 12);
 
         if(player.getColor() === 'blue'){
             this.#camera.moveCamera(36,36)
@@ -77,8 +77,11 @@ class GameLogic {
     }
     getUnitData(){
         const units = this.#unitController.getAllUnits()
-        //console.log(units)
         return units
+    }
+    updateUnits(units){
+        this.#unitController.refreshUnits(units)
+        this.setupControl();
     }
 }
 

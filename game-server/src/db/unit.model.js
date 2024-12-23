@@ -9,6 +9,8 @@ const UnitSchema = new Schema({
     speed: {type: Number, required: true},
     type: { type: String, enum: ["dead", "archer", "warrior", "worker"], required: true },
     state: { type: String , default: "idle"},
+    targetX: { type: Number, default: null },
+    targetY: { type: Number, default:  null },
     updatedAt: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now }
 })

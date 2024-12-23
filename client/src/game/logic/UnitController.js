@@ -89,17 +89,13 @@ class UnitController {
         const existingUnitIds = new Set(this.#units.keys());
 
         data.forEach(unitData => {
-            //console.log(unitData)
-            //console.log(this.#units.get(unitData.id))
-            // this.loadUnit({...unitData});
-            //console.log(unitData);
+            console.log(unitData)
+            console.log(this.#units.get(unitData['_id']))
+            this.loadUnit({...unitData});
+            console.log(unitData);
 
             // Mark this unit as processed
-            // existingUnitIds.delete(unitData.id);
-        });
-
-        existingUnitIds.forEach(id => {
-            this.#units.delete(id);
+            existingUnitIds.delete(unitData.id);
         });
     }
 
@@ -107,7 +103,7 @@ class UnitController {
     * @param {Object} param0 
     */
     loadUnit({...props}) {
-        const {type, health, x, y, state, color, target} = props;
+        const {type, health, x, y, state, color, targetX, targetY, speed} = props;
         const id = props["_id"]
         if (!type || !id || !x || !y || !health) {
             throw new Error(`Missing data: name${type}, health: ${health}, position: x:${x},y:${y} id=${id}`);
@@ -115,8 +111,8 @@ class UnitController {
         if (this.#units.has(id)) {
             const unit = this.#units.get(id);
             unit.setState(state);
-            if (target) {
-                unit.setTarget(target.x, target.y);
+            if (targetX) {
+               unit.setTarget(targetX, targetY);
             }
         } else {
             let unit = null
@@ -124,17 +120,17 @@ class UnitController {
             switch (type.toLowerCase()) {
                 case 'warrior':
                     spriteSheet = this.#assetManager.getImage(`warrior_${color}`);
-                    unit = new Warrior(x, y, spriteSheet, id, state, health, color);
+                    unit = new Warrior(x, y, spriteSheet, id, state, health, color, speed);
                     break;
                 case 'worker':
                     spriteSheet = this.#assetManager.getImage(`pawn_${color}`);
-                    unit = new Worker(x, y, spriteSheet, id, state, health, color);
+                    unit = new Worker(x, y, spriteSheet, id, state, health, color, speed);
                     break;
                 default:console.warn(`Unknown unit type: ${type}`);
             }
 
             if(!unit || !spriteSheet) return
-            if (target) unit.setTarget(target.x, target.y);
+            if (targetX) unit.setTarget(targetX, targetY);
             this.#units.set(id, unit);
         }
     }

@@ -37,6 +37,43 @@ class SessionService {
 
         return units;
     }
+
+    static async saveUnitsData(units) {
+        if (!Array.isArray(units) || units.length === 0) {
+            throw new BadRequestError("No units data provided to save", 400);
+        }
+
+        const bulkOps = units.map(unit => {
+            const { id, ...updateData } = unit;
+
+            // Ensure the `id` field exists in each unit object
+            if (!id) {
+                throw new BadRequestError("Unit is missing an id", 400);
+            }
+
+            return {
+                updateOne: {
+                    filter: { _id: id }, // Match the unit by its unique ID
+                    update: { 
+                        $set: { 
+                            ...updateData, 
+                            updatedAt: Date.now() // Update the timestamp
+                        } 
+                    },
+                    upsert: true // Create a new unit if it doesn't already exist
+                }
+            };
+        });
+
+        // Execute the bulkWrite operation
+        const result = await Unit.bulkWrite(bulkOps);
+
+        return {
+            matched: result.matchedCount,
+            modified: result.modifiedCount,
+            upserted: result.upsertedCount
+        };
+    }
 }
 
 

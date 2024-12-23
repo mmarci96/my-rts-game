@@ -94,7 +94,7 @@ class MouseEventHandler {
         const screenX = clientX - rect.left;
         const screenY = clientY - rect.top;
         const { worldX, worldY } = screenToWorld(screenX, screenY, this.#camera);
-        const commands = {}
+        const commands = []
 
         const gridSize = Math.round(Math.sqrt(units.length));
         units.forEach((unit, index) => {
@@ -108,13 +108,13 @@ class MouseEventHandler {
             );
             const targetX = worldX + col;
             const targetY = worldY + row;
-
-            console.log(targetX, targetY);
-            
-            commands[unit.getId()] = {
-                action: 'moving',
-                targetX: targetX,
-                targetY: targetY,
+            if(unit.isSelected()){
+                commands.push({
+                    unitId: unit.getId(),
+                    action: 'moving',
+                    targetX: targetX,
+                    targetY: targetY,
+                })
             }
         })
             
