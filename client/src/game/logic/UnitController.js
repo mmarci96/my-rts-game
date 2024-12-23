@@ -47,6 +47,11 @@ class UnitController {
             .filter(unit => unit.getColor() === color);
     }
 
+    getEnemyUnits(allyColor){
+        return[...this.#units.values()]
+            .filter(unit => unit.getColor() !== allyColor)
+    }
+
     /**
     * Merges together logic to animate the sprites state and movement
     * @param { Camera } camera 

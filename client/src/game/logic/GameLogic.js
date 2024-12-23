@@ -48,19 +48,19 @@ class GameLogic {
         this.#keyHandler = new KeyEventHandler(this.#camera);
 
         this.#selectionBox = new SelectionBox();
+        
         this.#mouseHandler = new MouseEventHandler(
-                this.#camera, this.#selectionBox
+                this.#camera, this.#selectionBox, this.#assets
         );
     }
     setupGame(){
         this.loadMap();
         this.loadUnits();
         this.setupControl();
-        this.drawHouse();
-    
     }
 
     loadMap() {
+        this.drawHouse();
         this.#gameMap.drawMap()
         this.#keyHandler = new KeyEventHandler(this.#camera);
         this.#keyHandler.setupCameraControl(this.#gameMap);	
@@ -74,9 +74,11 @@ class GameLogic {
     }
     setupControl(){
         const playerColor = this.#player.getColor()
-        const playerUnits = this.#unitController.getUnitsByColor(playerColor)
-        
+        const playerUnits = this.#unitController.getUnitsByColor(playerColor)    
         this.#mouseHandler.drawSelection(playerUnits, this.#commandHandler )
+
+        const enemyUnits = this.#unitController.getEnemyUnits(playerColor)
+        this.#mouseHandler.getEnemyUnitOnHover(enemyUnits)
     }
     getUnitData(){
         const units = this.#unitController.getAllUnits()

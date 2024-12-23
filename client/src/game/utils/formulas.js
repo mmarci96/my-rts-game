@@ -41,7 +41,7 @@ export const screenToWorld = (screenX, screenY, camera) => {
     const worldX = (adjustedX / (tileWidth / 2) + adjustedY / (tileHeight / 2)) / 2 + cameraX;
     const worldY = (adjustedY / (tileHeight / 2) - adjustedX / (tileWidth / 2)) / 2 + cameraY;
 
-    return {worldX:worldX, worldY};
+    return {worldX, worldY};
 }
 
 

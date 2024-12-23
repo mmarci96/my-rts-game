@@ -40,6 +40,10 @@ class AssetManager {
     async loadAssets() {
         try {
             await Promise.all([
+                // Cursors
+                this.loadImage('default_cursor', '/assets/cursor_pack/36x36px/cursor_default.png'),
+                this.loadImage('attack_cursor', '/assets/cursor_pack/36x36px/cursor_attack_enemy.png'),
+
                 // Warriors
                 this.loadImage('warrior_blue', '/assets/Warrior/Blue/Warrior_Blue.png'),
                 this.loadImage('warrior_purple', '/assets/Warrior/Purple/Warrior_Purple.png'),

@@ -4,7 +4,7 @@ import Movable from "./models/Movable.js";
 import AnimatedSprite from "./models/AnimatedSprite.js";
 import Camera from "../ui/Camera.js";
 import EntityStatus from "./models/EntityStatus.js";
-
+import Attacker from "./models/Attacker.js";
 class Unit extends GameEntity {
     #health
     #movable
@@ -28,6 +28,7 @@ class Unit extends GameEntity {
         this.state = new EntityStatus(state)
         this.animatedSprite = new AnimatedSprite(spriteSheet);
         this.#health = health;
+        this.attacker = new Attacker(1)
     }
 
     /**
@@ -54,6 +55,13 @@ class Unit extends GameEntity {
         this.animatedSprite.setAnimationType(this.getState())
         this.animatedSprite.draw(context, x, y, camera, this.selectable);
         this.animatedSprite.updateAnimation();
+    }
+
+    attackUnit(unitId){
+        this.attacker.setTargetId(unitId)
+    }
+    setBonusDmg(bonus){
+        this.attacker.setAttackDmg(bonus);
     }
 
     getHealth(){
