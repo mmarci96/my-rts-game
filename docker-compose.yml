@@ -28,6 +28,8 @@ services:
     build:
       context: ./client
     container_name: client
+    environment:
+      - VITE_LOCAL=false
     depends_on:
       - flask-app
       - express-server

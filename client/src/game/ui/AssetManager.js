@@ -1,7 +1,8 @@
 class AssetManager {
-    constructor() {
+    constructor(port) {
         this.images = new Map();
-        this.baseURL = import.meta.env.VITE_LOCAL === 'true' ? 'http://localhost:5173' : 'http://localhost';
+        console.log(port)
+        this.baseURL = port === '5173' ? 'http://localhost:5173' : 'http://localhost';
     }
 
     /**

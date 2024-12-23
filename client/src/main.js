@@ -44,10 +44,13 @@ const loadEvent = async () => {
     document.addEventListener('contextmenu', e => e.preventDefault());
 
     const path = window.location.pathname.split("/");
+    const port = window.location.port
+    console.log(port)
+    
     const prefix = path[1];
     if(prefix === 'mapview'){
         const mapId = path[2];
-        const mapViewer = await GameLoader.loadMapViewer(mapId)
+        const mapViewer = await GameLoader.loadMapViewer(mapId, port)
         if(mapViewer){
             mapViewer.loadMap();
         }
@@ -55,7 +58,7 @@ const loadEvent = async () => {
         const userId = path[3];
         const gameId = path[2];
         
-        const game = await GameLoader.loadGame(userId, gameId, createCommand)
+        const game = await GameLoader.loadGame(userId, gameId, createCommand, port)
         
         const socket = io();
         socketHandler(socket, game, userId);

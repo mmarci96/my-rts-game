@@ -32,21 +32,21 @@ class GameLoader {
         }
         return session
     }
-    static async loadAssets(){
-        this.assetManager = new AssetManager();
+    static async loadAssets(port){
+        this.assetManager = new AssetManager(port);
         const assets = await this.assetManager.loadAssets()
 
         return assets
     }
 
-    static async loadGame(userId, gameId, createCommand){
+    static async loadGame(userId, gameId, createCommand, port){
         const gameData = await this.fetchGameById(gameId)
         
         const { mapId, sessionId } = gameData
 
         const mapData = await this.fetchGameMap(mapId)
         const units = await this.fetchSessionData(sessionId)
-        const assets = await this.loadAssets();
+        const assets = await this.loadAssets(port);
 
         const { color } = gameData.players.find(p => p.userId === userId)
 
@@ -58,9 +58,9 @@ class GameLoader {
         return game;
     }
 
-    static async loadMapViewer(mapId){
+    static async loadMapViewer(mapId, port){
         const mapData = await this.fetchGameMap(mapId);
-        const assets = await this.loadAssets();
+        const assets = await this.loadAssets(port);
         
         const mapViewer = new MapViewer(mapData, assets)
         return mapViewer;
