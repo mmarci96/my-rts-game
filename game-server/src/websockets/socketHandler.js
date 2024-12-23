@@ -54,9 +54,8 @@ module.exports = (io) => {
             socket.join(data.sessionId);
             addSession(data, socket.id)
         });
-        socket.on('unitStatus', updateData => {
-            console.log('on unitStatus',updateData)
-
+        socket.on('unitStatus', data => {
+            console.log(data)
         })
 
         socket.on('commandRequest', commands => {
@@ -67,12 +66,12 @@ module.exports = (io) => {
         socket.on('updateSession', (sessionData) => {
             const sessionId = sessionData['_id']
             sessionData.units.forEach(unit => {
-                console.log('on updateSession',unit)
+                console.log(unit)
                 units[unit.id] = { ...unit }
             });
 
             sessions[sessionId] = { units }
-            console.log('seessions',sessions)
+            console.log(sessions)
            
         });
 

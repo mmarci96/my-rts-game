@@ -2,7 +2,6 @@ import Player from './data/Player.js';
 import GameLogic from './logic/GameLogic.js';
 
 class Game {
-    #sessionId
     #gameLogic;
     /**
 	  * An array of string will be the parameter we receive from endpoint/ws
@@ -12,16 +11,12 @@ class Game {
     * @param { Player } player
     * @param { Function } createCommand 
 	  */
-    constructor(map, assets, units, player, createCommand, sessionId) {
-        this.#sessionId = sessionId
+    constructor(map, assets, units, player, createCommand) {
         this.player = player
         if (!(map instanceof Array)) {
             throw new TypeError('Map loader requires at least one map');
         }
         this.#gameLogic = new GameLogic(map, assets, units, this.player, createCommand);
-    }
-    getSessionId(){
-        return this.#sessionId;
     }
     getCurrentState(){
         const units = this.#gameLogic.getUnitData();

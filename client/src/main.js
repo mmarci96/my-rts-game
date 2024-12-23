@@ -14,30 +14,24 @@ const socketHandler = (socket, game, userId) => {
     socket.on('connect', ()=>{
         console.log('Hello socket! Connected as ', socket.id)
         const units = game.getCurrentState();
-        //console.log('on connect',units)
-        const unitStatusData = {
-            connectionId : socket.id,
-            userId,
-            sessionId: game.getSessionId(),
-            units,
-        }
-        socket.emit('unitStatus', unitStatusData)
+        console.log(units)
+        socket.emit('unitStatus', units)
     })
 
     socket.on('unitUpdate', unitUpdates => {
-           //console.log('on unitUpdate',unitUpdates)
+           console.log(unitUpdates)
     })
 
-    const droprate = 10
+    const droprate = 5
     let c = 0
     setInterval(() => {
         if(pendingCommands.length > 0){
             socket.emit('commandRequest', pendingCommands)
-            pendingCommands.pop()
-            console.log('pending command',pendingCommands)
+            pendingCommands.filter(command => command === null)
+            console.log(pendingCommands)
         }
-        if(c > droprate){
-            c = 0;
+        if(c > 5){
+            c = 0
             socket.emit('unitStatus', game.getCurrentState())
         } else {
             c++
