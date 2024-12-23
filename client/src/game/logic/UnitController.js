@@ -89,10 +89,7 @@ class UnitController {
         const existingUnitIds = new Set(this.#units.keys());
 
         data.forEach(unitData => {
-            console.log(unitData)
-            console.log(this.#units.get(unitData['_id']))
             this.loadUnit({...unitData});
-            console.log(unitData);
 
             // Mark this unit as processed
             existingUnitIds.delete(unitData.id);
