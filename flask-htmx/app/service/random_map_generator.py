@@ -36,7 +36,6 @@ def create_map_with_params(size, scale, octaves, persistence, lacunarity):
                 repeaty=height,
                 base=42
             )
-            print(elevation)
             
             # Map elevation to tile types
             # Again theese numbers are just set up completly by looking at the outputs
@@ -67,7 +66,7 @@ def create_map_with_params(size, scale, octaves, persistence, lacunarity):
         map_data.append(row)
 
     # Printing the map here to check on terminal but I will create a client to check it how would look
-    print(map_data)
+    # print(map_data)
     # Ensure water tiles are grouped
     # that function was written by ai and seem right try commenting it out and see if it works even
     # group_water_tiles(map_data, width, height)
@@ -133,16 +132,13 @@ def generate_random_map(size):
                 repeaty=height,
                 base=42
             )
-            print(elevation)
             
             # Map elevation to tile type
             if elevation < -0.15:  # More generous threshold for water
-                print('hiiii')
                 tile_type = 'water1'
                 z = -0.5  # Fixed z for water
             elif elevation >= -0.15:
                 random_num = random.randrange(0, len(available_tiles)-1, 1)
-                print(random_num)
                 tile_type = available_tiles[random_num]
                 z = round(elevation, 2)
             elif elevation > -0.1:
