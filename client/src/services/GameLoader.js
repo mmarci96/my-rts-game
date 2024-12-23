@@ -18,7 +18,7 @@ class GameLoader {
         const res = await fetch('/api/games/maps/' + mapId)
         const map = await res.json()
         if(!res.ok){
-            console.log(res)
+            console.error(res)
             return res
         }
         return map;
@@ -27,7 +27,7 @@ class GameLoader {
         const res = await fetch('/api/games/sessions/' + sessionId)
         const session = await res.json()
         if(!res.ok){
-            console.log(res)
+            console.error(res)
             return res
         }
         return session

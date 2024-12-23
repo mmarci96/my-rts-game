@@ -1,51 +1,54 @@
 import { io } from 'socket.io-client';
 import GameLoader from './services/GameLoader';
+import Game from './game/Game';
 
-const pendingCommands = []
+let pendingCommands = []
 
 const createCommand = (commands) => {
-    //console.log(commands)
-    pendingCommands.push(commands)
-    //console.log(pendingCommands)
+    commands.forEach(command => {
+        pendingCommands.push(command)
+    });
 }
 
-
-const socketHandler = (socket, game, userId) => {
+const socketHandler = (socket, game, userId, gameId) => {
+    if(!(game instanceof Game)){
+        throw new TypeError("Invalid game for socketconnection")
+    }
     socket.on('connect', ()=>{
-        console.log('Hello socket! Connected as ', socket.id)
-        const units = game.getCurrentState();
-        console.log(units)
-        socket.emit('unitStatus', units)
+        const data = { 
+            gameId, userId
+        }
+        socket.emit('startGame', data)
     })
 
-    socket.on('unitUpdate', unitUpdates => {
-           console.log(unitUpdates)
+    socket.on('gameState', data => {
+        if(data.units.length > 1){
+            game.refreshUnitData(data.units)
+        }
     })
 
-    const droprate = 5
-    let c = 0
+    const saveRate = 200
+    let count = 0
     setInterval(() => {
-        if(pendingCommands.length > 0){
-            socket.emit('commandRequest', pendingCommands)
-            pendingCommands.filter(command => command === null)
+        if(pendingCommands.length >= 1){
             console.log(pendingCommands)
+            socket.emit('moveUnit', pendingCommands)
+            pendingCommands = []
         }
-        if(c > 5){
-            c = 0
-            socket.emit('unitStatus', game.getCurrentState())
-        } else {
-            c++
+        count++
+        if(count > saveRate){
+            const currentState = game.getCurrentState();
+            socket.emit('saveGame', currentState)
+            count = 0
         }
-    }, 1000)
+    }, 60)
 }
    
-
 const loadEvent = async () => {
     document.addEventListener('contextmenu', e => e.preventDefault());
 
     const path = window.location.pathname.split("/");
     const port = window.location.port
-    console.log(port)
     
     const prefix = path[1];
     if(prefix === 'mapview'){
@@ -61,7 +64,7 @@ const loadEvent = async () => {
         const game = await GameLoader.loadGame(userId, gameId, createCommand, port)
         
         const socket = io();
-        socketHandler(socket, game, userId);
+        socketHandler(socket, game, userId, gameId);
     }
 };
 
