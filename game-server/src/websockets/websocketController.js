@@ -64,27 +64,5 @@ const websocketController = (io) => {
     })
 }
 
-const updateUnitPosition = (movingUnit) => {
-    const x = movingUnit.x
-    const y = movingUnit.y
-
-    const dx = movingUnit.targetX - x;
-    const dy = movingUnit.targetY - y;
-    const distance = Math.sqrt(dx*dx + dy*dy)
-
-    const minDistance = 0.1
-    if(distance > minDistance) {
-        const angle = Math.atan2(dy, dx);
-        movingUnit.x += Math.cos(angle) * movingUnit.speed/64;
-        movingUnit.y += Math.sin(angle) * movingUnit.speed/64;
-        return movingUnit
-    }
-    movingUnit.state = 'idle';
-    movingUnit.x = movingUnit.targetX;
-    movingUnit.y = movingUnit.targetY;
-    movingUnit.targetX = null;
-    movingUnit.targetY = null;
-}
-
 
 module.exports = websocketController;
