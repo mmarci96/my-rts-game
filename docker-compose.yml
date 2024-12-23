@@ -10,7 +10,8 @@ services:
       context: ./flask-htmx
     container_name: flask-app
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/mydatabase
+      - MONGO_URI=${MONGO_URI}
+      - SECRET_KEY=${SECRET_KEY}
     depends_on:
       - mongodb
 
@@ -19,7 +20,7 @@ services:
       context: ./game-server
     container_name: express-server
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/mydatabase
+      - MONGO_URI=${MONGO_URI}
     depends_on:
       - mongodb
 
