@@ -6,7 +6,7 @@ class MouseEventHandler {
     #canvas;
     #camera;
     #selectionBox;
-    #units;
+    #units
 
     /**
      *
@@ -72,12 +72,12 @@ class MouseEventHandler {
             ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
             isSelecting = false;
 
-            this.#selectionBox.handleSelecting(units, this.#camera);
+            this.#selectionBox.handleSelecting(this.#units, this.#camera);
         });
 
         this.#canvas.addEventListener('mousedown', e => {
             if (e.button === 2) {
-                const target = this.getTargetPosition(units, e.clientX, e.clientY);
+                const target = this.getTargetPosition(this.#units, e.clientX, e.clientY);
                 mouseControl(target)
             }
         });
