@@ -1,7 +1,7 @@
 class AssetManager {
     constructor() {
         this.images = new Map();
-        this.baseURL = import.meta.env.VITE_LOCAL ? 'http://localhost:5173' : 'http://localhost'; 
+        this.baseURL = import.meta.env.VITE_LOCAL === 'true' ? 'http://localhost:5173' : 'http://localhost';
     }
 
     /**
