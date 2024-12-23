@@ -30,7 +30,7 @@ def create_map():
         map_id = mongo.db.maps.insert_one(game_map).inserted_id
 
         # Redirect to the map's URL
-        map_url = f"http://localhost:5173/mapview/{map_id}"
+        map_url = f"http://localhost/mapview/{map_id}"
         return redirect(map_url)
 
     # Render the map creation form

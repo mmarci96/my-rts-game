@@ -172,7 +172,7 @@ def start():
         return "Not all players are ready", 400
 
     if(game['status'] != "waiting"):
-        connection_url = "http://localhost:5173/play/" + str(game_id) + "/" + str(user_id)
+        connection_url = "http://localhost/play/" + str(game_id) + "/" + str(user_id)
         return redirect(connection_url)
 
 
@@ -211,7 +211,7 @@ def start():
                        }
              }
             )
-    connection_url = "http://localhost:5173/play/" + str(game_id) + "/" + str(user_id)
+    connection_url = "http://localhost/play/" + str(game_id) + "/" + str(user_id)
 
     return redirect(connection_url)
 
