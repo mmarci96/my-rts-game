@@ -67,6 +67,14 @@ class AssetManager {
 
                 // Dead
                 this.loadImage('dead', '/assets/Dead/Dead.png'),
+                
+                // House
+                this.loadImage('house_red', '/assets/House/House_Red.png'),
+                this.loadImage('house_blue', '/assets/House/House_Blue.png'),
+                this.loadImage('house_purpe', '/assets/House/House_Purple.png'),
+                this.loadImage('house_yellow', '/assets/House/House_Yellow.png'),
+                this.loadImage('house_construction', '/assets/House/House_Construction.png'),
+                this.loadImage('house_destroyed', '/assets/House/House_Destroyed.png'),
 
                 // Tileset
                 this.loadImage('directional_sign', '/assets/TileSet/Tiles/directional_sign.png'),

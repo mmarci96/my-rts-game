@@ -15,7 +15,7 @@ class UnitController {
      */
     constructor(assets) {
         this.#assetManager = assets;
-        this.#unitCanvas = document.getElementById('unit-canvas');
+        this.#unitCanvas = document.getElementById('game-canvas');
         this.#units = new Map();
 
         this.#unitCanvas.width = GameMap.WIDTH;

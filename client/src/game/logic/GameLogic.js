@@ -87,14 +87,12 @@ class GameLogic {
         this.setupControl();
     }
     drawHouse(){
-        const house = new House(5,5,128,127,'idhouse', 'red', this.#assets.getImage('dead'))
-        console.log(house)
-        const buildingCanvas = document.createElement('canvas')
-        document.getElementById('root').appendChild(buildingCanvas)
-        buildingCanvas.height = window.innerHeight
-        buildingCanvas.width = window.innerWidth
-        const ctx = buildingCanvas.getContext('2d')
-        house.draw(ctx, this.#camera)
+        const houseRed = new House(5,5,128,128,'idhouse_red', 'red', this.#assets.getImage('house_red'))
+        const houseBlue = new House(42,42,128,128,'idhouse_blue', 'blue', this.#assets.getImage('house_blue'))
+        const gameCanvas = document.getElementById('map-canvas')
+        const ctx = gameCanvas.getContext('2d')
+        houseRed.draw(ctx, this.#camera)
+        houseBlue.draw(ctx, this.#camera)
     }
 
 }
