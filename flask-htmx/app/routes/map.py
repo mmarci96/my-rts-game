@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, g
-
+import os
 from app.service.random_map_generator import create_map_with_params
 
 map_bp = Blueprint('map', __name__)
@@ -29,8 +29,13 @@ def create_map():
         }
         map_id = mongo.db.maps.insert_one(game_map).inserted_id
 
+        mongo_uri = os.getenv("MONGO_URI", "local")
+
         # Redirect to the map's URL
         map_url = f"http://localhost/mapview/{map_id}"
+        if mongo_uri == 'local':
+            map_url = f"http://localhost:5173/mapview/{map_id}"
+        
         return redirect(map_url)
 
     # Render the map creation form
