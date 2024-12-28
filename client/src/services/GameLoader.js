@@ -46,7 +46,7 @@ class GameLoader {
 
         const mapData = await this.fetchGameMap(mapId)
         console.log('Loading game with session id: ', sessionId)
-        const units = await this.fetchSessionData(sessionId)
+        const units = [] // await this.fetchSessionData(sessionId)
         const assets = await this.loadAssets(port);
 
         const { color } = gameData.players.find(p => p.userId === userId)

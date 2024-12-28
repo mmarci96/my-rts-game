@@ -60,7 +60,7 @@ class UnitController {
         const canvas = this.#unitCanvas;
         const context = canvas.getContext('2d');
 
-        const updateTimer = 60 * 2;
+        const updateTimer = 15;
         let frame = 0;
 
         const animate = () => {
@@ -97,7 +97,7 @@ class UnitController {
             this.loadUnit({...unitData});
 
             // Mark this unit as processed
-            existingUnitIds.delete(unitData.id);
+            existingUnitIds.delete(unitData["_id"]);
         });
     }
 
@@ -106,6 +106,7 @@ class UnitController {
     */
     loadUnit({...props}) {
         const {type, health, x, y, state, color, targetX, targetY, speed} = props;
+        console.log('loading: ',props)
         const id = props["_id"]
         if (!type || !id || !x || !y || !health) {
             throw new Error(`Missing data: name${type}, health: ${health}, position: x:${x},y:${y} id=${id}`);

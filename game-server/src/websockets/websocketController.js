@@ -18,18 +18,27 @@ const loadGameState = async gameId => {
         game.loadGame(mapData.tiles, units)
         const state = game.getGameState()
         console.log('Gamestate after load: ',state)
+        games[gameId] = {
+            gameData,
+            game
+        }
     }
 
-    games[gameId] = {
-        units,
-        gameData
-    }
     return games[gameId]
 }
 
 const saveGameState = async unitsList => {
     const updatedUnits = await SessionService.saveUnitsData(unitsList)
     return updatedUnits;
+}
+
+const getGameState = (gameId) => {
+    const { game, gameData } = games[gameId]
+    const gameState = {
+        gameData,
+        units: game.getGameState().units
+    }
+    return gameState
 }
 
 const websocketController = (io) => {
@@ -43,7 +52,9 @@ const websocketController = (io) => {
                 player: userId, 
                 game: gameId
             }
-            const gameData = await loadGameState(gameId)
+            await loadGameState(gameId)
+
+            const gameData = getGameState(gameId)
             socket.join(gameId)
             io.to(gameId).emit('gameState', gameData)
         })

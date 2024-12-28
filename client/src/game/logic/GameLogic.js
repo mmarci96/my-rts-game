@@ -44,7 +44,8 @@ class GameLogic {
         )
 
         this.#unitController = new UnitController(this.#assets);
-
+        this.#unitController.animationLoop(this.#camera)
+        
         this.#keyHandler = new KeyEventHandler(this.#camera);
 
         this.#selectionBox = new SelectionBox();
@@ -70,7 +71,6 @@ class GameLogic {
         this.#units.forEach(unit => {
            this.#unitController.loadUnit({...unit}) 
         });
-        this.#unitController.animationLoop(this.#camera)
     }
     setupControl(){
         const playerColor = this.#player.getColor()
