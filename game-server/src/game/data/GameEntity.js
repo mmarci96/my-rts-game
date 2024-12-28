@@ -3,12 +3,14 @@ module.exports = class GameEntity {
     #y;
     #unitId;
     #color;
+    #state;
 
-    constructor({ unitId, x, y, color }) {
+    constructor({ unitId, x, y, color, state }) {
         this.#unitId = unitId
         this.#x = x;
         this.#y = y;
         this.#color = color
+        this.#state = state
     }
 
     getId(){
@@ -17,6 +19,14 @@ module.exports = class GameEntity {
 
     getColor(){
         return this.#color;
+    }
+
+    getState(){
+        return this.#state;
+    }
+
+    setState(state){
+        this.#state = state;
     }
 
     getX() {

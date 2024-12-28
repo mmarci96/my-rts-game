@@ -11,6 +11,7 @@ const loadGameState = async gameId => {
     const units = await SessionService.getUnitsBySessionId(gameData.sessionId)
     const mapData = await MapService.getMapById(gameData.mapId)
     if(games[gameId] = 'undefined'){
+        console.log(gameData)
         const game = new Game(gameId);
         const id = game.getId();
         console.log("Game created: ", id);

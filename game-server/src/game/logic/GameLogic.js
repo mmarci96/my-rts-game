@@ -1,51 +1,29 @@
 const GameMap = require("./GameMap")
 const Player = require("../data/Player")
-const Unit = require("../data/Unit")
+const UnitController = require("./UnitController")
 
 module.exports = class GameLogic {
     #gameMap
     #players
-    #units
+    #unitController
     constructor(){
         this.#players = new Map();
-        this.#units = new Map();
+        this.#unitController = new UnitController;
     }
 
-    loadUnits(units){
-        units.forEach(unit => {
-            const creteUnit = new Unit({
-                unitId:unit["_id"], 
-                x: unit.x, 
-                y: unit.y,
-                color: unit["color"],
-            })
-            this.#units.set(
-                creteUnit.getId(), creteUnit
-            )
+    loadPlayers(players){
+        players.forEach(player => {
+            const createPlayer = new Player(player["userId"], player["color"])
+            this.#players.set(createPlayer.getId(), createPlayer)
         });
     }
 
-    getUnitById(unitId){
-        const unit = this.#units.get(unitId)
-        return {
-            id: unit.getId(),
-            x: unit.getX(),
-            y: unit.getY(),
-            color: unit.getColor()
-        }
+    loadUnits(units){
+        this.#unitController.loadUnits(units)
     }
-
     getUnits(){
-        console.log(this.#units)
-        return [...this.#units.values()].flatMap(unit => ({
-            id: unit.getId(),
-            x: unit.getX(),
-            y: unit.getY(),
-            color: unit.getColor()
-        }));
-            
+        return this.#unitController.getUnits();
     }
-    
 
     loadMap(map){
         this.#gameMap = new GameMap(map);
