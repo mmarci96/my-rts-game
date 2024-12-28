@@ -28,8 +28,9 @@ const loadGameState = async gameId => {
 }
 
 const saveGameState = async unitsList => {
-    const updatedUnits = await SessionService.saveUnitsData(unitsList)
-    return updatedUnits;
+    console.log(unitsList)
+    //const updatedUnits = await SessionService.saveUnitsData(unitsList)
+    //return updatedUnits;
 }
 
 const getGameState = (gameId) => {
@@ -62,11 +63,7 @@ const websocketController = (io) => {
         socket.on('moveUnit', commands => {
             const gameId = players[socket.id].game
             commands.forEach(command => {
-                const unitId = command.unitId;
-                const u = games[gameId].units.find(unit => unit['_id'].toString() === unitId)
-                u.targetX = command.targetX
-                u.targetY = command.targetY
-                u.state = 'moving'
+                games[gameId].game.handleMoveCommand(command)
             });
             io.to(gameId).emit('gameState', games[gameId])
         })

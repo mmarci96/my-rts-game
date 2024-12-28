@@ -16,7 +16,8 @@ module.exports = class UnitController {
                 color: unit["color"],
                 state: unit["state"],
                 health: unit["health"],
-                speed: unit["speed"]
+                speed: unit["speed"],
+                type: unit["type"]
             })
             this.#units.set(
                 creteUnit.getId(), creteUnit
@@ -25,13 +26,7 @@ module.exports = class UnitController {
     }
 
     getUnitById(unitId){
-        const unit = this.#units.get(unitId)
-        return {
-            id: unit.getId(),
-            x: unit.getX(),
-            y: unit.getY(),
-            color: unit.getColor()
-        }
+        return this.#units.get(unitId)    
     }
 
     getUnits(){
@@ -45,7 +40,8 @@ module.exports = class UnitController {
             health: unit.damagable.getHealth(),
             speed: unit.movable.getSpeed(),
             targetX: unit.movable.getTargetX(),
-            targetY: unit.movable.getTargetY()
+            targetY: unit.movable.getTargetY(),
+            type: unit.getType()
         }));
             
     }

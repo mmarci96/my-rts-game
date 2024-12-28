@@ -24,6 +24,12 @@ module.exports = class GameLogic {
     getUnits(){
         return this.#unitController.getUnits();
     }
+    
+    handleCommand(command){
+        const unit = this.#unitController.getUnitById(command.unitId)
+        unit.movable.setTarget(command.targetX, command.targetY)
+        unit.setState(command.state)
+    }
 
     loadMap(map){
         this.#gameMap = new GameMap(map);

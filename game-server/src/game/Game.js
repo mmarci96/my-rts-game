@@ -24,6 +24,10 @@ module.exports = class Game {
         }
     }
 
+    handleMoveCommand(command){
+        this.#gameLogic.handleCommand(command);
+    }
+
     startGameLoop() {
         console.log("Starting game loop...");
 
