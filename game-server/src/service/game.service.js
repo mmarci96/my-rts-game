@@ -1,13 +1,13 @@
-const Game = require('../db/game.model');
+const GameSchema = require('../db/game.model');
 const BadRequestError = require('../error/BadRequestError');
 
 class GameService {
     static async createGame(data) {
-        return await Game.create(data);
+        return await GameSchema.create(data);
     }
 
     static async getGameById(gameId) {
-        const game = await Game.findById(gameId);
+        const game = await GameSchema.findById(gameId);
         if (!game) {
           throw new BadRequestError('Game not found', 404);
         }
@@ -15,7 +15,7 @@ class GameService {
     }
 
     static async deleteGame(gameId) {
-        const game = await Game.findByIdAndDelete(gameId);
+        const game = await GameSchema.findByIdAndDelete(gameId);
         if (!game) {
             throw new BadRequestError('Game not found', 404);
         }
@@ -28,7 +28,7 @@ class GameService {
             throw new BadRequestError('Invalid status');
         }
 
-        const game = await Game.findByIdAndUpdate(
+        const game = await GameSchema.findByIdAndUpdate(
               gameId,
               { status },
               { new: true, runValidators: true }

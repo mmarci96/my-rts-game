@@ -1,7 +1,7 @@
 module.exports = {
   env: {
     node: true, // Enables Node.js global variables and Node.js scoping
-    es2021: true, // Supports ES2021 features
+    es2021: false, // Supports ES2021 features
   },
   extends: [
     'eslint:recommended', // Base recommended ESLint rules
