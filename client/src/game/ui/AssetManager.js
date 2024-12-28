@@ -58,7 +58,7 @@ class AssetManager {
 
                 // Archers + Bow
                 this.loadImage('archer_blue', '/assets/Archer/Blue/Archer_Blue.png'),
-                this.loadImage('archer_purple', '/assets/Archer/Purple/Archer_Purple.png'),
+                // this.loadImage('archer_purple', '/assets/Archer/Purple/Archer_Purple.png'),
                 this.loadImage('archer_red', '/assets/Archer/Red/Archer_Red.png'),
                 this.loadImage('archer_yellow', '/assets/Archer/Yellow/Archer_Yellow.png'),
                 this.loadImage('archer_bow_blue', '/assets/Archer/Archer%20+%20Bow/Archer_Bow_Blue.png'),

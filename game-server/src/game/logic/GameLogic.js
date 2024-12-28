@@ -13,8 +13,15 @@ module.exports = class GameLogic {
 
     loadUnits(units){
         units.forEach(unit => {
-            const creteUnit = new Unit(unit.id, unit.x, unit.y, unit.color)
-            this.#units.set(units.id, creteUnit)
+            const creteUnit = new Unit({
+                unitId:unit["_id"], 
+                x: unit.x, 
+                y: unit.y,
+                color: unit["color"],
+            })
+            this.#units.set(
+                creteUnit.getId(), creteUnit
+            )
         });
     }
 
@@ -29,7 +36,14 @@ module.exports = class GameLogic {
     }
 
     getUnits(){
-        return [...this.#units.values()];
+        console.log(this.#units)
+        return [...this.#units.values()].flatMap(unit => ({
+            id: unit.getId(),
+            x: unit.getX(),
+            y: unit.getY(),
+            color: unit.getColor()
+        }));
+            
     }
     
 

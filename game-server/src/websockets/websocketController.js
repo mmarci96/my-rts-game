@@ -1,7 +1,7 @@
 const GameService = require('../service/game.service.js')
 const MapService = require('../service/map.service.js')
 const SessionService = require('../service/session.service.js')
-
+const Game = require('../game/Game.js')
 
 const players = {}
 const games = {}
@@ -9,6 +9,15 @@ const games = {}
 const loadGameState = async gameId => {
     const gameData = await GameService.getGameById(gameId)
     const units = await SessionService.getUnitsBySessionId(gameData.sessionId)
+    const mapData = await MapService.getMapById(gameData.mapId)
+    if(games[gameId] = 'undefined'){
+        const game = new Game(gameId);
+        const id = game.getId();
+        console.log("Game created: ", id);
+        game.loadGame(mapData.tiles, units)
+        const state = game.getGameState()
+        console.log('Gamestate after load: ',state)
+    }
 
     games[gameId] = {
         units,
@@ -51,9 +60,9 @@ const websocketController = (io) => {
         })
 
         socket.on('saveGame', async units => {
-            console.log("Saving units: ",units)
+            // console.log("Saving units: ",units)
             const saved = await saveGameState(units)
-            console.log("Saved units: ",saved)
+            // console.log("Saved units: ",saved)
         })
     })
 
