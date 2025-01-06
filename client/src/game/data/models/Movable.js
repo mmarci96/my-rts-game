@@ -5,21 +5,21 @@ class Movable {
     #isMoving
 
     /**
-   * Just divide by 60 to get back the 60 fps thingy?
-   * I think it makes sense but maybe passing down the framerate could be worth
-   * @param { number } speed
-   */
+    * Just divide by 60 to get back the 60 fps thingy?
+    * I think it makes sense but maybe passing down the framerate could be worth
+    * @param { number } speed
+    */
     constructor(speed) {
         this.#speed = speed / 128;
         this.#isMoving = false;
     }
 
     /**
-   * Pretty easy to figure out. Although lot of logic ha been built around target
-   * being null but it should rather check states for that
-   * @param x
-   * @param y
-   */
+    * Pretty easy to figure out. Although lot of logic ha been built around target
+    * being null but it should rather check states for that
+    * @param x
+    * @param y
+    */
     setTarget(x, y) {
         this.#isMoving = true;
 

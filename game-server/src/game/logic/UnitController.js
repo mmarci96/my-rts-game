@@ -6,9 +6,16 @@ module.exports = class UnitController {
         this.#units = new Map();
     }
 
+    refreshUnits(){
+        this.#units.forEach(unit => {
+            if(unit.getState() === 'moving'){
+                
+            }
+        })
+    }
+
     loadUnits(units){
         units.forEach(unit => {
-            console.log(unit)
             const creteUnit = new Unit({
                 unitId:unit["_id"], 
                 x: unit["x"], 
@@ -30,7 +37,6 @@ module.exports = class UnitController {
     }
 
     getUnits(){
-        console.log(this.#units)
         return [...this.#units.values()].flatMap(unit => ({
             id: unit.getId(),
             x: unit.getX(),
@@ -43,6 +49,19 @@ module.exports = class UnitController {
             targetY: unit.movable.getTargetY(),
             type: unit.getType()
         }));
-            
+    }
+
+    handleMoving(unit){
+        const x = unit.getX()
+        const y = unit.getY()
+        const speed = unit.getSpeed()
+
+        const { targetX, targetY } = unit.getTarget();
+        const dx = targetX - x;
+        const dy = targetY - y;
+        const distance = Math.sqrt(dx**dx + dy**dy)
+        if(distance <= speed){
+
+        }
     }
 }
