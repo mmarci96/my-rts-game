@@ -27,9 +27,9 @@ module.exports = class UnitController {
                 type: unit["type"]
             })
             this.#units.set(
-                creteUnit.getId(), creteUnit
+                creteUnit.getId().toString(), creteUnit
             )
-        });
+});
     }
 
     getUnitById(unitId){
@@ -63,5 +63,12 @@ module.exports = class UnitController {
         if(distance <= speed){
 
         }
+    }
+    updateUnitPositions(){
+        [...this.#units.values()].forEach(unit => {
+           if(unit.getState() === 'moving'){
+                unit.move();
+            } 
+        })
     }
 }

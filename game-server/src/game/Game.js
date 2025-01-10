@@ -35,6 +35,7 @@ module.exports = class Game {
         this.gameLoopInterval = setInterval(() => {
             const gameState = this.getGameState();
             console.log("Game State:", gameState);
+            this.#gameLogic.updateUnits();
 
             // Optional: Logic to break the loop, such as checking a game over condition
             // Example:
@@ -52,4 +53,10 @@ module.exports = class Game {
         }
     }
 
+    isRunning(){
+        if(this.gameLoopInterval){
+            return true
+        }
+        return false
+    }
 }

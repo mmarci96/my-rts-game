@@ -22,8 +22,7 @@ const loadGameState = async gameId => {
             gameData,
             game
         }
-    }
-
+    } 
     return games[gameId]
 }
 
@@ -58,6 +57,10 @@ const websocketController = (io) => {
             const gameData = getGameState(gameId)
             socket.join(gameId)
             io.to(gameId).emit('gameState', gameData)
+            if(!games[gameId].game.isRunning()){
+                games[gameId].game.startGameLoop()
+            }
+            
         })
 
         socket.on('moveUnit', commands => {
@@ -65,20 +68,22 @@ const websocketController = (io) => {
             commands.forEach(command => {
                 games[gameId].game.handleMoveCommand(command)
             });
-            io.to(gameId).emit('gameState', games[gameId])
+            //io.to(gameId).emit('gameState', games[gameId])
         })
-
-        socket.on('saveGame', async units => {
-            // console.log("Saving units: ",units)
-            const saved = await saveGameState(units)
-            // console.log("Saved units: ",saved)
-        })
+        socket.on('updateGameState', () => {
+            const gameId = players[socket.id].game
+            const gameState = getGameState(gameId);
+            console.log(gameState)
+            io.to(socket.id).emit('gameState', gameState)
+        })    
     })
 
 
     io.on('disconnect', socket => {
         console.log('Connection ended: ', socket.io)
         delete players[socket.id]
+        const gameId = players[socket.id].game
+        games[gameId].game.stopGameLoop();
     })
 }
 
