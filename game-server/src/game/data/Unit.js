@@ -14,6 +14,7 @@ module.exports = class Unit extends GameEntity {
         this.damageDealer = new DamageDealer(dmg)
     }
     move(deltaTime){
+        if(this.getState() !== 'moving') console.log('moving');
         const tx = this.movable.getTargetX()
         const ty = this.movable.getTargetY()
         const dx = tx - super.getX()

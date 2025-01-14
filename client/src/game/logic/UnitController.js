@@ -84,7 +84,6 @@ class UnitController {
         if (!Array.isArray(data)) {
             throw new TypeError('Expected an array of unit data');
         }
-
         const existingUnitIds = new Set(this.#units.keys());
 
         data.forEach(unitData => {

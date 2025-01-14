@@ -13,13 +13,6 @@ module.exports = class GameLogic {
         this.commandCount = 0
     }
 
-    loadPlayers(players){
-        players.forEach(player => {
-            const createPlayer = new Player(player["userId"], player["color"])
-            this.#players.set(createPlayer.getId(), createPlayer)
-        });
-    }
-
     loadUnits(units){
         this.#unitController.loadUnits(units)
     }
@@ -67,7 +60,15 @@ module.exports = class GameLogic {
         const player = new Player(playerId, color);
         this.#players.set(playerId, player)
     }
-
+    getPlayers(){
+        return [...this.#players.values()].flatMap(player => ({
+            playerId: player.getId(),
+            color: player.getColor()
+        }))
+    }
+    removePlayerById(playerId){
+        this.#players.delete(playerId)
+    }
     getPlayerById(playerId){
         return this.#players.get(playerId);
     }

@@ -8,6 +8,8 @@ class MouseEventHandler {
     #selectionBox;
     #units
     #assets
+    #cursorTracker
+    #enemyUnits
 
     /**
      *
@@ -29,7 +31,7 @@ class MouseEventHandler {
         this.#canvas.height = window.innerHeight;
         this.#canvas.style.zIndex = '4';
         this.setCursor('default');
-        this.hoveredEnemies = [];
+        this.hoveredEnemy = null;
         this.selectionActive = false;
     }
 
@@ -39,18 +41,27 @@ class MouseEventHandler {
      * @param { function } mouseControl
      */
     drawSelection(units, mouseControl, enemyUnits) {
+        const treshHold = 48;
+        let ox,oy
         this.#units = units;
+        this.#enemyUnits = enemyUnits;
         const ctx = this.#canvas.getContext('2d');
         let isSelecting = false;
         let startX = 0;
         let startY = 0;
+        function debounce(func, delay) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func(...args), delay);
+            };
+        }
 
         this.#canvas.addEventListener('mousedown', e => {
             if (e.button === 2) return;
             const rect = this.#canvas.getBoundingClientRect();
             startX = e.clientX - rect.left;
             startY = e.clientY - rect.top;
-
             isSelecting = true;
         });
         this.#canvas.addEventListener('mousemove', e => {
@@ -71,12 +82,12 @@ class MouseEventHandler {
                 ctx.strokeRect(startX, startY, width, height);
                 return;
             }
-            if(this.selectionActive){
-                this.handleHover(screenX,screenY);
+            if(this.selectionActive && this.hoveredEnemy === null){
+                this.#cursorTracker = {x:e.clientX-rect.left,y:e.clientX-rect.top}
+                console.log(this.#cursorTracker);
+                this.handleHover(this.#cursorTracker.x,this.#cursorTracker.y);
+                
             }
-
-
-
         });
 
         this.#canvas.addEventListener('mouseup', e => {
@@ -113,25 +124,25 @@ class MouseEventHandler {
         })
 
         // Handle hover detection
-        const hovering = enemyUnits.filter(unit => {
-            const x = unit.getX();
-            const y = unit.getY();
-            return (
-                worldX - 0.8 < x && worldX + 0.8 > x &&
-                worldY - 1.0 < y && worldY + 1.0 > y
-            );
-        });
-
-        if (hovering.length >= 1 && this.#units.find(u => u.isSelected())) {
-            this.hoveredEnemies = hovering;
+        const hovering = this.#enemyUnits.find(eunit => {
+            const { px, py } = VectorTransformer.positionToCanvas({ 
+                screenX, screenY,
+                cameraX, cameraY
+            })
+            const x = eunit.getX();
+            const y = eunit.getY();
+            console.log(x,y, px,py)
+        })
+        if (hovering) {
+            this.hoveredEnemy = hovering;
             this.setCursor('attack');
         } else {
-            this.hoveredEnemies = [];
+            this.hoveredEnemy = null;
             this.setCursor('default');
-        } 
+        }
     }
     commandUnit(clientX, clientY){
-        if(this.hoveredEnemies.length > 0){
+        if(this.hoveredEnemy != null){
             const target = this.getTargetPosition(this.#units, clientX, clientY)
             mouseControl(target);
         }

@@ -12,19 +12,13 @@ const loadGameState = async gameId => {
     const mapData = await MapService.getMapById(gameData.mapId)
     console.log('Current games:\n',games, '\n')
     if(games[gameId] = 'undefined'){
-        //console.log(gameData)
         const game = new Game(gameId);
-        const id = game.getId();
-        console.log("Game created: ", id);
         game.loadGame(mapData.tiles, units)
-        const state = game.getGameState()
-        //console.log('Gamestate after load: ',state)
         games[gameId] = {
             gameData,
             game
         }
     } 
-    return games[gameId]
 }
 
 const saveGameState = async unitsList => {
@@ -73,7 +67,7 @@ const websocketController = (io) => {
 
             const gameData = getGameState(gameId)
             socket.join(gameId)
-            io.to(gameId).emit('gameState', gameData)
+            io.emit('gameState', gameData)
             if(!games[gameId].game.isRunning()){
                 console.log('line before start loop')
                 games[gameId].game.startGameLoop()
@@ -97,7 +91,7 @@ const websocketController = (io) => {
         console.log('Connection ended: ', socket.io)
         delete players[socket.id]
         const gameId = players[socket.id].game
-        games[gameId].game.stopGameLoop();
+        //games[gameId].game.stopGameLoop();
     })
 }
 

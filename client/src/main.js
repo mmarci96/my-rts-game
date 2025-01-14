@@ -32,6 +32,7 @@ const socketHandler = (socket, game, userId, gameId) => {
         if(pendingCommands.length >= 1){
             socket.emit('pendingCommands', pendingCommands)
             pendingCommands = []
+            console.log('Commands added to stack')
         }
     }, 60);
 }

@@ -58,4 +58,13 @@ module.exports = class Game {
     isRunning(){
         return this.running;
     }
+    connectPlayer(playerId, color){
+        this.#gameLogic.addPlayer(playerId, color)
+    }
+    getConnectedPlayers(){
+        return this.#gameLogic.getPlayers()
+    }
+    disconnectPlayer(playerId){
+        this.#gameLogic.removePlayerById(playerId)
+    }
 }
