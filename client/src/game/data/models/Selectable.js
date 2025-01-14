@@ -1,29 +1,69 @@
 class Selectable {
-	#isSelected;
-	#id
-	#color
+    #isSelected;
+    #id
+    #color
 
-	constructor(id, color) {
-		this.#id = id;
-		this.#isSelected = false;
-		this.#color = color;
-	}
+    /**
+    * @param { string } id
+    * @param { string } color 
+    */
+    constructor(id, color) {
+        this.#id = id;
+        this.#isSelected = false;
+        this.#color = color;
+    }
 
-	select(selected) {
-		this.#isSelected = selected;
-	}
+    /**
+    * Draws a green circle around the unit for the selected ones only hopefully
+    * @param {CanvasRenderingContext2D } ctx
+    * @param { number } x
+    * @param { number } y
+    */
+    drawSelector(ctx, x, y) {
+        ctx.save();
+        ctx.beginPath();
+        if(this.isSelected()){
+            ctx.arc(
+                x,
+                y,
+                128 / 4,
+                0,
+                Math.PI * 2 // Full circle
+            );
+            ctx.fillStyle = 'rgba(255, 255, 0, 0.5)';
+            ctx.fill();
+            ctx.closePath();
+            ctx.restore();
+        }
+    }
 
-	isSelected() {
-		return this.#isSelected;
-	}
+    /**
+    * @param { boolean } selected 
+    */
+    select(selected) {
+        this.#isSelected = selected;
+    }
 
-	getId() {
-		return this.#id;
-	}
+    /**
+    * @returns { boolean }
+    */
+    isSelected() {
+        return this.#isSelected;
+    }
 
-	getColor() {
-		return this.#color;
-	}
+    /**
+    * @returns { string }
+    */
+    getId() {
+        return this.#id;
+    }
+
+    /**
+    * @returns { string }
+    */
+    getColor() {
+        return this.#color;
+    }
 }
 
 export default Selectable;

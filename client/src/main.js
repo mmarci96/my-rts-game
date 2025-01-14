@@ -31,17 +31,17 @@ const socketHandler = (socket, game, userId, gameId) => {
     let count = 0
     setInterval(() => {
         if(pendingCommands.length >= 1){
-            console.log(pendingCommands)
             socket.emit('moveUnit', pendingCommands)
             pendingCommands = []
         }
-        count++
+        count++;
         if(count > saveRate){
             const currentState = game.getCurrentState();
-            socket.emit('saveGame', currentState)
-            count = 0
+            console.log(currentState);
+            // socket.emit('saveGame', currentState)
+            count = 0;
         }
-    }, 60)
+    }, 60);
 }
    
 const loadEvent = async () => {

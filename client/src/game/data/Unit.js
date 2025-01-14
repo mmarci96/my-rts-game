@@ -4,22 +4,22 @@ import Movable from "./models/Movable.js";
 import AnimatedSprite from "./models/AnimatedSprite.js";
 import Camera from "../ui/Camera.js";
 import EntityStatus from "./models/EntityStatus.js";
-
+import Attacker from "./models/Attacker.js";
 class Unit extends GameEntity {
     #health
     #movable
 
     /**
-   * This unit will represent anything that's controllable by player and goes in
-   * combat and moves around, pretty straightforward classes c:
-   * @param { number } x
-   * @param { number } y
-   * @param { Image } spriteSheet
-   * @param { string } id
-   * @param { string } state
-   * @param { number } health
-   * @param { string } color
-   */
+    * This unit will represent anything that's controllable by player and goes in
+    * combat and moves around, pretty straightforward classes c:
+    * @param { number } x
+    * @param { number } y
+    * @param { Image } spriteSheet
+    * @param { string } id
+    * @param { string } state
+    * @param { number } health
+    * @param { string } color
+    */
     constructor(x, y, spriteSheet, id, state, health, color, speed) {
         super(x, y);
         this.selectable = new Selectable(id, color);
@@ -28,14 +28,15 @@ class Unit extends GameEntity {
         this.state = new EntityStatus(state)
         this.animatedSprite = new AnimatedSprite(spriteSheet);
         this.#health = health;
+        this.attacker = new Attacker(1)
     }
 
     /**
-   * @param { any } context
-   * @param { number } x
-   * @param { number } y
-   * @param { Camera } camera
-   */
+    * @param { CanvasRenderingContext2D } context
+    * @param { number } x
+    * @param { number } y
+    * @param { Camera } camera
+    */
     draw(context, x, y, camera) {
         if (!(camera instanceof Camera)) {
             throw new TypeError("Camera must be a Camera.");
@@ -52,17 +53,25 @@ class Unit extends GameEntity {
             this.setState('idle')
         }
         this.animatedSprite.setAnimationType(this.getState())
-        this.animatedSprite.draw(context, x, y, camera, this.isSelected());
+        this.animatedSprite.draw(context, x, y, camera, this.selectable);
         this.animatedSprite.updateAnimation();
+    }
+
+    attackUnit(unitId){
+        this.attacker.setTargetId(unitId)
+    }
+    setBonusDmg(bonus){
+        this.attacker.setAttackDmg(bonus);
     }
 
     getHealth(){
         return this.#health
     }
+
     /**
-   *
-   * @returns { string } state
-   */
+    *
+    * @returns { string } state
+    */
     getState() {
         return this.state.getState()
     }
@@ -90,16 +99,12 @@ class Unit extends GameEntity {
     getId() {
         return this.selectable.getId();
     }
-    // Need attacks implemented
-    // getHealth() {
-    // 	return this.#health
-    // }
 
     /**
-   *
-   * @param { number } x
-   * @param { number } y
-   */
+    * This is the method that makes units move, maybe I need to remove it
+    * @param { number } x
+    * @param { number } y
+    */
     setTarget(x, y) {
         this.#movable.setTarget(x, y);
         this.setState('moving')
@@ -110,9 +115,9 @@ class Unit extends GameEntity {
 
 
     /**
-   * For checking ownership in the future and to find the right colored sprite
-   * @returns { string }
-   */
+    * For checking ownership in the future and to find the right colored sprite
+    * @returns { string }
+    */
     getColor() {
         return this.selectable.getColor();
     }

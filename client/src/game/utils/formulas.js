@@ -12,16 +12,16 @@ const offsetY = GameMap.HEIGHT * 0.5
  * @returns {{px: number, py: number}}
  */
 export const calculateScreenPos = (camera, posX, posY) => {
-	const cameraX = camera.getX() ;
-	const cameraY = camera.getY() ;
+    const cameraX = camera.getX() ;
+    const cameraY = camera.getY() ;
 
-	const px = ((posX - cameraX) - (posY - cameraY)) * (tileWidth * 0.5) + offsetX;
-	const py = ((posX - cameraX) + (posY - cameraY)) * (tileHeight * 0.5) + offsetY;
+    const px = ((posX - cameraX) - (posY - cameraY)) * (tileWidth * 0.5) + offsetX;
+    const py = ((posX - cameraX) + (posY - cameraY)) * (tileHeight * 0.5) + offsetY;
 
-	return {
-		px,
-		py,
-	};
+    return {
+        px,
+        py,
+    };
 };
 
 /**
@@ -32,16 +32,16 @@ export const calculateScreenPos = (camera, posX, posY) => {
  * @returns {{ worldX: number, worldY: number }} The world coordinates.
  */
 export const screenToWorld = (screenX, screenY, camera) => {
-	const cameraX = camera.getX();
-	const cameraY = camera.getY();
+    const cameraX = camera.getX();
+    const cameraY = camera.getY();
 
-	const adjustedX = screenX - offsetX;
-	const adjustedY = screenY - offsetY;
+    const adjustedX = screenX - offsetX;
+    const adjustedY = screenY - offsetY;
 
-	const worldX = (adjustedX / (tileWidth / 2) + adjustedY / (tileHeight / 2)) / 2 + cameraX;
-	const worldY = (adjustedY / (tileHeight / 2) - adjustedX / (tileWidth / 2)) / 2 + cameraY;
+    const worldX = (adjustedX / (tileWidth / 2) + adjustedY / (tileHeight / 2)) / 2 + cameraX;
+    const worldY = (adjustedY / (tileHeight / 2) - adjustedX / (tileWidth / 2)) / 2 + cameraY;
 
-	return {worldX:worldX, worldY};
+    return {worldX, worldY};
 }
 
 

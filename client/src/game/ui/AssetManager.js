@@ -40,6 +40,10 @@ class AssetManager {
     async loadAssets() {
         try {
             await Promise.all([
+                // Cursors
+                this.loadImage('default_cursor', '/assets/cursor_pack/36x36px/cursor_default.png'),
+                this.loadImage('attack_cursor', '/assets/cursor_pack/36x36px/cursor_attack_enemy.png'),
+
                 // Warriors
                 this.loadImage('warrior_blue', '/assets/Warrior/Blue/Warrior_Blue.png'),
                 this.loadImage('warrior_purple', '/assets/Warrior/Purple/Warrior_Purple.png'),
@@ -54,7 +58,7 @@ class AssetManager {
 
                 // Archers + Bow
                 this.loadImage('archer_blue', '/assets/Archer/Blue/Archer_Blue.png'),
-                this.loadImage('archer_purple', '/assets/Archer/Purple/Archer_Purlple.png'),
+                // this.loadImage('archer_purple', '/assets/Archer/Purple/Archer_Purple.png'),
                 this.loadImage('archer_red', '/assets/Archer/Red/Archer_Red.png'),
                 this.loadImage('archer_yellow', '/assets/Archer/Yellow/Archer_Yellow.png'),
                 this.loadImage('archer_bow_blue', '/assets/Archer/Archer%20+%20Bow/Archer_Bow_Blue.png'),
@@ -67,6 +71,14 @@ class AssetManager {
 
                 // Dead
                 this.loadImage('dead', '/assets/Dead/Dead.png'),
+                
+                // House
+                this.loadImage('house_red', '/assets/House/House_Red.png'),
+                this.loadImage('house_blue', '/assets/House/House_Blue.png'),
+                this.loadImage('house_purpe', '/assets/House/House_Purple.png'),
+                this.loadImage('house_yellow', '/assets/House/House_Yellow.png'),
+                this.loadImage('house_construction', '/assets/House/House_Construction.png'),
+                this.loadImage('house_destroyed', '/assets/House/House_Destroyed.png'),
 
                 // Tileset
                 this.loadImage('directional_sign', '/assets/TileSet/Tiles/directional_sign.png'),
