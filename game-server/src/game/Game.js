@@ -30,21 +30,20 @@ module.exports = class Game {
     }
 
     startGameLoop() {
+        let uptime = 0
         this.running = true;
         console.log("Starting game loop...")
+        let lastTime = Date.now();
+        const interval = 1000;
 
-        const interval = 1000; // 1-second interval for the game loop
         this.gameLoopInterval = setInterval(() => {
-            const gameState = this.getGameState();
-            //console.log("Game State:", gameState);
-            this.#gameLogic.updateUnits();
+            const now = Date.now()
+            const deltaTime = (now - lastTime) / 1000
+            lastTime = now;
+            uptime += deltaTime;
+            console.log('uptime: ', uptime)
 
-            // Optional: Logic to break the loop, such as checking a game over condition
-            // Example:
-            // if (this.#gameLogic.isGameOver()) {
-            //     console.log("Game Over");
-            //     clearInterval(this.gameLoopInterval);
-            // }
+            this.#gameLogic.updateUnits(deltaTime);
         }, interval);
     }
 

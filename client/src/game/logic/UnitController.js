@@ -57,18 +57,19 @@ class UnitController {
     * Merges together logic to animate the sprites state and movement
     * @param { Camera } camera 
     */
+    
     animationLoop(camera) {
+        let uptime = 0;
         const canvas = this.#unitCanvas;
         const context = canvas.getContext('2d');
 
-        const updateTimer = 15;
-        let frame = 0;
+        let lastTime = performance.now(); // Initial timestamp
 
         const animate = () => {
-            if (frame > updateTimer) {
-                frame = 0;
-            }
-            frame++;
+            const now = performance.now();
+            const deltaTime = (now - lastTime); // Time in seconds
+            lastTime = now;
+            uptime += deltaTime
 
             context.clearRect(0, 0, canvas.width, canvas.height);
             [...this.#units.values()].forEach(unit => {
@@ -76,12 +77,16 @@ class UnitController {
                     throw new Error('Unknown unit: ' + unit);
                 }
 
+                if(Math.floor(uptime) % 1 === 0)console.log(uptime);
+                //unit.update(deltaTime); // Optional: handle unit animations
                 unit.draw(context, unit.getX(), unit.getY(), camera);
             });
+
             requestAnimationFrame(animate);
         };
         animate();
     }
+
 
     /**
     * They are still just js obj data with key / value pairs here

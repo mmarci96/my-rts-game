@@ -6,15 +6,15 @@ module.exports = class UnitController {
         this.#units = new Map();
     }
 
-    refreshUnits(){
+    refreshUnits(deltaTime){
         [...this.#units.values()].forEach(unit => {
             let state = unit.getState();
             switch (state) {
                 case 'moving':
-                    unit.move();
+                    unit.move(deltaTime);
                     break;
                 case 'attack':
-                    this.handleAttack(unit);
+                    this.handleAttack(unit, deltaTime);
                     break;
                 default:
                     break;

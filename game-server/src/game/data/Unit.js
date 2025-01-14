@@ -13,27 +13,26 @@ module.exports = class Unit extends GameEntity {
         if(!dmg) dmg = Unit.#unitBaseAttack;
         this.damageDealer = new DamageDealer(dmg)
     }
-    move(){
+    move(deltaTime){
         const tx = this.movable.getTargetX()
         const ty = this.movable.getTargetY()
         const dx = tx - super.getX()
         const dy = ty - super.getY()
         const distance = Math.sqrt(dx * dx + dy * dy);
-        const speed = this.movable.getSpeed()/32;
+        const speed = this.movable.getSpeed();
+        const stepDistance = speed*deltaTime;
         console.log('distance', distance)
-        if(distance <= 0.4){
+        if(distance <= stepDistance){
             super.setX(tx);
             super.setY(ty);
             super.setState('idle');
             this.movable.resetTarget();
-        }else if(distance < speed){
-
-        } else {
+        }else {
             const nx = dx / distance; // Normalized x direction
             const ny = dy / distance; // Normalized y direction
 
-            const newX = super.getX() + nx * speed;
-            const newY = super.getY() + ny * speed;
+            const newX = super.getX() + nx * stepDistance;
+            const newY = super.getY() + ny * stepDistance;
             super.setX(newX);
             super.setY(newY);
         }

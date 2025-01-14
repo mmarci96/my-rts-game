@@ -26,8 +26,8 @@ module.exports = class GameLogic {
     getUnits(){
         return this.#unitController.getUnits();
     }
-    updateUnits(){
-        this.#unitController.refreshUnits();
+    updateUnits(deltaTime){
+        this.#unitController.refreshUnits(deltaTime);
     }
     
     handleCommand(command){
