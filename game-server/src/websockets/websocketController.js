@@ -74,16 +74,11 @@ const websocketController = (io) => {
             
         })
 
-        socket.on('moveUnit', commands => {
+        socket.on('pendingCommands', commands => {
             const gameId = players[socket.id].game
+            console.log("GAME ID: ", gameId);
             commands.forEach(command => {
                 games[gameId].game.handlePlayerCommand(command)
-            });
-        });
-        socket.on('attackUnit', commands => {
-            const gameId = players[socket.id].game;
-            commands.forEach(command => {
-               games[gameId].game.handlePlayerCommand(command) 
             });
         });
         socket.on('updateGameState', () => {

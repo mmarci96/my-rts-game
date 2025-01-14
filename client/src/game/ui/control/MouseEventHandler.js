@@ -29,7 +29,7 @@ class MouseEventHandler {
         this.#canvas.height = window.innerHeight;
         this.#canvas.style.zIndex = '4';
         this.setCursor('default');
-        this.hoveredEnemies = [] 
+        this.hoveredEnemies = [];
     }
 
     /**
@@ -82,10 +82,36 @@ class MouseEventHandler {
         this.#canvas.addEventListener('mousedown', e => {
             if (e.button === 2) {
                 const target = this.getTargetPosition(this.#units, e.clientX, e.clientY);
-                
+
+
                 mouseControl(target)
             }
         });
+    }
+    commandUnit(clientX, clientY){
+        if(this.hoveredEnemies.length > 0){
+            const target = this.getTargetPosition(this.#units, clientX, clientY)
+            mouseControl(target);
+        }
+    }
+    createAttackCommand(targetUnit, unitId){
+        const action = 'attack';
+        return {
+            unitId: unitId,
+            action: action,
+            targetX: targetUnit.getX(),
+            targetY: targetUnit.getY(),
+            targetId: targetUnit.getId()
+        }
+    }
+    createMoveUnitCommand(targetX, targetY, unitId){
+        const action = 'moving';
+        return {
+            unitId: unitId,
+            action: action,
+            targetX: targetX,
+            targetY: targetY,
+        }
     }
 
     getEnemyUnitOnHover(enemyUnits){
@@ -100,8 +126,8 @@ class MouseEventHandler {
                 const x = unit.getX()
                 const y = unit.getY()
                 if(
-                    worldX - 0.4 < x && worldX + 0.4 > x &&
-                    worldY - 0.6 < y && worldY + 0.6 > y
+                    worldX - 0.8 < x && worldX + 0.8 > x &&
+                    worldY - 1.0 < y && worldY + 1.0 > y
                 ){
                     return unit
                 }
@@ -111,11 +137,9 @@ class MouseEventHandler {
                 this.setCursor('attack')
             } else{
                 this.hoveredEnemies.filter((unit) => unit.getId() === null);
-                setTimeout(() => {
-                    this.setCursor('default')
-                }, 100)
+                this.setCursor('default');
             }
-            
+
         })
 
     }
@@ -146,24 +170,18 @@ class MouseEventHandler {
             const targetX = worldX + col;
             const targetY = worldY + row;
             if(unit.isSelected()){
-                let action = 'moving'
                 if(this.hoveredEnemies.length >= 1){
-                    const enemId = this.hoveredEnemies[0].getId()
-                    unit.attackUnit(enemId)
+                    const targetEnemy = this.hoveredEnemies[0]
+                    const attackCommand = this.createAttackCommand(targetEnemy,unit.getId())
+                    commands.push(attackCommand)
+                } else {
+                    const moveCommand = this.createMoveUnitCommand(targetX, targetY, unit.getId())
+                    commands.push(moveCommand)
                 }
-
-                commands.push({
-                    unitId: unit.getId(),
-                    action: action,
-                    targetX: targetX,
-                    targetY: targetY,
-                })
             }
         })
-
         return commands
     }
-
 
     /**
      *

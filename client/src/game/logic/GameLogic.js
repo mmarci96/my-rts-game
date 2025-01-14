@@ -32,11 +32,11 @@ class GameLogic {
         this.#player = player
         this.#units = units
         this.#mapData = map;
-        this.#camera = new Camera(14, 14, 14, 14);
+        this.#camera = new Camera(16, 16, 14, 14);
 
         if(player.getColor() === 'blue'){
             const camOffSet = Math.sqrt(map.length*map.length)
-            this.#camera.moveCamera(camOffSet-28, camOffSet-28)
+            this.#camera.moveCamera(camOffSet-24, camOffSet-24)
         }
         this.#assets = assets;
         this.#gameMap = new GameMap(

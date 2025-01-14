@@ -31,7 +31,7 @@ const socketHandler = (socket, game, userId, gameId) => {
     let count = 0
     setInterval(() => {
         if(pendingCommands.length >= 1){
-            socket.emit('moveUnit', pendingCommands)
+            socket.emit('pendingCommands', pendingCommands)
             pendingCommands = []
         }
         count++;
