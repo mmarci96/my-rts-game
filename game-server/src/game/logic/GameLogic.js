@@ -1,6 +1,7 @@
 const GameMap = require("./GameMap")
 const Player = require("../data/Player")
 const UnitController = require("./UnitController")
+const Unit = require("../data/Unit")
 
 module.exports = class GameLogic {
     #gameMap
@@ -29,12 +30,27 @@ module.exports = class GameLogic {
     }
     
     handleCommand(command){
-        console.log(command)
-        console.log(this.#unitController.getUnits())
-        const unit = this.#unitController.getUnitById(command.unitId)
-        console.log(unit)
-        unit.movable.setTarget(command.targetX, command.targetY)
-        unit.setState(command.action)
+        console.log(command);
+        const { action, unitId } = command;
+        const unit = this.#unitController.getUnitById(unitId)
+        if(!(unit instanceof Unit)) throw new TypeError('Invalid unit');
+        if(!unit) {
+            console.log('unit not found, command cannot resolve');
+            return;
+        }
+        switch (action) {
+            case 'moving':
+                unit.movable.setTarget(command.targetX, command.targetY)
+                break;
+            case 'attack':
+                const targetId = command;
+                unit.damageDealer.setTargetId(targetId);
+                break;
+            default:
+                break;
+        }
+        unit.setState(action);
+
     }
 
     loadMap(map){

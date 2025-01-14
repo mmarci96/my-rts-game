@@ -6,6 +6,7 @@ module.exports = class Game {
     constructor(gameId){
         this.#gameId = gameId;
         this.#gameLogic = new GameLogic();
+        this.running = false;
     }
 
     getId(){
@@ -24,17 +25,18 @@ module.exports = class Game {
         }
     }
 
-    handleMoveCommand(command){
+    handlePlayerCommand(command){
         this.#gameLogic.handleCommand(command);
     }
 
     startGameLoop() {
-        console.log("Starting game loop...");
+        this.running = true;
+        console.log("Starting game loop...")
 
         const interval = 1000; // 1-second interval for the game loop
         this.gameLoopInterval = setInterval(() => {
             const gameState = this.getGameState();
-            console.log("Game State:", gameState);
+            //console.log("Game State:", gameState);
             this.#gameLogic.updateUnits();
 
             // Optional: Logic to break the loop, such as checking a game over condition
@@ -48,15 +50,13 @@ module.exports = class Game {
 
     stopGameLoop() {
         if (this.gameLoopInterval) {
+            this.running = false;
             clearInterval(this.gameLoopInterval);
             console.log("Game loop stopped.");
         }
     }
 
     isRunning(){
-        if(this.gameLoopInterval){
-            return true
-        }
-        return false
+        return this.running;
     }
 }

@@ -8,10 +8,54 @@ module.exports = class UnitController {
 
     refreshUnits(){
         this.#units.forEach(unit => {
-            if(unit.getState() === 'moving'){
-                
+            let state = unit.getState();
+            switch (state) {
+                case 'moving':
+                    this.handleMoving(unit);
+                    break;
+                case 'attack':
+                    this.handleAttack(unit);
+                default:
+                    break;
             }
         })
+    }
+        //TODO create a field in client on click to add targetid
+    handleAttack(unit){
+        if(!(unit instanceof Unit))throw new TypeError('Unit type bad!');
+        const targetId = unit.damageDealer.getTargetId();
+        const targetUnit = this.getUnitById(targetId);
+        if(targetUnit.getHealth() <= 0){
+            unit.setState('idle');
+            this.#units.delete(targetId);
+        }
+
+        const dx = targetUnit.getX() - unit.getX();
+        const dy = targetUnit.getY() - unit.getY();
+        const distance = Math.sqrt(dx*dx + dy*dy);
+        if(distance <= 1.6){
+            const attackDirection = calculateAttackAngle(dx,dy);
+            unit.setState(attackDirection);
+            unit.attackUnit(targetUnit);
+        } else {
+            unit.movable.setTarget(targetUnit.getX(),targetUnit.getY());
+        }
+    }
+    calculateAttackAngle(dx,dy){
+        const angle = Math.atan2(dy, dx); // Angle between -π and π
+        let attackDirection = '';
+
+        // Determine direction based on angle
+        if (angle >= -Math.PI / 4 && angle <= Math.PI / 4) {
+            attackDirection = 'attackRight'; // Facing right
+        } else if (angle > Math.PI / 4 && angle <= (3 * Math.PI) / 4) {
+            attackDirection = 'attackDown'; // Facing down
+        } else if (angle > (3 * Math.PI) / 4 || angle <= -(3 * Math.PI) / 4) {
+            attackDirection = 'attackLeft'; // Facing left
+        } else if (angle > -(3 * Math.PI) / 4 && angle <= -Math.PI / 4) {
+            attackDirection = 'attackUp'; // Facing up
+        }
+        return attackDirection;
     }
 
     loadUnits(units){
@@ -29,7 +73,7 @@ module.exports = class UnitController {
             this.#units.set(
                 creteUnit.getId().toString(), creteUnit
             )
-});
+        });
     }
 
     getUnitById(unitId){
@@ -52,6 +96,7 @@ module.exports = class UnitController {
     }
 
     handleMoving(unit){
+        if(!(unit instanceof Unit))throw new TypeError('Invalid unit!')
         const x = unit.getX()
         const y = unit.getY()
         const speed = unit.getSpeed()
@@ -61,7 +106,10 @@ module.exports = class UnitController {
         const dy = targetY - y;
         const distance = Math.sqrt(dx**dx + dy**dy)
         if(distance <= speed){
-
+            unit.setX(targetX);
+            unit.setY(targetY);
+            unit.movable.setTarget(null,null);
+            unit.setState('idle');
         }
     }
     updateUnitPositions(){
