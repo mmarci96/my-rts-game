@@ -75,10 +75,9 @@ class GameLogic {
     setupControl(){
         const playerColor = this.#player.getColor()
         const playerUnits = this.#unitController.getUnitsByColor(playerColor)    
-        this.#mouseHandler.drawSelection(playerUnits, this.#commandHandler )
-
         const enemyUnits = this.#unitController.getEnemyUnits(playerColor)
-        this.#mouseHandler.getEnemyUnitOnHover(enemyUnits)
+    
+        this.#mouseHandler.drawSelection(playerUnits, this.#commandHandler, enemyUnits)
     }
     getUnitData(){
         const units = this.#unitController.getAllUnits()

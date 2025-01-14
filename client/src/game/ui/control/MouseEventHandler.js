@@ -37,7 +37,7 @@ class MouseEventHandler {
      * @param { Array<Unit> } units
      * @param { function } mouseControl
      */
-    drawSelection(units, mouseControl) {
+    drawSelection(units, mouseControl, enemyUnits) {
         this.#units = units;
         const ctx = this.#canvas.getContext('2d');
         let isSelecting = false;
@@ -53,10 +53,16 @@ class MouseEventHandler {
             isSelecting = true;
         });
         this.#canvas.addEventListener('mousemove', e => {
+            const rect = this.#canvas.getBoundingClientRect();
+            const screenX = e.clientX - rect.left;
+            const screenY = e.clientY - rect.top;
+
+            const { worldX, worldY } = screenToWorld(screenX, screenY, this.#camera);
+
+            // Handle selection drawing if currently selecting
             if (isSelecting) {
-                const rect = this.#canvas.getBoundingClientRect();
-                const currentX = e.clientX - rect.left;
-                const currentY = e.clientY - rect.top;
+                const currentX = screenX;
+                const currentY = screenY;
 
                 ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
 
@@ -66,7 +72,26 @@ class MouseEventHandler {
                 ctx.lineWidth = 1;
                 ctx.strokeRect(startX, startY, width, height);
             }
+
+            // Handle hover detection
+            const hovering = enemyUnits.filter(unit => {
+                const x = unit.getX();
+                const y = unit.getY();
+                return (
+                    worldX - 0.8 < x && worldX + 0.8 > x &&
+                    worldY - 1.0 < y && worldY + 1.0 > y
+                );
+            });
+
+            if (hovering.length >= 1 && this.#units.find(u => u.isSelected())) {
+                this.hoveredEnemies = hovering;
+                this.setCursor('attack');
+            } else {
+                this.hoveredEnemies = [];
+                this.setCursor('default');
+            }        
         });
+        
         this.#canvas.addEventListener('mouseup', e => {
             if (e.button === 2) return;
             const rect = this.#canvas.getBoundingClientRect();
@@ -82,8 +107,6 @@ class MouseEventHandler {
         this.#canvas.addEventListener('mousedown', e => {
             if (e.button === 2) {
                 const target = this.getTargetPosition(this.#units, e.clientX, e.clientY);
-
-
                 mouseControl(target)
             }
         });
@@ -114,42 +137,12 @@ class MouseEventHandler {
         }
     }
 
-    getEnemyUnitOnHover(enemyUnits){
-        this.#canvas.addEventListener('mousemove', e => {
-            const rect = this.#canvas.getBoundingClientRect();
-            const screenX = e.clientX - rect.left;
-            const screenY = e.clientY - rect.top;
-            const { worldX, worldY } = screenToWorld(screenX, screenY, this.#camera);
-            //console.log(worldY, worldX)
-
-            const hovering = enemyUnits.filter(unit => {
-                const x = unit.getX()
-                const y = unit.getY()
-                if(
-                    worldX - 0.8 < x && worldX + 0.8 > x &&
-                    worldY - 1.0 < y && worldY + 1.0 > y
-                ){
-                    return unit
-                }
-            })
-            if(hovering.length >= 1 && this.#units.find(u=> u.isSelected())){
-                this.hoveredEnemies.push(...hovering)
-                this.setCursor('attack')
-            } else{
-                this.hoveredEnemies.filter((unit) => unit.getId() === null);
-                this.setCursor('default');
-            }
-
-        })
-
-    }
-
     /**
-     * @param { Array<Unit> } units
-     * @param { number } clientX
-     * @param { number } clientY
-     * @returns { {} }
-     */
+    * @param { Array<Unit> } units
+    * @param { number } clientX
+    * @param { number } clientY
+    * @returns { {} }
+    */
     getTargetPosition(units, clientX, clientY) {
         const rect = this.#canvas.getBoundingClientRect();
         const screenX = clientX - rect.left;

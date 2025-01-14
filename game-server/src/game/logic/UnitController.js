@@ -20,11 +20,13 @@ module.exports = class UnitController {
             }
         })
     }
-        //TODO create a field in client on click to add targetid
+
     handleAttack(unit){
         if(!(unit instanceof Unit))throw new TypeError('Unit type bad!');
         const targetId = unit.damageDealer.getTargetId();
         const targetUnit = this.getUnitById(targetId);
+        console.log('Target id: ', targetId);
+        console.log('Targeting unit: ',targetUnit);
         if(targetUnit.getHealth() <= 0){
             unit.setState('idle');
             this.#units.delete(targetId);
@@ -38,7 +40,7 @@ module.exports = class UnitController {
             unit.setState(attackDirection);
             unit.attackUnit(targetUnit);
         } else {
-            unit.movable.setTarget(targetUnit.getX(),targetUnit.getY());
+            this.handleMoving(unit)    
         }
     }
     calculateAttackAngle(dx,dy){

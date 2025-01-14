@@ -106,7 +106,6 @@ class UnitController {
     */
     loadUnit({...props}) {
         const {type, id, health, x, y, state, color, targetX, targetY, speed} = props;
-        console.log('loading: ',props)
         if (!type || !id || !x || !y || !health) {
             throw new Error(`Missing data: name${type}, health: ${health}, position: x:${x},y:${y} id=${id}`);
         }

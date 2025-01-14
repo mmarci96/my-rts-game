@@ -43,11 +43,10 @@ module.exports = class GameLogic {
                 unit.movable.setTarget(command.targetX, command.targetY)
                 break;
             case 'attack':
-                const targetId = command;
+                const { targetId } = command;
                 unit.damageDealer.setTargetId(targetId);
-                break;
-            default:
-                break;
+                unit.setState(action)
+                break;   
         }
         unit.setState(action);
 
