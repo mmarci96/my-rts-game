@@ -17,26 +17,24 @@ class GameLogic {
     #assets;
     #commandHandler
     #unitController;
-    #units
     #player
     isInitialized = false;
 
     /**
     * @param { string [] } map 
     */ 
-    constructor(map, assets, units, player, commandHandler) {
+    constructor(map, assets, player, commandHandler) {
         if(!(player instanceof Player)){
             throw new TypeError('Invalid player')
         }
         this.#commandHandler = commandHandler
         this.#player = player
-        this.#units = units
         this.#mapData = map;
         this.#camera = new Camera(16, 16, 14, 14);
 
         if(player.getColor() === 'blue'){
             const camOffSet = Math.sqrt(map.length*map.length)
-            this.#camera.moveCamera(camOffSet-24, camOffSet-24)
+            this.#camera.moveCamera(camOffSet/2, camOffSet/2)
         }
         this.#assets = assets;
         this.#gameMap = new GameMap(
@@ -56,8 +54,6 @@ class GameLogic {
     }
     setupGame(){
         this.loadMap();
-        this.loadUnits();
-        this.setupControl();
     }
 
     loadMap() {
@@ -67,16 +63,10 @@ class GameLogic {
         this.#keyHandler.setupCameraControl(this.#gameMap);	
     }
 
-    loadUnits(){
-        this.#units.forEach(unit => {
-           this.#unitController.loadUnit({...unit}) 
-        });
-    }
     setupControl(){
         const playerColor = this.#player.getColor()
         const playerUnits = this.#unitController.getUnitsByColor(playerColor)    
         const enemyUnits = this.#unitController.getEnemyUnits(playerColor)
-    
         this.#mouseHandler.drawSelection(playerUnits, this.#commandHandler, enemyUnits)
     }
     getUnitData(){

@@ -7,14 +7,15 @@ module.exports = class UnitController {
     }
 
     refreshUnits(){
-        this.#units.forEach(unit => {
+        [...this.#units.values()].forEach(unit => {
             let state = unit.getState();
             switch (state) {
                 case 'moving':
-                    this.handleMoving(unit);
+                    unit.move();
                     break;
                 case 'attack':
                     this.handleAttack(unit);
+                    break;
                 default:
                     break;
             }
@@ -27,11 +28,10 @@ module.exports = class UnitController {
         const targetUnit = this.getUnitById(targetId);
         console.log('Target id: ', targetId);
         console.log('Targeting unit: ',targetUnit);
-        if(targetUnit.getHealth() <= 0){
+        if(targetUnit.damagable.getHealth() <= 0){
             unit.setState('idle');
             this.#units.delete(targetId);
         }
-
         const dx = targetUnit.getX() - unit.getX();
         const dy = targetUnit.getY() - unit.getY();
         const distance = Math.sqrt(dx*dx + dy*dy);
@@ -40,7 +40,7 @@ module.exports = class UnitController {
             unit.setState(attackDirection);
             unit.attackUnit(targetUnit);
         } else {
-            this.handleMoving(unit)    
+            console.log("target too far")    
         }
     }
     calculateAttackAngle(dx,dy){
@@ -97,28 +97,4 @@ module.exports = class UnitController {
         }));
     }
 
-    handleMoving(unit){
-        if(!(unit instanceof Unit))throw new TypeError('Invalid unit!')
-        const x = unit.getX()
-        const y = unit.getY()
-        const speed = unit.getSpeed()
-
-        const { targetX, targetY } = unit.getTarget();
-        const dx = targetX - x;
-        const dy = targetY - y;
-        const distance = Math.sqrt(dx**dx + dy**dy)
-        if(distance <= speed){
-            unit.setX(targetX);
-            unit.setY(targetY);
-            unit.movable.setTarget(null,null);
-            unit.setState('idle');
-        }
-    }
-    updateUnitPositions(){
-        [...this.#units.values()].forEach(unit => {
-           if(unit.getState() === 'moving'){
-                unit.move();
-            } 
-        })
-    }
 }

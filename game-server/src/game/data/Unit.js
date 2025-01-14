@@ -19,19 +19,25 @@ module.exports = class Unit extends GameEntity {
         const dx = tx - super.getX()
         const dy = ty - super.getY()
         const distance = Math.sqrt(dx * dx + dy * dy);
-        const speed = this.movable.getSpeed();
-        if(distance <= speed){
+        const speed = this.movable.getSpeed()/32;
+        console.log('distance', distance)
+        if(distance <= 0.4){
             super.setX(tx);
             super.setY(ty);
             super.setState('idle');
-        }
-        const nx = dx / distance; // Normalized x direction
-        const ny = dy / distance; // Normalized y direction
+            this.movable.resetTarget();
+        }else if(distance < speed){
 
-        const newX = super.getX() + nx * speed;
-        const newY = super.getY() + ny * speed;
-        super.setX(newX);
-        super.setY(newY);
+        } else {
+            const nx = dx / distance; // Normalized x direction
+            const ny = dy / distance; // Normalized y direction
+
+            const newX = super.getX() + nx * speed;
+            const newY = super.getY() + ny * speed;
+            super.setX(newX);
+            super.setY(newY);
+        }
+
     }
 
     attackUnit(targetUnit){
@@ -50,5 +56,8 @@ module.exports = class Unit extends GameEntity {
             x: super.getX(),
             y: super.getY(),
         }
+    }
+    getHealth(){
+        return this.damagable.getHealth();
     }
 }

@@ -42,14 +42,14 @@ class Movable {
         const dx = this.#targetX - this.x;
         const dy = this.#targetY - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
+        console.log('distance', distance)
 
         // Check if the target is reached
-        if (distance <= this.#speed) {
+        if (distance <= 0.4) {
             // Snap to target and stop moving
             this.x = this.#targetX;
             this.y = this.#targetY;
             this.#isMoving = false;
-            console.log('ARRRived');
             return { x: this.x, y: this.y };
         }
 

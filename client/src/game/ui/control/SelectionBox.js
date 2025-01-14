@@ -1,6 +1,7 @@
 import Camera from "../Camera.js";
 import Unit from "../../data/Unit.js";
-import {calculateScreenPos} from "../../utils/formulas.js";
+import GameMap from "../../logic/GameMap.js";
+import VectorTransformer from "../../utils/VectorTransformer.js";
 
 class SelectionBox {
     #startX
@@ -52,8 +53,13 @@ class SelectionBox {
             if (!(unit instanceof Unit)) {
                 throw new TypeError("Unit is not supported");
             }
-
-            const { px, py } = calculateScreenPos(camera, unit.x, unit.y);
+            
+            const { px, py } = VectorTransformer.positionToCanvas({
+                posX: unit.x,
+                posY: unit.y,
+                cameraX: camera.getX(),
+                cameraY: camera.getY()
+            });
             const unitRect = {
                 left: px,
                 top: py,
@@ -69,6 +75,7 @@ class SelectionBox {
             );
 
             unit.setSelected(isPartiallyInside);
+            return unit.isSelected()
         });
     }
 

@@ -23,23 +23,15 @@ const socketHandler = (socket, game, userId, gameId) => {
 
     socket.on('gameState', data => {
         if(data.units.length > 1){
+            //console.log(data)
             game.refreshUnitData(data.units)
         }
     })
 
-    const saveRate = 200
-    let count = 0
     setInterval(() => {
         if(pendingCommands.length >= 1){
             socket.emit('pendingCommands', pendingCommands)
             pendingCommands = []
-        }
-        count++;
-        if(count > saveRate){
-            const currentState = game.getCurrentState();
-            console.log(currentState);
-            // socket.emit('saveGame', currentState)
-            count = 0;
         }
     }, 60);
 }

@@ -10,6 +10,7 @@ module.exports = class GameLogic {
     constructor(){
         this.#players = new Map();
         this.#unitController = new UnitController;
+        this.commandCount = 0
     }
 
     loadPlayers(players){
@@ -26,11 +27,13 @@ module.exports = class GameLogic {
         return this.#unitController.getUnits();
     }
     updateUnits(){
-        this.#unitController.updateUnitPositions();
+        this.#unitController.refreshUnits();
     }
     
     handleCommand(command){
+        console.log(this.commandCount)
         console.log(command);
+        this.commandCount++
         const { action, unitId } = command;
         const unit = this.#unitController.getUnitById(unitId)
         if(!(unit instanceof Unit)) throw new TypeError('Invalid unit');

@@ -1,4 +1,5 @@
 import Camera from "../ui/Camera.js";
+import VectorTransformer from '../utils/VectorTransformer.js'
 
 class GameMap {
       static WIDTH = window.innerWidth;
@@ -50,11 +51,6 @@ class GameMap {
         const minX = cameraX - camera.getWidth()
         const maxX = cameraX + camera.getWidth()
 
-        const transFormula = (x, y) => ({
-              px: ((x - cameraX) - (y - cameraY)) * (GameMap.TILE_WIDTH / 2) + offsetX,
-              py: ((x - cameraX) + (y - cameraY)) * (GameMap.TILE_HEIGHT / 2) + offsetY
-        })
-
         for (let y = minY; y <= maxY; y++) {
               if (y < 0 || y >= this.#map.length) {
                 continue;
@@ -65,7 +61,7 @@ class GameMap {
                 if (x < 0 || x >= row.length) {
                     continue;
                 }
-                const {px, py} = transFormula(x, y);
+                const {px, py} = VectorTransformer.positionToCanvas({posX:x,posY:y,cameraX,cameraY});
                 const name = row[x].tile; //this.#tileMapper(row[x])
 
                 if (!name) continue

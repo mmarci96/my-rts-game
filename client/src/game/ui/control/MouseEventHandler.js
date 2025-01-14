@@ -1,6 +1,6 @@
 import SelectionBox from "./SelectionBox.js";
 import Camera from "../Camera.js";
-import {screenToWorld} from "../../utils/formulas.js"
+import VectorTransformer from "../../utils/VectorTransformer.js";
 
 class MouseEventHandler {
     #canvas;
@@ -30,6 +30,7 @@ class MouseEventHandler {
         this.#canvas.style.zIndex = '4';
         this.setCursor('default');
         this.hoveredEnemies = [];
+        this.selectionActive = false;
     }
 
     /**
@@ -56,9 +57,6 @@ class MouseEventHandler {
             const rect = this.#canvas.getBoundingClientRect();
             const screenX = e.clientX - rect.left;
             const screenY = e.clientY - rect.top;
-
-            const { worldX, worldY } = screenToWorld(screenX, screenY, this.#camera);
-
             // Handle selection drawing if currently selecting
             if (isSelecting) {
                 const currentX = screenX;
@@ -71,27 +69,16 @@ class MouseEventHandler {
                 ctx.strokeStyle = 'green';
                 ctx.lineWidth = 1;
                 ctx.strokeRect(startX, startY, width, height);
+                return;
+            }
+            if(this.selectionActive){
+
             }
 
-            // Handle hover detection
-            const hovering = enemyUnits.filter(unit => {
-                const x = unit.getX();
-                const y = unit.getY();
-                return (
-                    worldX - 0.8 < x && worldX + 0.8 > x &&
-                    worldY - 1.0 < y && worldY + 1.0 > y
-                );
-            });
 
-            if (hovering.length >= 1 && this.#units.find(u => u.isSelected())) {
-                this.hoveredEnemies = hovering;
-                this.setCursor('attack');
-            } else {
-                this.hoveredEnemies = [];
-                this.setCursor('default');
-            }        
+
         });
-        
+
         this.#canvas.addEventListener('mouseup', e => {
             if (e.button === 2) return;
             const rect = this.#canvas.getBoundingClientRect();
@@ -102,7 +89,13 @@ class MouseEventHandler {
             ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
             isSelecting = false;
 
-            this.#selectionBox.handleSelecting(this.#units, this.#camera);
+            const selectedUnits = this.#selectionBox.handleSelecting(this.#units, this.#camera);
+            if(selectedUnits.length > 0){
+                this.selectionActive = true;
+            } else {
+                this.selectionActive = false;
+            }
+            console.log('units selected: ', selectedUnits);
         });
         this.#canvas.addEventListener('mousedown', e => {
             if (e.button === 2) {
@@ -110,6 +103,32 @@ class MouseEventHandler {
                 mouseControl(target)
             }
         });
+    }
+    handleHover(screenX,screenY){
+        const cameraX = this.#camera.getX();
+        const cameraY = this.#camera.getY();
+
+        const { worldX, worldY } = VectorTransformer.getPositionFromCanvas({
+            screenX, screenY, cameraX, cameraY
+        })
+
+        // Handle hover detection
+        const hovering = enemyUnits.filter(unit => {
+            const x = unit.getX();
+            const y = unit.getY();
+            return (
+                worldX - 0.8 < x && worldX + 0.8 > x &&
+                worldY - 1.0 < y && worldY + 1.0 > y
+            );
+        });
+
+        if (hovering.length >= 1 && this.#units.find(u => u.isSelected())) {
+            this.hoveredEnemies = hovering;
+            this.setCursor('attack');
+        } else {
+            this.hoveredEnemies = [];
+            this.setCursor('default');
+        } 
     }
     commandUnit(clientX, clientY){
         if(this.hoveredEnemies.length > 0){
@@ -147,21 +166,17 @@ class MouseEventHandler {
         const rect = this.#canvas.getBoundingClientRect();
         const screenX = clientX - rect.left;
         const screenY = clientY - rect.top;
-        const { worldX, worldY } = screenToWorld(screenX, screenY, this.#camera);
+        const { worldX, worldY } = VectorTransformer.getPositionFromCanvas({
+            screenX, 
+            screenY, 
+            cameraX: this.#camera.getX(),
+            cameraY: this.#camera.getY()
+        }) 
         const commands = []
 
-        const gridSize = Math.round(Math.sqrt(units.length));
-        units.forEach((unit, index) => {
-            const { row, col } = this.createCheapGrid(
-                unit.getX(),
-                unit.getY(),
-                worldX,
-                worldY,
-                gridSize,
-                index
-            );
-            const targetX = worldX + col;
-            const targetY = worldY + row;
+        units.forEach((unit) => {
+            const targetX = worldX;
+            const targetY = worldY;
             if(unit.isSelected()){
                 if(this.hoveredEnemies.length >= 1){
                     const targetEnemy = this.hoveredEnemies[0]

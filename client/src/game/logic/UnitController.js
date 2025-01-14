@@ -27,6 +27,7 @@ class UnitController {
     * @returns { Array<Unit> } 
     */
     getAllUnits() {
+        if(!this.#units) console.log('mmmmm')
         return [...this.#units.values()]
             .flatMap(unit => ({
                 id: unit.getId(),
@@ -105,7 +106,7 @@ class UnitController {
     * @param {Object} param0 
     */
     loadUnit({...props}) {
-        const {type, id, health, x, y, state, color, targetX, targetY, speed} = props;
+        const {type, id, health, x, y, state, color, targetX, targetY, speed } = props;
         if (!type || !id || !x || !y || !health) {
             throw new Error(`Missing data: name${type}, health: ${health}, position: x:${x},y:${y} id=${id}`);
         }
@@ -113,7 +114,7 @@ class UnitController {
             const unit = this.#units.get(id);
             unit.setState(state);
             if (targetX) {
-               unit.setTarget(targetX, targetY);
+                unit.setTarget(targetX, targetY);
             }
         } else {
             let unit = null

@@ -49,7 +49,7 @@ class Unit extends GameEntity {
             const updatedPos = this.#movable.move(super.getX(), super.getY());
             super.setX(updatedPos.x);
             super.setY(updatedPos.y);
-        }else {
+        } else {
             this.setState('idle')
         }
         this.animatedSprite.setAnimationType(this.getState())

@@ -81,14 +81,7 @@ const websocketController = (io) => {
                 games[gameId].game.handlePlayerCommand(command)
             });
         });
-        socket.on('updateGameState', () => {
-            const gameId = players[socket.id].game
-            const gameState = getGameState(gameId);
-            console.log('On updateGameState: ',games)
-            //console.log(gameState)
-            io.to(gameId).emit('gameState', gameState)
-        })
-
+        
     })
 
 
