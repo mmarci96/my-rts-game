@@ -2,7 +2,6 @@ const GameService = require('../service/game.service.js')
 const MapService = require('../service/map.service.js')
 const SessionService = require('../service/session.service.js')
 const Game = require('../game/Game.js')
-const { request } = require('http')
 
 const players = {}
 const games = {}
@@ -16,7 +15,7 @@ const loadGameState = async gameId => {
         //console.log(gameData)
         const game = new Game(gameId);
         const id = game.getId();
-        //console.log("Game created: ", id);
+        console.log("Game created: ", id);
         game.loadGame(mapData.tiles, units)
         const state = game.getGameState()
         //console.log('Gamestate after load: ',state)
@@ -30,8 +29,8 @@ const loadGameState = async gameId => {
 
 const saveGameState = async unitsList => {
     console.log(unitsList)
-    //const updatedUnits = await SessionService.saveUnitsData(unitsList)
-    //return updatedUnits;
+    const updatedUnits = await SessionService.saveUnitsData(unitsList)
+    return updatedUnits;
 }
 
 const getGameState = (gameId) => {
@@ -44,9 +43,18 @@ const getGameState = (gameId) => {
 }
 
 const websocketUpdater = (io, gameId) => {
+    let count = 0
+    const saveRate = 10
     setInterval(() => {
         const gameData = getGameState(gameId)
         io.to(gameId).emit('gameState', gameData)
+        count++;
+        if(count >= saveRate){
+
+
+            //saveGameState(gameData.units).then(update => console.log('Game saved: ', update))
+            count = 0;
+        }
     }, 1000);
 }
 

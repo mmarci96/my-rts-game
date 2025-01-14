@@ -72,7 +72,7 @@ class MouseEventHandler {
                 return;
             }
             if(this.selectionActive){
-
+                this.handleHover(screenX,screenY);
             }
 
 

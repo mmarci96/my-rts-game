@@ -4,7 +4,8 @@ import Movable from "./models/Movable.js";
 import AnimatedSprite from "./models/AnimatedSprite.js";
 import Camera from "../ui/Camera.js";
 import EntityStatus from "./models/EntityStatus.js";
-import Attacker from "./models/Attacker.js";
+import Attacker from "./models/Attacker";
+
 class Unit extends GameEntity {
     #health
     #movable
@@ -23,7 +24,6 @@ class Unit extends GameEntity {
     constructor(x, y, spriteSheet, id, state, health, color, speed) {
         super(x, y);
         this.selectable = new Selectable(id, color);
-        // Speed of units will stay a magic number for now since it fun to have a few
         this.#movable = new Movable(speed);
         this.state = new EntityStatus(state)
         this.animatedSprite = new AnimatedSprite(spriteSheet);

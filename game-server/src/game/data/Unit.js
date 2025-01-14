@@ -19,7 +19,7 @@ module.exports = class Unit extends GameEntity {
         const dx = tx - super.getX()
         const dy = ty - super.getY()
         const distance = Math.sqrt(dx * dx + dy * dy);
-        const speed = this.movable.getSpeed();
+        const speed = this.movable.getSpeed()/4;
         const stepDistance = speed*deltaTime;
         console.log('distance', distance)
         if(distance <= stepDistance){
@@ -28,8 +28,8 @@ module.exports = class Unit extends GameEntity {
             super.setState('idle');
             this.movable.resetTarget();
         }else {
-            const nx = dx / distance; // Normalized x direction
-            const ny = dy / distance; // Normalized y direction
+            const nx = dx / distance;
+            const ny = dy / distance;
 
             const newX = super.getX() + nx * stepDistance;
             const newY = super.getY() + ny * stepDistance;

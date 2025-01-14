@@ -59,29 +59,17 @@ class UnitController {
     */
     
     animationLoop(camera) {
-        let uptime = 0;
         const canvas = this.#unitCanvas;
         const context = canvas.getContext('2d');
 
-        let lastTime = performance.now(); // Initial timestamp
-
         const animate = () => {
-            const now = performance.now();
-            const deltaTime = (now - lastTime); // Time in seconds
-            lastTime = now;
-            uptime += deltaTime
-
             context.clearRect(0, 0, canvas.width, canvas.height);
             [...this.#units.values()].forEach(unit => {
                 if (!(unit instanceof Unit)) {
                     throw new Error('Unknown unit: ' + unit);
                 }
-
-                if(Math.floor(uptime) % 1 === 0)console.log(uptime);
-                //unit.update(deltaTime); // Optional: handle unit animations
                 unit.draw(context, unit.getX(), unit.getY(), camera);
             });
-
             requestAnimationFrame(animate);
         };
         animate();

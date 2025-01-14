@@ -24,6 +24,7 @@ module.exports = class UnitController {
 
     handleAttack(unit){
         if(!(unit instanceof Unit))throw new TypeError('Unit type bad!');
+
         const targetId = unit.damageDealer.getTargetId();
         const targetUnit = this.getUnitById(targetId);
         console.log('Target id: ', targetId);
@@ -49,13 +50,13 @@ module.exports = class UnitController {
 
         // Determine direction based on angle
         if (angle >= -Math.PI / 4 && angle <= Math.PI / 4) {
-            attackDirection = 'attackRight'; // Facing right
+            attackDirection = 'attackRight1'; // Facing right
         } else if (angle > Math.PI / 4 && angle <= (3 * Math.PI) / 4) {
-            attackDirection = 'attackDown'; // Facing down
+            attackDirection = 'attackDown1'; // Facing down
         } else if (angle > (3 * Math.PI) / 4 || angle <= -(3 * Math.PI) / 4) {
-            attackDirection = 'attackLeft'; // Facing left
+            attackDirection = 'attackLeft1'; // Facing left
         } else if (angle > -(3 * Math.PI) / 4 && angle <= -Math.PI / 4) {
-            attackDirection = 'attackUp'; // Facing up
+            attackDirection = 'attackUp1'; // Facing up
         }
         return attackDirection;
     }

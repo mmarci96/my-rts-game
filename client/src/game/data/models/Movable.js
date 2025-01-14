@@ -10,7 +10,7 @@ class Movable {
     * @param { number } speed
     */
     constructor(speed) {
-        this.#speed = speed / 128;
+        this.#speed = speed / 240;
         this.#isMoving = false;
     }
 
@@ -50,6 +50,8 @@ class Movable {
             this.x = this.#targetX;
             this.y = this.#targetY;
             this.#isMoving = false;
+            this.#targetX = null;
+            this.#targetY = null;
             return { x: this.x, y: this.y };
         }
 

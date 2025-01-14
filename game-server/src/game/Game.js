@@ -34,14 +34,14 @@ module.exports = class Game {
         this.running = true;
         console.log("Starting game loop...")
         let lastTime = Date.now();
-        const interval = 1000;
+        const interval = 50;
 
         this.gameLoopInterval = setInterval(() => {
             const now = Date.now()
             const deltaTime = (now - lastTime) / 1000
             lastTime = now;
             uptime += deltaTime;
-            console.log('uptime: ', uptime)
+            //console.log('uptime: ', uptime)
 
             this.#gameLogic.updateUnits(deltaTime);
         }, interval);
