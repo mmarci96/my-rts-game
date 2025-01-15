@@ -14,7 +14,7 @@ module.exports = class UnitController {
                     this.handleAttack(unit, deltaTime);
                     break;               
                 case 'moving':
-                    unit.move(deltaTime);
+                    unit.updatePosition(deltaTime);
                     break;
                 default:
                     console.log('state:', unit.getState())
