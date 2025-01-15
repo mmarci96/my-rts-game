@@ -1,6 +1,7 @@
 import SelectionBox from "./SelectionBox.js";
 import Camera from "../Camera.js";
 import VectorTransformer from "../../utils/VectorTransformer.js";
+import Unit from "../../data/Unit.js";
 
 class MouseEventHandler {
     #canvas;
@@ -8,7 +9,6 @@ class MouseEventHandler {
     #selectionBox;
     #units
     #assets
-    #cursorTracker
     #enemyUnits
 
     /**
@@ -41,21 +41,12 @@ class MouseEventHandler {
      * @param { function } mouseControl
      */
     drawSelection(units, mouseControl, enemyUnits) {
-        const treshHold = 48;
-        let ox,oy
         this.#units = units;
         this.#enemyUnits = enemyUnits;
         const ctx = this.#canvas.getContext('2d');
         let isSelecting = false;
         let startX = 0;
         let startY = 0;
-        function debounce(func, delay) {
-            let timeout;
-            return (...args) => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func(...args), delay);
-            };
-        }
 
         this.#canvas.addEventListener('mousedown', e => {
             if (e.button === 2) return;
@@ -65,29 +56,13 @@ class MouseEventHandler {
             isSelecting = true;
         });
         this.#canvas.addEventListener('mousemove', e => {
-            const rect = this.#canvas.getBoundingClientRect();
-            const screenX = e.clientX - rect.left;
-            const screenY = e.clientY - rect.top;
             // Handle selection drawing if currently selecting
             if (isSelecting) {
-                const currentX = screenX;
-                const currentY = screenY;
-
-                ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
-
-                const width = currentX - startX;
-                const height = currentY - startY;
-                ctx.strokeStyle = 'green';
-                ctx.lineWidth = 1;
-                ctx.strokeRect(startX, startY, width, height);
-                return;
+                this.onSelecting(e.clientX, e.screenY, startX, startY);
             }
-            if(this.selectionActive && this.hoveredEnemy === null){
-                this.#cursorTracker = {x:e.clientX-rect.left,y:e.clientX-rect.top}
-                console.log(this.#cursorTracker);
-                this.handleHover(this.#cursorTracker.x,this.#cursorTracker.y);
-                
-            }
+            if(this.selectionActive){
+                this.handleHover(e.clientX, e.clientY); 
+            } 
         });
 
         this.#canvas.addEventListener('mouseup', e => {
@@ -115,24 +90,36 @@ class MouseEventHandler {
             }
         });
     }
-    handleHover(screenX,screenY){
-        const cameraX = this.#camera.getX();
-        const cameraY = this.#camera.getY();
+    onSelecting(clientX, clientY, startX, startY){
+        const rect = this.#canvas.getBoundingClientRect();
+        const screenX = clientX - rect.left;
+        const screenY = clientY - rect.top;
+        const currentX = screenX;
+        const currentY = screenY;
+        const width = currentX - startX;
+        const height = currentY - startY;
+        
+        ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
+        ctx.strokeStyle = 'green';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(startX, startY, width, height);
 
-        const { worldX, worldY } = VectorTransformer.getPositionFromCanvas({
-            screenX, screenY, cameraX, cameraY
-        })
-
-        // Handle hover detection
+    }
+    handleHover(clientX, clientY){
         const hovering = this.#enemyUnits.find(eunit => {
-            const { px, py } = VectorTransformer.positionToCanvas({ 
-                screenX, screenY,
-                cameraX, cameraY
-            })
-            const x = eunit.getX();
-            const y = eunit.getY();
-            console.log(x,y, px,py)
+            const { worldX, worldY } = this.convertCursorPosition(clientX, clientY);
+            const diffX = Math.abs(worldX - eunit.getX());
+            const diffY = Math.abs(worldY - eunit.getY());
+            const max = 1.1
+            if(diffX < max && diffY < max){
+                return eunit;
+            }
         })
+
+        if(this.hoveredEnemy && !hovering){
+            this.hoveredEnemy = null;
+            this.setCursor('default');
+        }
         if (hovering) {
             this.hoveredEnemy = hovering;
             this.setCursor('attack');
@@ -174,27 +161,17 @@ class MouseEventHandler {
     * @returns { {} }
     */
     getTargetPosition(units, clientX, clientY) {
-        const rect = this.#canvas.getBoundingClientRect();
-        const screenX = clientX - rect.left;
-        const screenY = clientY - rect.top;
-        const { worldX, worldY } = VectorTransformer.getPositionFromCanvas({
-            screenX, 
-            screenY, 
-            cameraX: this.#camera.getX(),
-            cameraY: this.#camera.getY()
-        }) 
+        const { worldX, worldY } = this.convertCursorPosition(clientX, clientY) 
         const commands = []
 
         units.forEach((unit) => {
-            const targetX = worldX;
-            const targetY = worldY;
             if(unit.isSelected()){
-                if(this.hoveredEnemies.length >= 1){
-                    const targetEnemy = this.hoveredEnemies[0]
+                if(this.hoveredEnemy){
+                    const targetEnemy = this.hoveredEnemy
                     const attackCommand = this.createAttackCommand(targetEnemy,unit.getId())
                     commands.push(attackCommand)
                 } else {
-                    const moveCommand = this.createMoveUnitCommand(targetX, targetY, unit.getId())
+                    const moveCommand = this.createMoveUnitCommand(worldX, worldY, unit.getId())
                     commands.push(moveCommand)
                 }
             }
@@ -232,7 +209,15 @@ class MouseEventHandler {
         } else {
             console.warn('Default cursor is not a valid image or URL.');
         }   
-
+    }
+    convertCursorPosition(clientX, clientY){
+        const rect = this.#canvas.getBoundingClientRect();
+        return VectorTransformer.getPositionFromCanvas({
+            screenX: clientX - rect.left, 
+            screenY: clientY - rect.top, 
+            cameraX: this.#camera.getX(),
+            cameraY: this.#camera.getY()
+        });
     }
 }
 
