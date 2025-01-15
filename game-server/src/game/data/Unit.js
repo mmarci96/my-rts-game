@@ -25,7 +25,7 @@ module.exports = class Unit extends GameEntity {
         if(distance <= stepDistance){
             super.setX(tx);
             super.setY(ty);
-            this.#updateState();
+            //this.#updateState();
             this.movable.resetTarget();
         }else {
             const nx = dx / distance;
@@ -36,15 +36,25 @@ module.exports = class Unit extends GameEntity {
             super.setY(newY);
         }
     }
-
-    #updateState(){
-        if(this.damageDealer.getTargetId() !== null){
-            this.setState('attack')
-        } else {
-            this.setState('idle');
+    updatePosition(deltaTime){
+        const { newX, newY, progress } = this.movable.move({
+            startx: this.getX(), 
+            startY: this.getY(), 
+            deltatime: deltaTime
+        });
+        if(progress !== 'completed'){
+            this.setX(newX);
+            this.setY(newY);
+            this.setState('moving');
+            return;
         }
-    }
-
+        if(this.damageDealer.getTargetId() !== null){
+            this.setState('attack');
+            return;
+        }
+        this.setState('idle');
+        return;
+    } 
     attackUnit(targetUnit){
         if(!(targetUnit instanceof Unit)){
             throw new TypeError("Target must be a unit!")
