@@ -1,6 +1,6 @@
 import Camera from "../../ui/Camera.js";
-import {calculateScreenPos} from "../../utils/formulas.js";
 import Selectable from "./Selectable.js";
+import VectorTransformer from "../../utils/VectorTransformer.js";
 
 class AnimatedSprite {
     constructor(spriteSheet) {
@@ -43,7 +43,13 @@ class AnimatedSprite {
         const isVisible = this.checkOutOfBounds(camera, x, y)
 
         if(isVisible) {
-            const { px, py } = calculateScreenPos(camera, x, y);
+            const { px, py } = VectorTransformer.positionToCanvas({
+                posX:x,
+                posY:y, 
+                cameraX: camera.getX(), 
+                cameraY: camera.getY()
+            })
+
             if(selectable.isSelected()){
                 selectable.drawSelector(context, px, py)
             }

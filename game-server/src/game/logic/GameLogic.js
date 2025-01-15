@@ -10,13 +10,7 @@ module.exports = class GameLogic {
     constructor(){
         this.#players = new Map();
         this.#unitController = new UnitController;
-    }
-
-    loadPlayers(players){
-        players.forEach(player => {
-            const createPlayer = new Player(player["userId"], player["color"])
-            this.#players.set(createPlayer.getId(), createPlayer)
-        });
+        this.commandCount = 0
     }
 
     loadUnits(units){
@@ -25,12 +19,14 @@ module.exports = class GameLogic {
     getUnits(){
         return this.#unitController.getUnits();
     }
-    updateUnits(){
-        this.#unitController.updateUnitPositions();
+    updateUnits(deltaTime){
+        this.#unitController.refreshUnits(deltaTime);
     }
     
     handleCommand(command){
+        console.log(this.commandCount)
         console.log(command);
+        this.commandCount++
         const { action, unitId } = command;
         const unit = this.#unitController.getUnitById(unitId)
         if(!(unit instanceof Unit)) throw new TypeError('Invalid unit');
@@ -43,11 +39,10 @@ module.exports = class GameLogic {
                 unit.movable.setTarget(command.targetX, command.targetY)
                 break;
             case 'attack':
-                const targetId = command;
+                const { targetId } = command;
                 unit.damageDealer.setTargetId(targetId);
-                break;
-            default:
-                break;
+                unit.setState(action)
+                break;   
         }
         unit.setState(action);
 
@@ -65,7 +60,15 @@ module.exports = class GameLogic {
         const player = new Player(playerId, color);
         this.#players.set(playerId, player)
     }
-
+    getPlayers(){
+        return [...this.#players.values()].flatMap(player => ({
+            playerId: player.getId(),
+            color: player.getColor()
+        }))
+    }
+    removePlayerById(playerId){
+        this.#players.delete(playerId)
+    }
     getPlayerById(playerId){
         return this.#players.get(playerId);
     }

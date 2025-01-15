@@ -27,6 +27,7 @@ class UnitController {
     * @returns { Array<Unit> } 
     */
     getAllUnits() {
+        if(!this.#units) console.log('mmmmm')
         return [...this.#units.values()]
             .flatMap(unit => ({
                 id: unit.getId(),
@@ -56,31 +57,24 @@ class UnitController {
     * Merges together logic to animate the sprites state and movement
     * @param { Camera } camera 
     */
+    
     animationLoop(camera) {
         const canvas = this.#unitCanvas;
         const context = canvas.getContext('2d');
 
-        const updateTimer = 15;
-        let frame = 0;
-
         const animate = () => {
-            if (frame > updateTimer) {
-                frame = 0;
-            }
-            frame++;
-
             context.clearRect(0, 0, canvas.width, canvas.height);
             [...this.#units.values()].forEach(unit => {
                 if (!(unit instanceof Unit)) {
                     throw new Error('Unknown unit: ' + unit);
                 }
-
                 unit.draw(context, unit.getX(), unit.getY(), camera);
             });
             requestAnimationFrame(animate);
         };
         animate();
     }
+
 
     /**
     * They are still just js obj data with key / value pairs here
@@ -90,7 +84,6 @@ class UnitController {
         if (!Array.isArray(data)) {
             throw new TypeError('Expected an array of unit data');
         }
-
         const existingUnitIds = new Set(this.#units.keys());
 
         data.forEach(unitData => {
@@ -105,8 +98,7 @@ class UnitController {
     * @param {Object} param0 
     */
     loadUnit({...props}) {
-        const {type, id, health, x, y, state, color, targetX, targetY, speed} = props;
-        console.log('loading: ',props)
+        const {type, id, health, x, y, state, color, targetX, targetY, speed } = props;
         if (!type || !id || !x || !y || !health) {
             throw new Error(`Missing data: name${type}, health: ${health}, position: x:${x},y:${y} id=${id}`);
         }
@@ -114,7 +106,7 @@ class UnitController {
             const unit = this.#units.get(id);
             unit.setState(state);
             if (targetX) {
-               unit.setTarget(targetX, targetY);
+                unit.setTarget(targetX, targetY);
             }
         } else {
             let unit = null

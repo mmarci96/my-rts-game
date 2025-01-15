@@ -11,12 +11,12 @@ class Game {
     * @param { Player } player
     * @param { Function } createCommand 
 	  */
-    constructor(map, assets, units, player, createCommand) {
+    constructor(map, assets, player, createCommand) {
         this.player = player
         if (!(map instanceof Array)) {
             throw new TypeError('Map loader requires at least one map');
         }
-        this.#gameLogic = new GameLogic(map, assets, units, this.player, createCommand);
+        this.#gameLogic = new GameLogic(map, assets, this.player, createCommand);
     }
     getCurrentState(){
         const units = this.#gameLogic.getUnitData();

@@ -1,8 +1,7 @@
 import Camera from "../../ui/Camera.js";
-import { calculateScreenPos } from "../../utils/formulas.js";
 import GameEntity from "./GameEntity.js";
 import Selectable from "./Selectable.js";
-
+import VectorTransformer from "../../utils/VectorTransformer.js";
 
 class Building extends GameEntity {
     #sprite
@@ -21,7 +20,12 @@ class Building extends GameEntity {
         if(!(camera instanceof Camera)){
             throw new TypeError('camera invalid')
         }
-        const { px, py } = calculateScreenPos(camera, super.getX(), super.getY())
+        const { px, py } = VectorTransformer.positionToCanvas({
+            posX:super.getX(),
+            posY: super.getY(),
+            cameraX: camera.getX(),
+            cameraY: camera.getY()
+        })
         context.drawImage(this.#sprite, px, py )
         
     }

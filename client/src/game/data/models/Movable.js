@@ -10,7 +10,7 @@ class Movable {
     * @param { number } speed
     */
     constructor(speed) {
-        this.#speed = speed / 128;
+        this.#speed = speed / 200;
         this.#isMoving = false;
     }
 
@@ -42,14 +42,14 @@ class Movable {
         const dx = this.#targetX - this.x;
         const dy = this.#targetY - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-
         // Check if the target is reached
-        if (distance <= this.#speed) {
+        if (distance <= 0.4) {
             // Snap to target and stop moving
             this.x = this.#targetX;
             this.y = this.#targetY;
             this.#isMoving = false;
-            console.log('ARRRived');
+            this.#targetX = null;
+            this.#targetY = null;
             return { x: this.x, y: this.y };
         }
 

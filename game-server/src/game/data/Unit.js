@@ -13,25 +13,36 @@ module.exports = class Unit extends GameEntity {
         if(!dmg) dmg = Unit.#unitBaseAttack;
         this.damageDealer = new DamageDealer(dmg)
     }
-    move(){
+    move(deltaTime){
+        if(this.getState() !== 'moving') console.log('moving');
         const tx = this.movable.getTargetX()
         const ty = this.movable.getTargetY()
         const dx = tx - super.getX()
         const dy = ty - super.getY()
         const distance = Math.sqrt(dx * dx + dy * dy);
-        const speed = this.movable.getSpeed();
-        if(distance <= speed){
+        const speed = this.movable.getSpeed()/4;
+        const stepDistance = speed*deltaTime;
+        if(distance <= stepDistance){
             super.setX(tx);
             super.setY(ty);
-            super.setState('idle');
+            this.#updateState();
+            this.movable.resetTarget();
+        }else {
+            const nx = dx / distance;
+            const ny = dy / distance;
+            const newX = super.getX() + nx * stepDistance;
+            const newY = super.getY() + ny * stepDistance;
+            super.setX(newX);
+            super.setY(newY);
         }
-        const nx = dx / distance; // Normalized x direction
-        const ny = dy / distance; // Normalized y direction
+    }
 
-        const newX = super.getX() + nx * speed;
-        const newY = super.getY() + ny * speed;
-        super.setX(newX);
-        super.setY(newY);
+    #updateState(){
+        if(this.damageDealer.getTargetId() !== null){
+            this.setState('attack')
+        } else {
+            this.setState('idle');
+        }
     }
 
     attackUnit(targetUnit){
@@ -50,5 +61,8 @@ module.exports = class Unit extends GameEntity {
             x: super.getX(),
             y: super.getY(),
         }
+    }
+    getHealth(){
+        return this.damagable.getHealth();
     }
 }

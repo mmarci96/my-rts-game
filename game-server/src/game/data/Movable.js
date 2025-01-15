@@ -30,4 +30,8 @@ module.exports = class Movable {
     getSpeed(){
         return this.#speed;
     }
+    resetTarget(){
+        this.#targetX = null;
+        this.#targetY = null;
+    }
 }
