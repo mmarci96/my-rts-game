@@ -11,6 +11,7 @@ const UnitSchema = new Schema({
     state: { type: String , default: "idle"},
     targetX: { type: Number, default: null },
     targetY: { type: Number, default:  null },
+    targetId: { type: mongoose.Types.ObjectId(), default: null },
     updatedAt: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now }
 })
