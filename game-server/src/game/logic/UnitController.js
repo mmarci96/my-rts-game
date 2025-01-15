@@ -10,13 +10,15 @@ module.exports = class UnitController {
         [...this.#units.values()].forEach(unit => {
             let state = unit.getState();
             switch (state) {
+                case 'attack':
+                    this.handleAttack(unit, deltaTime);
+                    break;               
                 case 'moving':
                     unit.move(deltaTime);
                     break;
-                case 'attack':
-                    this.handleAttack(unit, deltaTime);
-                    break;
                 default:
+                    console.log('state:', unit.getState())
+                    console.log('hp: ',unit.damagable.getHealth())
                     break;
             }
         })
@@ -36,12 +38,14 @@ module.exports = class UnitController {
         const dx = targetUnit.getX() - unit.getX();
         const dy = targetUnit.getY() - unit.getY();
         const distance = Math.sqrt(dx*dx + dy*dy);
-        if(distance <= 1.6){
-            const attackDirection = calculateAttackAngle(dx,dy);
+        const attackRange = 0.4; 
+        if(distance <= attackRange){
+            const attackDirection = this.calculateAttackAngle(dx,dy);
             unit.setState(attackDirection);
             unit.attackUnit(targetUnit);
         } else {
-            console.log("target too far")    
+            unit.setState('moving');
+            unit.movable.setTarget(targetUnit.getX(),targetUnit.getY());
         }
     }
     calculateAttackAngle(dx,dy){
