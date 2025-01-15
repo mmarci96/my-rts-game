@@ -7,7 +7,7 @@ services:
 
   flask-app:
     build:
-      context: ./flask-htmx
+      context: ./flask-app
     container_name: flask-app
     environment:
       - MONGO_URI=${MONGO_URI}
