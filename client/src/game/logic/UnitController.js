@@ -24,10 +24,11 @@ class UnitController {
     }
 
     /**
-    * @returns { Array<Unit> } 
+    * Returns an object containing every field of the units. 
+    * @returns { Array<Unit> }
     */
     getAllUnits() {
-        if(!this.#units) console.log('mmmmm')
+        if(!this.#units) console.error('unit list undefined')
         return [...this.#units.values()]
             .flatMap(unit => ({
                 id: unit.getId(),
@@ -40,6 +41,7 @@ class UnitController {
     }
 
     /**
+    * Makes an array from the Map of units and filters them. 
     * @param { string } color  
     * @returns { Array<Unit>}
     */
@@ -48,6 +50,11 @@ class UnitController {
             .filter(unit => unit.getColor() === color);
     }
 
+    /**
+    * Makes an array from the Map of units and filters them. 
+    * @param { string } color  
+    * @returns { Array<Unit>}
+    */
     getEnemyUnits(allyColor){
         return[...this.#units.values()]
             .filter(unit => unit.getColor() !== allyColor)
@@ -57,7 +64,6 @@ class UnitController {
     * Merges together logic to animate the sprites state and movement
     * @param { Camera } camera 
     */
-    
     animationLoop(camera) {
         const canvas = this.#unitCanvas;
         const context = canvas.getContext('2d');
@@ -74,7 +80,6 @@ class UnitController {
         };
         animate();
     }
-
 
     /**
     * They are still just js obj data with key / value pairs here
