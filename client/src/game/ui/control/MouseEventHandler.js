@@ -98,7 +98,7 @@ class MouseEventHandler {
         const currentY = screenY;
         const width = currentX - startX;
         const height = currentY - startY;
-        
+
         ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
         ctx.strokeStyle = 'green';
         ctx.lineWidth = 1;
@@ -171,7 +171,16 @@ class MouseEventHandler {
                     const attackCommand = this.createAttackCommand(targetEnemy,unit.getId())
                     commands.push(attackCommand)
                 } else {
-                    const moveCommand = this.createMoveUnitCommand(worldX, worldY, unit.getId())
+
+                    const { targetX, targetY } = this.createCheapGrid(
+                        unit.getX(),
+                        unit.getY(),
+                        worldX,
+                        worldY,
+                        gridSize,
+                        index
+                    );
+                    const moveCommand = this.createMoveUnitCommand(targetX, targetY, unit.getId())
                     commands.push(moveCommand)
                 }
             }
@@ -197,7 +206,9 @@ class MouseEventHandler {
 
         const row = Math.floor(i / gridSize) * accX;
         const col = (i % gridSize) * accY;
-        return { row, col };
+        const targetX = worldX + col;
+        const targetY = worldY + row;
+        return { targetX, targetY };
     }
 
     setCursor(name){
