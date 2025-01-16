@@ -25,7 +25,7 @@ module.exports = class Movable {
         const stepDistance = speed * deltaTime;
         if (distanceToTarget <= stepDistance) {
             this.resetTarget();
-            return { newX: startX, newY: startY(), progress: 'completed' };
+            return { newX: startX, newY: startY, progress: 'completed' };
         }
 
         const directionX = deltaX / distanceToTarget;
