@@ -2,6 +2,7 @@ import SelectionBox from "./SelectionBox.js";
 import Camera from "../Camera.js";
 import VectorTransformer from "../../utils/VectorTransformer.js";
 import Unit from "../../data/Unit.js";
+import UnitController from "../../logic/UnitController.js";
 
 class MouseEventHandler {
     #canvas;
@@ -34,15 +35,22 @@ class MouseEventHandler {
         this.hoveredEnemy = null;
         this.selectionActive = false;
     }
+    
+    updateSelection(controller, color){
+        if(!(controller instanceof UnitController)){
+            throw new TypeError('Not a controller')
+        }
+
+        this.#units = controller.getUnitsByColor(color);
+        this.#enemyUnits = controller.getEnemyUnits(color);
+    }
 
     /**
      *
      * @param { Array<Unit> } units
      * @param { function } mouseControl
      */
-    drawSelection(units, mouseControl, enemyUnits) {
-        this.#units = units;
-        this.#enemyUnits = enemyUnits;
+    drawSelection(mouseControl) {
         const ctx = this.#canvas.getContext('2d');
         let isSelecting = false;
         let startX = 0;
@@ -67,6 +75,8 @@ class MouseEventHandler {
 
         this.#canvas.addEventListener('mouseup', e => {
             if (e.button === 2) return;
+            this.#units.forEach(u => u.setSelected(false));
+            console.log(e.clientX, e.clientY)
             const rect = this.#canvas.getBoundingClientRect();
             const finalX = e.clientX - rect.left;
             const finalY = e.clientY - rect.top;
@@ -189,15 +199,14 @@ class MouseEventHandler {
     }
 
     /**
-     *
-     * @param {number} unitX
-     * @param {number} unitY
-     * @param {number} targetX
-     * @param {number} targetY
-     * @param {number} gridSize
-     * @param {number} i
-     * @returns {{row: number, col: number}}
-     */
+    * @param {number} unitX
+    * @param {number} unitY
+    * @param {number} targetX
+    * @param {number} targetY
+    * @param {number} gridSize
+    * @param {number} i
+    * @returns {{row: number, col: number}}
+    */
     createCheapGrid(unitX, unitY, tx, ty, gridSize, i) {
         let accX = 1.2;
         let accY = -1.2;

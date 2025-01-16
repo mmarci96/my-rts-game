@@ -54,6 +54,7 @@ class GameLogic {
     }
     setupGame(){
         this.loadMap();
+        this.setupControl();
     }
 
     loadMap() {
@@ -64,18 +65,16 @@ class GameLogic {
     }
 
     setupControl(){
-        const playerColor = this.#player.getColor()
-        const playerUnits = this.#unitController.getUnitsByColor(playerColor)    
-        const enemyUnits = this.#unitController.getEnemyUnits(playerColor)
-        this.#mouseHandler.drawSelection(playerUnits, this.#commandHandler, enemyUnits)
+        this.#mouseHandler.drawSelection(this.#commandHandler)
     }
+
     getUnitData(){
         const units = this.#unitController.getAllUnits()
         return units
     }
     updateUnits(units){
         this.#unitController.refreshUnits(units)
-        this.setupControl();
+        this.#mouseHandler.updateSelection(this.#unitController, this.#player.getColor())
     }
     drawHouse(){
         const houseRed = new House(5,5,128,128,'idhouse_red', 'red', this.#assets.getImage('house_red'))
