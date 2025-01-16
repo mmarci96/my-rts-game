@@ -76,10 +76,10 @@ class AnimatedSprite {
     * @returns {boolean}
     */
     checkOutOfBounds(camera, x, y) {
-        const minX = camera.getX() - camera.getWidth() - 2;
-        const maxX = camera.getX() + camera.getWidth() - 2;
-        const minY = camera.getY() - camera.getHeight() - 2;
-        const maxY = camera.getY() + camera.getHeight() - 2;
+        const minX = camera.getX() - camera.getWidth() ;
+        const maxX = camera.getX() + camera.getWidth() ;
+        const minY = camera.getY() - camera.getHeight();
+        const maxY = camera.getY() + camera.getHeight();
 
         return !(minY > y || minX > x || maxY < y || maxX < x);
     }
@@ -96,6 +96,9 @@ class AnimatedSprite {
             case 'idle':
                 this.frameY = 0
                 break
+            case 'cooldown':
+                this.frameY = 2;
+                break;
             case 'attackLeft1':
                 this.frameY = 2
                 break

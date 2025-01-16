@@ -29,7 +29,7 @@ class MouseEventHandler {
         this.#canvas = document.getElementById('ui-canvas');
         this.#canvas.width = window.innerWidth;
         this.#canvas.height = window.innerHeight;
-        this.#canvas.style.zIndex = '4';
+        this.#canvas.style.zIndex = '10';
         this.setCursor('default');
         this.hoveredEnemy = null;
         this.selectionActive = false;
@@ -58,7 +58,7 @@ class MouseEventHandler {
         this.#canvas.addEventListener('mousemove', e => {
             // Handle selection drawing if currently selecting
             if (isSelecting) {
-                this.onSelecting(e.clientX, e.screenY, startX, startY);
+                this.onSelecting(e.clientX, e.clientY, startX, startY, ctx);
             }
             if(this.selectionActive){
                 this.handleHover(e.clientX, e.clientY); 
@@ -90,7 +90,7 @@ class MouseEventHandler {
             }
         });
     }
-    onSelecting(clientX, clientY, startX, startY){
+    onSelecting(clientX, clientY, startX, startY, ctx){
         const rect = this.#canvas.getBoundingClientRect();
         const screenX = clientX - rect.left;
         const screenY = clientY - rect.top;

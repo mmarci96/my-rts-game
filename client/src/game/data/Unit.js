@@ -49,9 +49,7 @@ class Unit extends GameEntity {
             const updatedPos = this.#movable.move(super.getX(), super.getY());
             super.setX(updatedPos.x);
             super.setY(updatedPos.y);
-        } else {
-            this.setState('idle')
-        }
+        } 
         this.animatedSprite.setAnimationType(this.getState())
         this.animatedSprite.draw(context, x, y, camera, this.selectable);
         this.animatedSprite.updateAnimation();
@@ -66,6 +64,10 @@ class Unit extends GameEntity {
 
     getHealth(){
         return this.#health
+    }
+    
+    setHealth(health){
+        this.#health = health;
     }
 
     /**
@@ -107,7 +109,6 @@ class Unit extends GameEntity {
     */
     setTarget(x, y) {
         this.#movable.setTarget(x, y);
-        this.setState('moving')
         const updatedPos = this.#movable.move(super.getX(), super.getY())
         super.setX(updatedPos.x);
         super.setY(updatedPos.y);

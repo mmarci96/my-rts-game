@@ -92,11 +92,25 @@ class UnitController {
         const existingUnitIds = new Set(this.#units.keys());
 
         data.forEach(unitData => {
-            this.loadUnit({...unitData});
-
+            if (this.#units.has(unitData.id)) {
+                this.updateUnit({...unitData })
+            } else {
+                this.loadUnit({...unitData});
+            }
             // Mark this unit as processed
             existingUnitIds.delete(unitData["_id"]);
         });
+    }
+
+    updateUnit({...props}){
+        const {type, id, health, x, y, state, color, targetX, targetY, speed } = props;
+        if (!type || !id || !x || !y || health === null) {
+            throw new Error(`Missing:name${type};health: ${health};position:x:${x},y:${y} id=${id}`);
+        }
+        const unit = this.#units.get(id);
+        unit.setTarget(x,y);
+        unit.setState(state);
+        unit.setHealth(health);
     }
 
     /**
@@ -104,8 +118,8 @@ class UnitController {
     */
     loadUnit({...props}) {
         const {type, id, health, x, y, state, color, targetX, targetY, speed } = props;
-        if (!type || !id || !x || !y || !health) {
-            throw new Error(`Missing data: name${type}, health: ${health}, position: x:${x},y:${y} id=${id}`);
+        if (!type || !id || !x || !y || health === null) {
+            throw new Error(`Missing:name${type};health: ${health};position:x:${x},y:${y} id=${id}`);
         }
         if (this.#units.has(id)) {
             const unit = this.#units.get(id);
