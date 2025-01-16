@@ -22,19 +22,19 @@ module.exports = class Unit extends GameEntity {
             startY: this.getY(), 
             deltaTime: deltaTime
         });
-        console.log('x:', newX);
-        console.log('x:', newY);
-        console.log('progress:', progress);
+        
         if(progress !== 'completed'){
             this.setX(newX);
             this.setY(newY);
             this.setState('moving');
             return;
         }
+
         if(this.damageDealer.getTargetId() !== null){
             this.setState('attack');
             return;
         }
+
         this.setState('idle');
         return;
     }

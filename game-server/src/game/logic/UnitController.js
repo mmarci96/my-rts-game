@@ -4,10 +4,19 @@ module.exports = class UnitController {
     #units
     constructor(){
         this.#units = new Map();
+        this.timePassed = 0;
     }
 
     refreshUnits(deltaTime){
+        //this.timePassed += deltaTime;
+        //if (this.timePassed > 1){
+        //    this.checkForOverlaps();
+        //    this.timePassed = 0;
+        //} 
         [...this.#units.values()].forEach(unit => {
+            if(!(unit instanceof Unit)){
+                throw new TypeError('Not a valid unit, cant refresh!')
+            }
             let state = unit.getState();
             switch (state) {
                 case 'attack':
@@ -16,9 +25,10 @@ module.exports = class UnitController {
                 case 'moving':
                     unit.updatePosition(deltaTime);
                     break;
+                case 'cooldown':
+                    unit.updateAttackCooldown(deltaTime)
+                    break;
                 default:
-                    console.log('state:', unit.getState())
-                    console.log('hp: ',unit.damagable.getHealth())
                     break;
             }
         })
@@ -29,45 +39,86 @@ module.exports = class UnitController {
 
         const targetId = unit.damageDealer.getTargetId();
         const targetUnit = this.getUnitById(targetId);
-        console.log('Target id: ', targetId);
-        console.log('Targeting unit: ',targetUnit);
-        if(targetUnit.damagable.getHealth() <= 0){
-            unit.setState('idle');
-            this.#units.delete(targetId);
-        }
-        const dx = targetUnit.getX() - unit.getX();
-        const dy = targetUnit.getY() - unit.getY();
+        const dx = targetUnit.getX() - unit.getX()
+        const dy = targetUnit.getY() - unit.getY()
         const distance = Math.sqrt(dx*dx + dy*dy);
         const attackRange = 0.4; 
         if(distance <= attackRange){
-            const attackDirection = this.calculateAttackAngle(dx,dy);
-            unit.setState(attackDirection);
+            console.log('attampting attack!');
             unit.attackUnit(targetUnit);
+            console.log("Emeny health after attack: ", targetUnit.getHealth())
         } else {
             unit.setState('moving');
             unit.movable.setTarget(targetUnit.getX(),targetUnit.getY());
         }
     }
-    calculateAttackAngle(dx,dy){
-        const angle = Math.atan2(dy, dx); // Angle between -π and π
-        let attackDirection = '';
 
-        // Determine direction based on angle
-        if (angle >= -Math.PI / 4 && angle <= Math.PI / 4) {
-            attackDirection = 'attackRight1'; // Facing right
-        } else if (angle > Math.PI / 4 && angle <= (3 * Math.PI) / 4) {
-            attackDirection = 'attackDown1'; // Facing down
-        } else if (angle > (3 * Math.PI) / 4 || angle <= -(3 * Math.PI) / 4) {
-            attackDirection = 'attackLeft1'; // Facing left
-        } else if (angle > -(3 * Math.PI) / 4 && angle <= -Math.PI / 4) {
-            attackDirection = 'attackUp1'; // Facing up
-        }
-        return attackDirection;
+    /**
+    * Adjusts the position of idle units to avoid overlap with other idle units at the target position.
+    * @param {Unit} idleUnit - The unit that needs position adjustment.
+    */
+    adjustIdleUnitPosition(idleUnit) {
+        const unitsArray = [...this.#units.values()];
+        const bufferDistance = 0.25; // Minimum distance between idle units.
+
+        unitsArray.forEach(otherUnit => {
+            if (idleUnit === otherUnit || otherUnit.getState() !== 'idle') return;
+
+            const dx = otherUnit.getX() - idleUnit.getX();
+            const dy = otherUnit.getY() - idleUnit.getY();
+            const distance = Math.sqrt(dx ** 2 + dy ** 2);
+
+            if (distance < bufferDistance) {
+                // Units are too close; adjust position of the idleUnit slightly
+                const overlap = bufferDistance - distance;
+
+                // Calculate normalized direction vector
+                const directionX = dx / distance || (Math.random() - 0.5);
+                const directionY = dy / distance || (Math.random() - 0.5);
+
+                // Move the idle unit slightly away
+                idleUnit.setX(idleUnit.getX() - directionX * overlap);
+                idleUnit.setY(idleUnit.getY() - directionY * overlap);
+
+                console.log(`Adjusted idle unit to: (${idleUnit.getX()}, ${idleUnit.getY()})`);
+            }
+        });
     }
 
-    loadUnits(units){
+    checkForOverlaps() {
+        const unitsArray = [...this.#units.values()];
+        const minDistance = 1.2; // Minimum allowed distance between units.
+
+        for (let i = 0; i < unitsArray.length; i++) {
+            const unitA = unitsArray[i];
+
+            for (let j = i + 1; j < unitsArray.length; j++) {
+                const unitB = unitsArray[j];
+
+                const dx = unitB.getX() - unitA.getX();
+                const dy = unitB.getY() - unitA.getY();
+                const distance = Math.sqrt(dx ** 2 + dy ** 2);
+
+                if (distance < minDistance) {
+                    // Units are overlapping; adjust their targets to avoid overlap
+                    const angleA = Math.random() * Math.PI * 2; // Randomize directions
+                    const angleB = Math.random() * Math.PI * 2;
+
+                    unitA.movable.setTarget(
+                        unitA.getX() + Math.cos(angleA) * minDistance,
+                        unitA.getY() + Math.sin(angleA) * minDistance
+                    );
+                    unitB.movable.setTarget(
+                        unitB.getX() + Math.cos(angleB) * minDistance,
+                        unitB.getY() + Math.sin(angleB) * minDistance
+                    );
+
+                }
+            }
+        }
+    }    loadUnits(units){
         units.forEach(unit => {
-            const creteUnit = new Unit({
+            const createUnit = new Unit({
                 unitId:unit["_id"], 
                 x: unit["x"], 
                 y: unit["y"],
@@ -78,11 +129,14 @@ module.exports = class UnitController {
                 type: unit["type"]
             })
             this.#units.set(
-                creteUnit.getId().toString(), creteUnit
+                createUnit.getId().toString(), createUnit
             )
         });
     }
 
+    /*
+    * @returns { Unit } 
+    */
     getUnitById(unitId){
         return this.#units.get(unitId)    
     }
