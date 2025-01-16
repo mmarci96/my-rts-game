@@ -48,7 +48,7 @@ start_game_server() {
 
 # Install and run flask backend
 start_flask_backend() {
-    open_terminal "cd flask-htmx && source venv/bin/activate && pip install -r requirements.txt && python run.py"
+    open_terminal "cd flask-app && source venv/bin/activate && pip install -r requirements.txt && python run.py"
 }
 
 # Main function to orchestrate everything
