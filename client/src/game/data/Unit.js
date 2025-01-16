@@ -37,7 +37,7 @@ class Unit extends GameEntity {
     * @param { number } y
     * @param { Camera } camera
     */
-    draw(context, x, y, camera) {
+    draw(context, x, y, camera, deltaTime) {
         if (!(camera instanceof Camera)) {
             throw new TypeError("Camera must be a Camera.");
         }
@@ -46,7 +46,7 @@ class Unit extends GameEntity {
         }
 
         if(this.#movable.isMoving()) {
-            const updatedPos = this.#movable.move(super.getX(), super.getY());
+            const updatedPos = this.#movable.move(super.getX(), super.getY(), deltaTime);
             super.setX(updatedPos.x);
             super.setY(updatedPos.y);
         } 

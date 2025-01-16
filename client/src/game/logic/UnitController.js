@@ -67,14 +67,19 @@ class UnitController {
     animationLoop(camera) {
         const canvas = this.#unitCanvas;
         const context = canvas.getContext('2d');
+        let lastTime = Date.now();
 
         const animate = () => {
+            const now = Date.now();
+            const deltaTime = (now - lastTime) / 1000
+            lastTime = now;
+            
             context.clearRect(0, 0, canvas.width, canvas.height);
             [...this.#units.values()].forEach(unit => {
                 if (!(unit instanceof Unit)) {
                     throw new Error('Unknown unit: ' + unit);
                 }
-                unit.draw(context, unit.getX(), unit.getY(), camera);
+                unit.draw(context, unit.getX(), unit.getY(), camera, deltaTime);
             });
             requestAnimationFrame(animate);
         };
@@ -121,31 +126,24 @@ class UnitController {
         if (!type || !id || !x || !y || health === null) {
             throw new Error(`Missing:name${type};health: ${health};position:x:${x},y:${y} id=${id}`);
         }
-        if (this.#units.has(id)) {
-            const unit = this.#units.get(id);
-            unit.setState(state);
-            if (targetX) {
-                unit.setTarget(targetX, targetY);
-            }
-        } else {
-            let unit = null
-            let spriteSheet = null;
-            switch (type.toLowerCase()) {
-                case 'warrior':
-                    spriteSheet = this.#assetManager.getImage(`warrior_${color}`);
-                    unit = new Warrior(x, y, spriteSheet, id, state, health, color, speed);
-                    break;
-                case 'worker':
-                    spriteSheet = this.#assetManager.getImage(`pawn_${color}`);
-                    unit = new Worker(x, y, spriteSheet, id, state, health, color, speed);
-                    break;
-                default:console.warn(`Unknown unit type: ${type}`);
-            }
-
-            if(!unit || !spriteSheet) return
-            if (targetX) unit.setTarget(targetX, targetY);
-            this.#units.set(id, unit);
+        let unit = null
+        let spriteSheet = null;
+        
+        switch (type.toLowerCase()) {
+            case 'warrior':
+                spriteSheet = this.#assetManager.getImage(`warrior_${color}`);
+                unit = new Warrior(x, y, spriteSheet, id, state, health, color, speed);
+                break;
+            case 'worker':
+                spriteSheet = this.#assetManager.getImage(`pawn_${color}`);
+                unit = new Worker(x, y, spriteSheet, id, state, health, color, speed);
+                break;
+            default:console.warn(`Unknown unit type: ${type}`);
         }
+
+        if(!unit || !spriteSheet) return
+        if (targetX) unit.setTarget(targetX, targetY);
+        this.#units.set(id, unit);
     }
 }
 

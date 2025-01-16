@@ -39,7 +39,8 @@ class Movable {
         const dy = this.#targetY - y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         // Check if the target is reached
-        if (distance <= 0.1) {
+        const stepDistance = 0.05;
+        if (distance <= stepDistance) {
             // Snap to target and stop moving
             this.#isMoving = false;
             return { x, y };
@@ -49,8 +50,8 @@ class Movable {
         const ny = dy / distance; // Normalized y direction
 
         // Move along the direction vector by speed
-        const tx = x + nx * this.#speed;
-        const ty = y + ny * this.#speed;
+        const tx = x + nx * stepDistance;
+        const ty = y + ny * stepDistance;
 
         return { x: tx, y: ty };
     }

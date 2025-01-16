@@ -54,8 +54,17 @@ module.exports = class UnitController {
             unit.attackUnit(targetUnit);
             console.log("Emeny health after attack: ", targetUnit.getHealth())
         } else {
+            const directionX = dx / distance; // Normalize the direction vector
+            const directionY = dy / distance;
+
+            const targetX = targetUnit.getX() - directionX * (attackRange-0.1);
+            const targetY = targetUnit.getY() - directionY * (attackRange-0.1);
+            console.log('enemy pos: ', {x:targetUnit.getX() ,y: targetUnit.getY()})
+            console.log('stopp pos: ', {x:targetX ,y: targetY})
+
+            // Set the unit's state and move it towards the calculated position
             unit.setState('moving');
-            unit.movable.setTarget(targetUnit.getX(),targetUnit.getY());
+            unit.movable.setTarget(targetX, targetY);
         }
     }
 

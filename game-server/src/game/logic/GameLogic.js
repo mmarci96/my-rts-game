@@ -24,14 +24,12 @@ module.exports = class GameLogic {
     }
     
     handleCommand(command){
-        console.log(this.commandCount)
-        console.log(command);
         this.commandCount++
         const { action, unitId } = command;
         const unit = this.#unitController.getUnitById(unitId)
         if(!(unit instanceof Unit)) throw new TypeError('Invalid unit');
         if(!unit) {
-            console.log('unit not found, command cannot resolve');
+            console.error('unit not found, command cannot resolve');
             return;
         }
         switch (action) {
