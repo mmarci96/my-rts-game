@@ -163,8 +163,8 @@ class MouseEventHandler {
     getTargetPosition(units, clientX, clientY) {
         const { worldX, worldY } = this.convertCursorPosition(clientX, clientY) 
         const commands = []
-
-        units.forEach((unit) => {
+        const gridSize = Math.round(Math.sqrt(units.length));
+        units.forEach((unit, index) => {
             if(unit.isSelected()){
                 if(this.hoveredEnemy){
                     const targetEnemy = this.hoveredEnemy
@@ -198,16 +198,16 @@ class MouseEventHandler {
      * @param {number} i
      * @returns {{row: number, col: number}}
      */
-    createCheapGrid(unitX, unitY, targetX, targetY, gridSize, i) {
+    createCheapGrid(unitX, unitY, tx, ty, gridSize, i) {
         let accX = 1.2;
         let accY = -1.2;
-        if (unitX > targetX) accX = -1.2;
-        if (unitY > targetY) accY = 1.2;
+        if (unitX > tx) accX = -1.2;
+        if (unitY > ty) accY = 1.2;
 
         const row = Math.floor(i / gridSize) * accX;
         const col = (i % gridSize) * accY;
-        const targetX = worldX + col;
-        const targetY = worldY + row;
+        const targetX = tx + col;
+        const targetY = ty + row;
         return { targetX, targetY };
     }
 
