@@ -13,6 +13,7 @@ module.exports = class UnitController {
         //    this.checkForOverlaps();
         //    this.timePassed = 0;
         //} 
+        
         [...this.#units.values()].forEach(unit => {
             if(!(unit instanceof Unit)){
                 throw new TypeError('Not a valid unit, cant refresh!')
@@ -28,6 +29,11 @@ module.exports = class UnitController {
                 case 'cooldown':
                     unit.updateAttackCooldown(deltaTime)
                     break;
+                case 'idle':
+                    unit.idleTime += deltaTime;
+                    if(unit.idleTime > 1)break;
+                    this.adjustIdleUnitPosition(unit);
+                    break;
                 default:
                     break;
             }
@@ -42,7 +48,7 @@ module.exports = class UnitController {
         const dx = targetUnit.getX() - unit.getX()
         const dy = targetUnit.getY() - unit.getY()
         const distance = Math.sqrt(dx*dx + dy*dy);
-        const attackRange = 0.4; 
+        const attackRange = 1.2; 
         if(distance <= attackRange){
             console.log('attampting attack!');
             unit.attackUnit(targetUnit);
@@ -59,7 +65,7 @@ module.exports = class UnitController {
     */
     adjustIdleUnitPosition(idleUnit) {
         const unitsArray = [...this.#units.values()];
-        const bufferDistance = 0.25; // Minimum distance between idle units.
+        const bufferDistance = 1;
 
         unitsArray.forEach(otherUnit => {
             if (idleUnit === otherUnit || otherUnit.getState() !== 'idle') return;
@@ -116,7 +122,9 @@ module.exports = class UnitController {
                 }
             }
         }
-    }    loadUnits(units){
+    }   
+
+    loadUnits(units){
         units.forEach(unit => {
             const createUnit = new Unit({
                 unitId:unit["_id"], 

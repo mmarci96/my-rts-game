@@ -14,9 +14,11 @@ module.exports = class Unit extends GameEntity {
         let dmg = attackDmg;
         if(!dmg) dmg = Unit.#unitBaseAttack;
         this.damageDealer = new DamageDealer(dmg, Unit.#unitBaseAttackSpeed)
+        this.idleTime = 0;
     }
 
     updatePosition(deltaTime){
+        this.idleTime = 0;
         const { newX, newY, progress } = this.movable.move({
             startX: this.getX(), 
             startY: this.getY(), 

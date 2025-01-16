@@ -47,7 +47,7 @@ const websocketUpdater = (io, gameId) => {
             //saveGameState(gameData.units).then(update => console.log('Game saved: ', update))
             count = 0;
         }
-    }, 200);
+    }, 100);
 }
 
 const websocketController = (io) => {
