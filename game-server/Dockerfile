@@ -1,15 +1,11 @@
-FROM node:18-alpine AS server 
+FROM node:23.4.0-alpine AS server 
 
-WORKDIR /app
+WORKDIR ./app
 
 COPY package*.json ./
 
-RUN npm install
-
 COPY src ./src
 
-ENV MONGO_URI=${MONGO_URI}
-
-ENV PORT=${PORT}
+RUN npm install
 
 CMD ["npm", "run", "start"]

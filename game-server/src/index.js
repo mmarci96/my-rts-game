@@ -25,11 +25,17 @@ app.use(errorHandler)
 
 
 const main = async () => {
+    const uri = process.env.MONGO_URI;
+    console.log('MONGO_URI: ',MONGO_URI)
+    console.log("miniui", uri)
     mongoose.connect(MONGO_URI)
     .then(() => console.log("Connected to db: ", MONGO_URI))
     .catch(err => console.error(err))
 
-    server.listen(PORT,'0.0.0.0', () => console.log(`Server running on http://localhost:${PORT}`))
+    const port = parseInt(PORT)
+    const fuck = 8080
+    
+    server.listen(fuck,'0.0.0.0', () => console.log(`Server running on http://localhost:${PORT}`))
 }
 
 

@@ -1,0 +1,13 @@
+
+version: '3'
+services:
+  rts-game-server:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env  # This will automatically load environment variables from the .env file
+    environment:
+      - MONGO_URI=mongodb://localhost:27017/mydatabase
+      - PORT=8080
