@@ -9,7 +9,6 @@ class UnitController {
     #assetManager;
     #units;
     #unitCanvas;
-    static deadAnimation
 
     /**
      * The actual picture loader asset map
@@ -106,8 +105,12 @@ class UnitController {
                 this.loadUnit({...unitData});
             }
             // Mark this unit as processed
-            existingUnitIds.delete(unitData["_id"]);
+            existingUnitIds.delete(unitData["id"]);
+            console.log(existingUnitIds)
         });
+        [...existingUnitIds.keys()].forEach(unitId => {
+            this.#units.delete(unitId);
+        })
     }
 
     updateUnit({...props}){
@@ -117,14 +120,13 @@ class UnitController {
         }
         const unit = this.#units.get(id);
         if(!(unit instanceof Unit)) throw new TypeError('Not a unit')
-        unit.setHealth(health);
-        unit.setState(state)
-        unit.setTarget(x,y);
-
         if (unit.getState() !== 'dead' &&
             state === 'dead' ){
             unit.onDeath(this.#assetManager.getImage('dead'))
-        } 
+        }  
+        unit.setHealth(health);
+        unit.setTarget(x,y);
+        unit.setState(state)
     }
 
     /**

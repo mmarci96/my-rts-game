@@ -49,13 +49,18 @@ class Unit extends GameEntity {
             super.setY(updatedPos.y);
         } 
         this.animatedSprite.setAnimationType(this.getState())
+        this.animatedSprite.updateAnimation(); 
         this.animatedSprite.draw(context, x, y, camera, this.selectable);
-        this.animatedSprite.updateAnimation();
     }
     onDeath(deathAnimation){
         this.animatedSprite.setDeathAnimation(deathAnimation)
         this.animatedSprite.isDying = true;
     }
+
+    isAnimationComplete() {
+        return this.animatedSprite.isAnimationComplete;
+    }
+
     getHealth(){
         return this.#health
     }

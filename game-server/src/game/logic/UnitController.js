@@ -2,15 +2,20 @@ const Unit = require("../data/Unit")
 
 module.exports = class UnitController {
     #units
-    constructor(){
+    #deleteUnit;
+
+    constructor(deleteUnit){
+        this.#deleteUnit = deleteUnit()
         this.#units = new Map();
         this.timePassed = 0;
     }
 
     #handleDeath(deltaTime,unit){
-        const id = unit.getId();
         const isDead = unit.death(deltaTime);    
-        console.log(id,isDead);
+        //console.log(isDead);
+        if(isDead){
+            unit.setState('delete')
+        }
     }
 
     refreshUnits(deltaTime){
@@ -19,7 +24,7 @@ module.exports = class UnitController {
         //    this.checkForOverlaps();
         //    this.timePassed = 0;
         //} 
-        
+
         [...this.#units.values()].forEach(unit => {
             if(!(unit instanceof Unit)){
                 throw new TypeError('Not a valid unit, cant refresh!')
@@ -43,6 +48,10 @@ module.exports = class UnitController {
                     unit.idleTime += deltaTime;
                     if(unit.idleTime > 1)break;
                     this.adjustIdleUnitPosition(unit);
+                    break;
+                case 'delete':
+                    //this.#units.delete(unit.getId().toString())
+                    //this.#deleteUnit(unit.getId());
                     break;
                 default:
                     break;
@@ -169,18 +178,20 @@ module.exports = class UnitController {
     }
 
     getUnits(){
-        return [...this.#units.values()].flatMap(unit => ({
-            id: unit.getId(),
-            x: unit.getX(),
-            y: unit.getY(),
-            color: unit.getColor(),
-            state: unit.getState(),
-            health: unit.damagable.getHealth(),
-            speed: unit.movable.getSpeed(),
-            targetX: unit.movable.getTargetX(),
-            targetY: unit.movable.getTargetY(),
-            type: unit.getType()
-        }));
+        return [...this.#units.values()]
+            .filter(unit => unit.getState() !== 'delete')
+            .flatMap(unit => ({
+                id: unit.getId(),
+                x: unit.getX(),
+                y: unit.getY(),
+                color: unit.getColor(),
+                state: unit.getState(),
+                health: unit.damagable.getHealth(),
+                speed: unit.movable.getSpeed(),
+                targetX: unit.movable.getTargetX(),
+                targetY: unit.movable.getTargetY(),
+                type: unit.getType()
+            }));
     }
 
 }

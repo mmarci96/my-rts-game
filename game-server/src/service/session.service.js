@@ -37,6 +37,10 @@ class SessionService {
 
         return units;
     }
+    static async deleteUnitById(unitId){
+        const unit = await Unit.findByIdAndDelete(unitId);
+        return unit;
+    }
     static async saveUnitsData(units) {
         if (!Array.isArray(units) || units.length === 0) {
             throw new BadRequestError("No units data provided to save", 400);

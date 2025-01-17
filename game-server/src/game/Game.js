@@ -3,9 +3,9 @@ const GameLogic = require("./logic/GameLogic")
 module.exports = class Game {
     #gameId
     #gameLogic
-    constructor(gameId){
+    constructor(gameId, deleteUnit){
         this.#gameId = gameId;
-        this.#gameLogic = new GameLogic();
+        this.#gameLogic = new GameLogic(deleteUnit);
         this.running = false;
     }
 

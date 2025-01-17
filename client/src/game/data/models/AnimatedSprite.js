@@ -11,14 +11,25 @@ class AnimatedSprite {
         this.frameY = 0;
         this.gameFrame = 0;
         this.staggerFrames = 6; // requestAnimationFrame(60FPS)/ 6 = 10 FPS
+        this.maxFrame = 5;
+        this.skullFrames = 0;
+        this.isAnimationComplete = false
     }
 
     updateAnimation() {
+        if (this.isDying && this.maxFrame === 6) {
+            if (this.skullFrames >= 7) {
+                this.frameY = 1;
+                this.isAnimationComplete = true; // Mark animation as complete
+            } else {
+                this.skullFrames++;
+            }
+        }
         if (this.gameFrame % this.staggerFrames === 0) {
-            if (this.frameX < this.frameWidth) this.frameX++;
-                else this.frameX = 0;
+            this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
         }
         this.gameFrame++;
+
     }
 
     /**
@@ -68,9 +79,16 @@ class AnimatedSprite {
         }
     }
     setDeathAnimation(deathSprite){
-        this.frameWidth = 896 / 8;
+        this.staggerFrames = 8
+        this.skullFrames = 0; 
+        this.maxFrame = 6
+        this.frameWidth = 896 / 7
         this.frameHeight = 256 / 2;
         this.spriteSheet = deathSprite;
+    }
+
+    getSkullFrames(){
+        return this.skullFrames;
     }
 
     /**

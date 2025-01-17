@@ -15,6 +15,7 @@ module.exports = class Unit extends GameEntity {
         if(!dmg) dmg = Unit.#unitBaseAttack;
         this.damageDealer = new DamageDealer(dmg, Unit.#unitBaseAttackSpeed)
         this.idleTime = 0;
+        this.deleteTime = 0;
     }
 
     updatePosition(deltaTime){
@@ -42,8 +43,8 @@ module.exports = class Unit extends GameEntity {
     }
 
     death(deltaTime){
-        this.idleTime += deltaTime;
-        if(deltaTime > 2){
+        this.deleteTime += deltaTime;
+        if(this.deleteTime > 1.2){
             return true;
         }
         return false;

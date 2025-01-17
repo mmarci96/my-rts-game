@@ -5,14 +5,24 @@ const Game = require('../game/Game.js')
 
 const players = {}
 const games = {}
+const deadUnits = []
+let idk = 0
+const deleteUnits = (unitId) => {
+    if(unitId){
+        SessionService.deleteUnitById(unitId)
+
+    }
+}
 
 const loadGameState = async gameId => {
+    idk++
+    console.log('COUNT',idk)
     const gameData = await GameService.getGameById(gameId)
     const units = await SessionService.getUnitsBySessionId(gameData.sessionId)
     const mapData = await MapService.getMapById(gameData.mapId)
     console.log('Current games:\n',games, '\n')
     if(games[gameId] = 'undefined'){
-        const game = new Game(gameId);
+        const game = new Game(gameId, deleteUnits);
         game.loadGame(mapData.tiles, units)
         games[gameId] = {
             gameData,
