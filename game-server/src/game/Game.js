@@ -3,9 +3,9 @@ const GameLogic = require("./logic/GameLogic")
 module.exports = class Game {
     #gameId
     #gameLogic
-    constructor(gameId, deleteUnit){
+    constructor(gameId, units, map){
         this.#gameId = gameId;
-        this.#gameLogic = new GameLogic(deleteUnit);
+        this.#gameLogic = new GameLogic(units, map);
         this.running = false;
     }
 
@@ -14,8 +14,9 @@ module.exports = class Game {
     }
 
     loadGame(map, units){
-        this.#gameLogic.loadMap(map)
-        this.#gameLogic.loadUnits(units)
+        console.log("load the game", map, units)
+        //this.#gameLogic.loadMap(map)
+        //this.#gameLogic.loadUnits(units)
     }
 
     getGameState(){
@@ -37,11 +38,15 @@ module.exports = class Game {
         const interval = 50;
 
         this.gameLoopInterval = setInterval(() => {
+            if(this.#gameLogic.isGameOver()){
+                console.log('wooooo', this.#gameLogic.isGameOver());
+                this.winner = this.#gameLogic.isGameOver();
+                this.stopGameLoop()
+            }
             const now = Date.now()
             const deltaTime = (now - lastTime) / 1000
             lastTime = now;
             uptime += deltaTime;
-            //console.log('uptime: ', uptime)
 
             this.#gameLogic.updateUnits(deltaTime);
         }, interval);
@@ -53,6 +58,10 @@ module.exports = class Game {
             clearInterval(this.gameLoopInterval);
             console.log("Game loop stopped.");
         }
+    }
+
+    getWinner(){
+        return this.winner;
     }
 
     isRunning(){

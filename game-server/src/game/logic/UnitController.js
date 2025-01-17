@@ -2,29 +2,27 @@ const Unit = require("../data/Unit")
 
 module.exports = class UnitController {
     #units
-    #deleteUnit;
 
-    constructor(deleteUnit){
-        this.#deleteUnit = deleteUnit()
+    constructor(units){
         this.#units = new Map();
+        this.loadUnits(units)
         this.timePassed = 0;
     }
 
     #handleDeath(deltaTime,unit){
         const isDead = unit.death(deltaTime);    
-        //console.log(isDead);
         if(isDead){
             unit.setState('delete')
         }
     }
-
+    getUnitsByColor(color){
+        return [ ...this.#units.values()]
+            .filter(unit => unit.getColor() === color)
+    }
+    getUnitSize(){
+        return this.#units.size;
+    }
     refreshUnits(deltaTime){
-        //this.timePassed += deltaTime;
-        //if (this.timePassed > 1){
-        //    this.checkForOverlaps();
-        //    this.timePassed = 0;
-        //} 
-
         [...this.#units.values()].forEach(unit => {
             if(!(unit instanceof Unit)){
                 throw new TypeError('Not a valid unit, cant refresh!')
@@ -50,8 +48,8 @@ module.exports = class UnitController {
                     this.adjustIdleUnitPosition(unit);
                     break;
                 case 'delete':
-                    //this.#units.delete(unit.getId().toString())
-                    //this.#deleteUnit(unit.getId());
+                    console.log('deleting')
+                    this.#units.delete(unit.getId().toString())
                     break;
                 default:
                     break;
@@ -64,23 +62,22 @@ module.exports = class UnitController {
 
         const targetId = unit.damageDealer.getTargetId();
         const targetUnit = this.getUnitById(targetId);
+        if(!targetUnit){
+            unit.setState('idle');
+            return;
+        }
         const dx = targetUnit.getX() - unit.getX()
         const dy = targetUnit.getY() - unit.getY()
         const distance = Math.sqrt(dx*dx + dy*dy);
         const attackRange = 1.2; 
         if(distance <= attackRange){
-            console.log('attampting attack!');
             unit.attackUnit(targetUnit);
-            console.log("Emeny health after attack: ", targetUnit.getHealth())
         } else {
             const directionX = dx / distance; // Normalize the direction vector
             const directionY = dy / distance;
 
             const targetX = targetUnit.getX() - directionX * (attackRange-0.1);
             const targetY = targetUnit.getY() - directionY * (attackRange-0.1);
-            console.log('enemy pos: ', {x:targetUnit.getX() ,y: targetUnit.getY()})
-            console.log('stopp pos: ', {x:targetX ,y: targetY})
-
             // Set the unit's state and move it towards the calculated position
             unit.setState('moving');
             unit.movable.setTarget(targetX, targetY);
@@ -114,7 +111,6 @@ module.exports = class UnitController {
                 idleUnit.setX(idleUnit.getX() - directionX * overlap);
                 idleUnit.setY(idleUnit.getY() - directionY * overlap);
 
-                console.log(`Adjusted idle unit to: (${idleUnit.getX()}, ${idleUnit.getY()})`);
             }
         });
     }

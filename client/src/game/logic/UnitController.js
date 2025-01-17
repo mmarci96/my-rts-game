@@ -106,7 +106,6 @@ class UnitController {
             }
             // Mark this unit as processed
             existingUnitIds.delete(unitData["id"]);
-            console.log(existingUnitIds)
         });
         [...existingUnitIds.keys()].forEach(unitId => {
             this.#units.delete(unitId);
