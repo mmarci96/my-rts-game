@@ -31,6 +31,7 @@ class GameLogic {
         this.#player = player
         this.#mapData = map;
         this.#camera = new Camera(16, 16, 14, 14);
+        this.isRunning = false;
 
         if(player.getColor() === 'blue'){
             const camOffSet = Math.sqrt(map.length*map.length)
@@ -55,8 +56,13 @@ class GameLogic {
     setupGame(){
         this.loadMap();
         this.setupControl();
+        this.isRunning = true;
     }
 
+    stopGame(){
+        console.log("I dont know how to stop this...")
+        this.isRunning = false
+    }
     loadMap() {
         this.drawHouse();
         this.#gameMap.drawMap()
@@ -69,12 +75,17 @@ class GameLogic {
     }
 
     getUnitData(){
-        const units = this.#unitController.getAllUnits()
-        return units
+        return units = this.#unitController.getAllUnits()
+
     }
     updateUnits(units){
-        this.#unitController.refreshUnits(units)
-        this.#mouseHandler.updateSelection(this.#unitController, this.#player.getColor())
+        if(this.isRunning){
+            this.#unitController.refreshUnits(units)
+            this.#mouseHandler.updateSelection(this.#unitController, this.#player.getColor())
+        } else {
+            this.stopGame();
+        }
+
     }
     drawHouse(){
         const houseRed = new House(5,5,128,128,'idhouse_red', 'red', this.#assets.getImage('house_red'))

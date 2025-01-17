@@ -5,8 +5,6 @@ const Game = require('../game/Game.js')
 
 const players = {}
 const games = {}
-const deadUnits = []
-let idk = 0
 const deleteUnits = (unitId) => {
     if(unitId){
         SessionService.deleteUnitById(unitId)
@@ -15,8 +13,6 @@ const deleteUnits = (unitId) => {
 }
 
 const loadGameState = async gameId => {
-    idk++
-    console.log('COUNT',idk)
     const gameData = await GameService.getGameById(gameId)
     const units = await SessionService.getUnitsBySessionId(gameData.sessionId)
     const mapData = await MapService.getMapById(gameData.mapId)
@@ -28,7 +24,8 @@ const loadGameState = async gameId => {
             gameData,
             game
         }
-    } 
+    }
+    return gameData
 }
 
 const saveGameState = unitsList => {
@@ -39,7 +36,8 @@ const getGameState = (gameId) => {
     const { game, gameData } = games[gameId]
     const gameState = {
         gameData,
-        units: game.getGameState().units
+        units: game.getGameState().units,
+        winner: game.winner
     }
     return gameState
 }
@@ -52,9 +50,12 @@ const websocketUpdater = (io, gameId) => {
         io.to(gameId).emit('gameState', gameData)
         count++;
         if(count >= saveRate){
-            console.log('data sent: ', gameData)
             saveGameState(gameData.units);
             count = 0;
+        }
+        if(gameData.winner){
+            io.to(gameId).emit('gameOver', gameData.winner)
+            clearInterval();
         }
     }, 100);
 }
@@ -69,17 +70,19 @@ const websocketController = (io) => {
                 player: userId, 
                 game: gameId
             }
-            await loadGameState(gameId)
+            const startData = await loadGameState(gameId)
 
             const gameData = getGameState(gameId)
             socket.join(gameId)
             io.to(gameId).emit('gameState', gameData)
             if(!games[gameId].game.isRunning()){
-                console.log('line before start loop')
                 games[gameId].game.startGameLoop()
+                const { color } = startData.players
+                    .find(p => p.userId.toString() === userId)
+                
+                games[gameId].game.connectPlayer(userId, color)
                 websocketUpdater(io,gameId);
             }
-            
         })
 
         socket.on('pendingCommands', commands => {
@@ -95,9 +98,10 @@ const websocketController = (io) => {
 
     io.on('disconnect', socket => {
         console.log('Connection ended: ', socket.io)
+        
         delete players[socket.id]
         const gameId = players[socket.id].game
-        //games[gameId].game.stopGameLoop();
+        games[gameId].game.disconnectPlayer(players[socket.id].player);
     })
 }
 

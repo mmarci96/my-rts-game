@@ -30,6 +30,9 @@ class Game {
     refreshUnitData(units) {
         this.#gameLogic.updateUnits(units)
     }
+    stopGame(){
+        this.#gameLogic.stopGame();
+    }
 }
 
 export default Game;

@@ -7,9 +7,9 @@ module.exports = class GameLogic {
     #gameMap
     #players
     #unitController
-    constructor(deleteUnit){
+    constructor(){
         this.#players = new Map();
-        this.#unitController = new UnitController(deleteUnit);
+        this.#unitController = new UnitController();
         this.commandCount = 0
     }
 
@@ -69,6 +69,26 @@ module.exports = class GameLogic {
     }
     getPlayerById(playerId){
         return this.#players.get(playerId);
+    }
+
+    getUnitsByPlayer(playerId){
+        const player = this.getPlayerById(playerId)
+        const color = player.getColor();
+        return this.#unitController.getUnits()
+           .filter(unit => unit.color === color);
+    }
+
+    isGameOver(){
+        this.getPlayers().forEach(({ playerId }) => {
+            const units = this.getUnitsByPlayer(playerId)
+            if (units.length === 0){
+                this.removePlayerById(playerId)
+            }
+        })
+        if(this.#players.size === 1){
+            return { winner: [...this.#players.values()][0].getId(), points: 2 }
+        }
+        return null;
     }
 
 }

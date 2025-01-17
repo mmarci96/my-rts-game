@@ -1,8 +1,7 @@
 class AssetManager {
     constructor(port) {
         this.images = new Map();
-        this.baseURL = port === '5173' ? 'http://localhost:5173' : 'http://localhost';
-        // 'http://192.168.0.138:5173' 
+        this.baseURL = 'http://192.168.0.138:5173' //port === '5173' ? 'http://localhost:5173' : 'http://localhost'; 
     }
 
     /**

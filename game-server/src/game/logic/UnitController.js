@@ -2,17 +2,14 @@ const Unit = require("../data/Unit")
 
 module.exports = class UnitController {
     #units
-    #deleteUnit;
 
-    constructor(deleteUnit){
-        this.#deleteUnit = deleteUnit()
+    constructor(){
         this.#units = new Map();
         this.timePassed = 0;
     }
 
     #handleDeath(deltaTime,unit){
         const isDead = unit.death(deltaTime);    
-        //console.log(isDead);
         if(isDead){
             unit.setState('delete')
         }
@@ -50,8 +47,7 @@ module.exports = class UnitController {
                     this.adjustIdleUnitPosition(unit);
                     break;
                 case 'delete':
-                    //this.#units.delete(unit.getId().toString())
-                    //this.#deleteUnit(unit.getId());
+                    this.#units.delete(unit.getId().toString())
                     break;
                 default:
                     break;
@@ -69,18 +65,13 @@ module.exports = class UnitController {
         const distance = Math.sqrt(dx*dx + dy*dy);
         const attackRange = 1.2; 
         if(distance <= attackRange){
-            console.log('attampting attack!');
             unit.attackUnit(targetUnit);
-            console.log("Emeny health after attack: ", targetUnit.getHealth())
         } else {
             const directionX = dx / distance; // Normalize the direction vector
             const directionY = dy / distance;
 
             const targetX = targetUnit.getX() - directionX * (attackRange-0.1);
             const targetY = targetUnit.getY() - directionY * (attackRange-0.1);
-            console.log('enemy pos: ', {x:targetUnit.getX() ,y: targetUnit.getY()})
-            console.log('stopp pos: ', {x:targetX ,y: targetY})
-
             // Set the unit's state and move it towards the calculated position
             unit.setState('moving');
             unit.movable.setTarget(targetX, targetY);
@@ -114,7 +105,6 @@ module.exports = class UnitController {
                 idleUnit.setX(idleUnit.getX() - directionX * overlap);
                 idleUnit.setY(idleUnit.getY() - directionY * overlap);
 
-                console.log(`Adjusted idle unit to: (${idleUnit.getX()}, ${idleUnit.getY()})`);
             }
         });
     }

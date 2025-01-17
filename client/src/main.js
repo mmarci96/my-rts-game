@@ -28,6 +28,14 @@ const socketHandler = (socket, game, userId, gameId) => {
         }
     })
 
+    socket.on('gameOver', winData => {
+        console.log('winner is: ', winData)
+        const {winner} = winData
+        game.stopGame();
+        displayGameOver(winner); 
+        return;
+    })
+
     setInterval(() => {
         if(pendingCommands.length >= 1){
             socket.emit('pendingCommands', pendingCommands)
@@ -35,6 +43,15 @@ const socketHandler = (socket, game, userId, gameId) => {
             console.log('Commands added to stack')
         }
     }, 60);
+}
+
+const displayGameOver = (winner) => {
+    const root = document.getElementById('root')
+    root.innerHTML = '';
+    const gameOverScene = document.createElement('div')
+    gameOverScene.classList = 'game-over'
+    root.appendChild(gameOverScene);
+    gameOverScene.innerText = 'Player: ' + winner + ", has won!";
 }
    
 const loadEvent = async () => {
