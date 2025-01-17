@@ -32,6 +32,7 @@ module "vpc" {
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = 1
   }
+  map_public_ip_on_launch = true
 }
 
 locals {
@@ -59,7 +60,7 @@ module "eks" {
   }
 
   vpc_id                   = local.vpc_id
-  subnet_ids               = local.subnets_ids
+  subnet_ids               = local.private_subnets_ids
   control_plane_subnet_ids = local.private_subnets_ids
 
   eks_managed_node_group_defaults = {

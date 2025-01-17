@@ -1,0 +1,47 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rts-game-server
+  labels:
+    app: rts-game-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rts-game-server
+  template:
+    metadata:
+      labels:
+        app: rts-game-server
+    spec:
+      containers:
+        - name: rts-game-server
+          image: mmarci96/rts-game-server:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: rts-game-server
+            - configMapRef:
+                name: rts-game-server
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 20
