@@ -16,8 +16,10 @@ const io = new Server(server);
 websocketController(io)
 
 app.use(express.json())
-
 app.use('/api/games', gameRoutes)
+app.get('health', (req, res) => {
+    res.status(200).send({status: OK})
+})
 app.use(errorHandler)
 
 

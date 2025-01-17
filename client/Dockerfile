@@ -17,6 +17,8 @@ COPY --from=client /src/dist /usr/share/nginx/html
 
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
+COPY --from=client 404.html /use/share/nginx/html/
+
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
