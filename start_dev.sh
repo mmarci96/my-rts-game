@@ -38,7 +38,7 @@ open_terminal() {
 
 # Install and run client
 start_client() {
-    open_terminal "cd client && npm install && npm run dev"
+    open_terminal "cd client && npm install && npm run dev -- --host"
 }
 
 # Install and run game server

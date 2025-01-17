@@ -44,7 +44,8 @@ module.exports = class Unit extends GameEntity {
 
     death(deltaTime){
         this.deleteTime += deltaTime;
-        if(this.deleteTime > 1.2){
+        if(this.deleteTime > 1){
+            this.setState('delete')
             return true;
         }
         return false;

@@ -48,28 +48,24 @@ class SelectionBox {
             right: Math.max(this.#startX, this.#finalX) + 28,
             bottom: Math.max(this.#startY, this.#finalY) + 28,
         };
-        console.log('selectionRect',selectionRect)
 
         return units.filter((unit) => {
             if (!(unit instanceof Unit)) {
                 throw new TypeError("Unit is not supported");
             }
-            console.log(selectionRect)
             const { px, py } = VectorTransformer.positionToCanvas({
                 posX: unit.getX(),
                 posY: unit.getY(),
                 cameraX: camera.getX(),
                 cameraY: camera.getY()
             });
-            console.log('unit on canvas: ', {x:px,y:py})
             const unitRect = {
                 left: px,
                 top: py,
                 right: px + 48,
                 bottom: py + 48,
             };
-
-            console.log('unitRect', unitRect)
+            
             const isPartiallyInside = (
                 selectionRect.right >= unitRect.left &&
                     selectionRect.left <= unitRect.right &&

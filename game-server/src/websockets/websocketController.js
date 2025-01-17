@@ -17,9 +17,8 @@ const loadGameState = async gameId => {
     const units = await SessionService.getUnitsBySessionId(gameData.sessionId)
     const mapData = await MapService.getMapById(gameData.mapId)
     console.log('Current games:\n',games, '\n')
-    if(games[gameId] = 'undefined'){
-        const game = new Game(gameId, deleteUnits);
-        game.loadGame(mapData.tiles, units)
+    if(games[gameId] !== 'undefined'){
+        const game = new Game(gameId,units, mapData);
         games[gameId] = {
             gameData,
             game
@@ -29,7 +28,7 @@ const loadGameState = async gameId => {
 }
 
 const saveGameState = unitsList => {
-     SessionService.saveUnitsData(unitsList).then(data => console.log('saved:', data))
+     SessionService.saveUnitsData(unitsList)
 }
 
 const getGameState = (gameId) => {
@@ -44,7 +43,7 @@ const getGameState = (gameId) => {
 
 const websocketUpdater = (io, gameId) => {
     let count = 0
-    const saveRate = 100
+    const saveRate = 5 
     setInterval(() => {
         const gameData = getGameState(gameId)
         io.to(gameId).emit('gameState', gameData)

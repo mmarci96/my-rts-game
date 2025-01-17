@@ -7,15 +7,13 @@ module.exports = class GameLogic {
     #gameMap
     #players
     #unitController
-    constructor(){
+    constructor(units, gameMap){
         this.#players = new Map();
-        this.#unitController = new UnitController();
+        this.#unitController = new UnitController(units);
+        this.#gameMap = new GameMap(gameMap);
         this.commandCount = 0
     }
 
-    loadUnits(units){
-        this.#unitController.loadUnits(units)
-    }
     getUnits(){
         return this.#unitController.getUnits();
     }
@@ -44,10 +42,6 @@ module.exports = class GameLogic {
         }
         unit.setState(action);
 
-    }
-
-    loadMap(map){
-        this.#gameMap = new GameMap(map);
     }
 
     getMap(){
@@ -79,16 +73,16 @@ module.exports = class GameLogic {
     }
 
     isGameOver(){
-        this.getPlayers().forEach(({ playerId }) => {
-            const units = this.getUnitsByPlayer(playerId)
-            if (units.length === 0){
-                this.removePlayerById(playerId)
+        let winner = null
+        const unitSize = this.#unitController.getUnitSize(); 
+        this.getPlayers().forEach(({ playerId, color }) => {
+            const playerUnits = this.#unitController.getUnitsByColor(color)
+            if(unitSize === playerUnits.length){
+                console.log('hiii?')
+                winner = { winner: playerId, color: color, points: 2 }
             }
         })
-        if(this.#players.size === 1){
-            return { winner: [...this.#players.values()][0].getId(), points: 2 }
-        }
-        return null;
+        return winner;
     }
 
 }

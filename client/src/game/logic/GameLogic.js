@@ -60,9 +60,9 @@ class GameLogic {
     }
 
     stopGame(){
-        console.log("I dont know how to stop this...")
         this.isRunning = false
     }
+
     loadMap() {
         this.drawHouse();
         this.#gameMap.drawMap()
@@ -82,11 +82,9 @@ class GameLogic {
         if(this.isRunning){
             this.#unitController.refreshUnits(units)
             this.#mouseHandler.updateSelection(this.#unitController, this.#player.getColor())
-        } else {
-            this.stopGame();
         }
-
     }
+
     drawHouse(){
         const houseRed = new House(5,5,128,128,'idhouse_red', 'red', this.#assets.getImage('house_red'))
         const houseBlue = new House(42,42,128,128,'idhouse_blue', 'blue', this.#assets.getImage('house_blue'))

@@ -3,8 +3,9 @@ const Unit = require("../data/Unit")
 module.exports = class UnitController {
     #units
 
-    constructor(){
+    constructor(units){
         this.#units = new Map();
+        this.loadUnits(units)
         this.timePassed = 0;
     }
 
@@ -14,14 +15,14 @@ module.exports = class UnitController {
             unit.setState('delete')
         }
     }
-
+    getUnitsByColor(color){
+        return [ ...this.#units.values()]
+            .filter(unit => unit.getColor() === color)
+    }
+    getUnitSize(){
+        return this.#units.size;
+    }
     refreshUnits(deltaTime){
-        //this.timePassed += deltaTime;
-        //if (this.timePassed > 1){
-        //    this.checkForOverlaps();
-        //    this.timePassed = 0;
-        //} 
-
         [...this.#units.values()].forEach(unit => {
             if(!(unit instanceof Unit)){
                 throw new TypeError('Not a valid unit, cant refresh!')
@@ -47,6 +48,7 @@ module.exports = class UnitController {
                     this.adjustIdleUnitPosition(unit);
                     break;
                 case 'delete':
+                    console.log('deleting')
                     this.#units.delete(unit.getId().toString())
                     break;
                 default:
@@ -60,6 +62,10 @@ module.exports = class UnitController {
 
         const targetId = unit.damageDealer.getTargetId();
         const targetUnit = this.getUnitById(targetId);
+        if(!targetUnit){
+            unit.setState('idle');
+            return;
+        }
         const dx = targetUnit.getX() - unit.getX()
         const dy = targetUnit.getY() - unit.getY()
         const distance = Math.sqrt(dx*dx + dy*dy);
