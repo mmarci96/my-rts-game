@@ -122,6 +122,7 @@ class Unit extends GameEntity {
     getColor() {
         return this.selectable.getColor();
     }
+
 }
 
 export default Unit;

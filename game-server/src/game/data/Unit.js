@@ -41,6 +41,14 @@ module.exports = class Unit extends GameEntity {
         return;
     }
 
+    death(deltaTime){
+        this.idleTime += deltaTime;
+        if(deltaTime > 2){
+            return true;
+        }
+        return false;
+    }
+
     attackUnit(targetUnit){
         if(!this.damageDealer.canAttack()){
             console.error('Unit should not attack on cooldown')

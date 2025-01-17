@@ -7,6 +7,15 @@ module.exports = class UnitController {
         this.timePassed = 0;
     }
 
+    #handleDeath(deltaTime,unit){
+        const id = unit.getId();
+        const isDead = unit.death(deltaTime);
+        if(isDead){
+            setTimeout(()=>{
+                this.#units.delete(id);
+            },2000)
+        }
+    }
     refreshUnits(deltaTime){
         //this.timePassed += deltaTime;
         //if (this.timePassed > 1){
@@ -17,6 +26,10 @@ module.exports = class UnitController {
         [...this.#units.values()].forEach(unit => {
             if(!(unit instanceof Unit)){
                 throw new TypeError('Not a valid unit, cant refresh!')
+            }
+            if(unit.getHealth() <= 0){
+                unit.setState('dead');
+                this.#handleDeath(deltaTime, unit)
             }
             let state = unit.getState();
             switch (state) {
