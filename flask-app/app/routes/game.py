@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, g, Response
 from bson import ObjectId
-from datetime import datetime
 import json
 import os
+
+from pymongo import timeout
 
 
 from app.service.random_map_generator import generate_random_map
@@ -85,21 +86,16 @@ def lobby(game_id):
 
 @game_bp.route('/lobby-stream/<game_id>', methods=['GET'])
 def lobby_stream(game_id):
-    def stream():
-        while True:
-            mongo = g.mongo
-            game = mongo.db.games.find_one({"_id": ObjectId(game_id)})
-            players = game['players']
+        mongo = g.mongo
+        game = mongo.db.games.find_one({"_id": ObjectId(game_id)})
+        players = game['players']
 
-            all_ready = all(player["isReady"] for player in players)
-            data = {
-                    "players": [{"username": p["username"], "color": p["color"], "isReady": p["isReady"]} for p in players],
-                    "allReady": all_ready,
-                    }
-            yield f"data: {json.dumps(data)}\n\n"
-            time.sleep(2)  # Adjust frequency as needed
-
-    return Response(stream(), mimetype="text/event-stream")
+        all_ready = all(player["isReady"] for player in players)
+        data = {
+                "players": [{"username": p["username"], "color": p["color"], "isReady": p["isReady"]} for p in players],
+                "allReady": all_ready,
+                }
+        return jsonify(data)
 
 @game_bp.route('/update-player-status/<game_id>', methods=['POST'])
 def update_player_status(game_id):

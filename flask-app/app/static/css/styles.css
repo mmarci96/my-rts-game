@@ -5,7 +5,6 @@ body {
     padding: 0;
     width: 100vw;
     height: 100vh;
-    margin-bottom: 40px;
     background-color: #0f0f0f;
     color: grey;
 }
@@ -16,75 +15,111 @@ h1, h2, h3, h4 {
     padding: 2px;
     margin: 8px;
 }
-main {
-    padding: 20px;
-}
+
 p, span {
     font-family: "Hack Nerd Font", sans-serif;
     color: #FFF4D5;
     padding: 2px;
     margin: 8px;
 }
+
 header {
     background-color: #333;
     color: white;
     padding: 10px;
-    margin: 0px;
+    margin: 0;
+    padding-bottom: 40px;
+    display: flex;
+    justify-content: space-evenly;
 }
 
-button {
-    padding: 4px;
-    margin: 4px;
-    color: grey;
-    font-size: 16px;
-    background: black;
-    border:black;
-}
-button:hover {
-    cursor: pointer;
-}
 nav {
-    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
     height: 28px;
+}
+nav ul {
+    padding: 0;
+    margin: 0;
 }
 nav ul li {
     display: inline-block;
     list-style-type: none;
     padding: 0;
+    margin: 16px 8px 4px 8px;
 }
-
-li {
-    margin: 16px;
-    margin-top: 4px;
-}
-
-a {
-    font-size: 16px;
+nav a {
+    padding: 8px;
+    margin: 4px;
+    font-size: 20px;
     color: grey;
-    border: grey 1px solid;
+    border: 1px solid grey;
     border-radius: 8px;
-    padding: 4px;
     background: black;
-    margin-bottom: 4px;
-    margin-top: 4px;
+}
+
+main {
+    padding: 20px;
 }
 
 footer {
     text-align: center;
-    padding: 10px;
     background-color: #333;
     color: white;
     position: fixed;
     width: 100%;
     bottom: 0;
 }
-input {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    font-size: 20px;
-    padding: 4px;
+
+a {
+    font-size: 16px;
 }
+a:hover {
+    color: white;
+    border-color: white;
+}
+
+button {
+    padding: 8px 12px;
+    margin: 6px 4px;
+    font-size: 16px;
+    color: grey;
+    background: black;
+    border: 1px solid grey;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+button:hover {
+    cursor: pointer;
+    color: white;
+    border-color: white;
+    background: #1c1c1c;
+}
+
+form {
+    margin: 4px 0;
+    padding: 1px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* Consistent spacing between inputs and buttons */
+}
+
+input, select {
+    font-size: 18px;
+    padding: 6px 8px;
+    margin: 4px 0;
+    border: 1px solid grey;
+    border-radius: 4px;
+    background: black;
+    color: grey;
+}
+input:focus, select:focus {
+    outline: none;
+    border-color: white;
+}
+
 div {
-    padding: 2px;
-    margin: 4px;
+    padding: 4px;
+    margin: 8px 0;
 }
+

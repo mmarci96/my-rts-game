@@ -11,11 +11,6 @@ spec:
     matchLabels:
       app: flask-app
   replicas: 2
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
   template:
     metadata:
       annotations:
@@ -23,54 +18,45 @@ spec:
       labels:
         app: flask-app
     spec:
-      # initContainers:
-        # Init containers are exactly like regular containers, except:
-          # - Init containers always run to completion.
-          # - Each init container must complete successfully before the next one starts.
       containers:
-      - name: flask-app
-        image: 390403884602.dkr.ecr.eu-north-1.amazonaws.com/rts-game-flask-app:latest
-        imagePullPolicy: IfNotPresent
-        resources:
+        - name: flask-app
+          image: 390403884602.dkr.ecr.eu-north-1.amazonaws.com/rts-game-flask-app:latest
+          imagePullPolicy: IfNotPresent
+          resources:
           requests:
-            cpu: 100m
-            memory: 100Mi
+            cpu: 250m
+            memory: 512Mi
           limits:
-            cpu: 100m
-            memory: 100Mi
-        livenessProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /_status/healthz
-            port: 80
-          initialDelaySeconds: 5
-          timeoutSeconds: 2
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
-        env:
-        - name: DB_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: flask-app
-              key: DB_HOST
-        ports:
-        - containerPort: 80
-          name: flask-app
-        volumeMounts:
-        - name: localtime
-          mountPath: /etc/localtime
-      volumes:
-        - name: localtime
-          hostPath:
-            path: /usr/share/zoneinfo/Asia/Taipei
-      restartPolicy: Always
+            cpu: 500m
+            memory: 1Gi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app
+  namespace: default
+spec:
+  selector:
+    app: flask-app
+  type: ClusterIP
+  ports:
+  - name: flask-app
+    protocol: TCP
+    port: 80
+    targetPort: 5000
+    nodePort: 30001
 ---
 
