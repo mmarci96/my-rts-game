@@ -1,3 +1,5 @@
+
+# RTS Game Server Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,20 +18,18 @@ spec:
     spec:
       containers:
         - name: rts-game-server
-          image: mmarci96/rts-game-server:latest
+          image: mmarci96/my-rts-game-server:latest
           ports:
             - containerPort: 8080
-          envFrom:
-            - secretRef:
-                name: rts-game-server
-            - configMapRef:
-                name: rts-game-server
+          env:
+            - name: MONGO_URI
+              value: mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/rts-game-db
           resources:
             requests:
-              memory: "256Mi"
+              memory: "128Mi"
               cpu: "250m"
             limits:
-              memory: "512Mi"
+              memory: "256Mi"
               cpu: "500m"
           readinessProbe:
             httpGet:
@@ -44,8 +44,10 @@ spec:
               port: 8080
             initialDelaySeconds: 10
             periodSeconds: 20
+
 ---
-# https://kubernetes.io/docs/concepts/services-networking/service/
+
+# RTS Game Server Service
 apiVersion: v1
 kind: Service
 metadata:
@@ -56,10 +58,7 @@ spec:
     app: rts-game-server
   type: ClusterIP
   ports:
-  - name: rts-game-server
-    protocol: TCP
-    port: 80
-    targetPort: 8080
-    nodePort: 30002
----
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
 

@@ -1,11 +1,11 @@
-FROM node:23.4.0-alpine AS server 
+FROM node:23-alpine AS server 
 
-WORKDIR ./src
+WORKDIR /app
 
-COPY package.json ./src
+COPY package*.json ./
 
 RUN npm install
 
-COPY . ./src
+COPY src ./src
 
 CMD ["npm", "run", "start"]
