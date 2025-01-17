@@ -1,11 +1,11 @@
-FROM node:alpine
+FROM node:23.4.0-alpine AS server 
 
-WORKDIR /express_server
+WORKDIR ./src
 
-COPY package.json /express_server
+COPY package.json ./src
 
 RUN npm install
 
-COPY . /express_server
+COPY . ./src
 
 CMD ["npm", "run", "start"]

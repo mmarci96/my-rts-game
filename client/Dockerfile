@@ -1,5 +1,5 @@
 # Build the client app
-FROM node:18-alpine AS client
+FROM node:23.4.0-alpine AS client
 
 WORKDIR /src
 
@@ -16,8 +16,6 @@ FROM nginx:alpine
 COPY --from=client /src/dist /usr/share/nginx/html
 
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
-
-COPY --from=client 404.html /use/share/nginx/html/
 
 EXPOSE 80
 
