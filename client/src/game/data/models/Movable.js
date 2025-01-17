@@ -10,7 +10,7 @@ class Movable {
     * @param { number } speed
     */
     constructor(speed) {
-        this.#speed = speed / 200;
+        this.#speed = 0.05;
         this.#isMoving = false;
     }
 
@@ -22,7 +22,6 @@ class Movable {
     */
     setTarget(x, y) {
         this.#isMoving = true;
-
         this.#targetX = x;
         this.#targetY = y
     }
@@ -35,33 +34,26 @@ class Movable {
     * @returns {{x: (*|number), y: (*|number)}}
     **/ 
     move(x, y) {
-        this.x = x;
-        this.y = y;
-
         // Calculate the direction vector
-        const dx = this.#targetX - this.x;
-        const dy = this.#targetY - this.y;
+        const dx = this.#targetX - x;
+        const dy = this.#targetY - y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         // Check if the target is reached
-        if (distance <= 0.4) {
+        const stepDistance = 0.05;
+        if (distance <= stepDistance) {
             // Snap to target and stop moving
-            this.x = this.#targetX;
-            this.y = this.#targetY;
             this.#isMoving = false;
-            this.#targetX = null;
-            this.#targetY = null;
-            return { x: this.x, y: this.y };
+            return { x, y };
         }
-
         // Normalize the direction vector
         const nx = dx / distance; // Normalized x direction
         const ny = dy / distance; // Normalized y direction
 
         // Move along the direction vector by speed
-        this.x += nx * this.#speed;
-        this.y += ny * this.#speed;
+        const tx = x + nx * stepDistance;
+        const ty = y + ny * stepDistance;
 
-        return { x: this.x, y: this.y };
+        return { x: tx, y: ty };
     }
 
     isMoving() {

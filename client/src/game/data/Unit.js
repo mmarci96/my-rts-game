@@ -4,7 +4,6 @@ import Movable from "./models/Movable.js";
 import AnimatedSprite from "./models/AnimatedSprite.js";
 import Camera from "../ui/Camera.js";
 import EntityStatus from "./models/EntityStatus.js";
-import Attacker from "./models/Attacker";
 
 class Unit extends GameEntity {
     #health
@@ -28,7 +27,6 @@ class Unit extends GameEntity {
         this.state = new EntityStatus(state)
         this.animatedSprite = new AnimatedSprite(spriteSheet);
         this.#health = health;
-        this.attacker = new Attacker(1)
     }
 
     /**
@@ -37,7 +35,7 @@ class Unit extends GameEntity {
     * @param { number } y
     * @param { Camera } camera
     */
-    draw(context, x, y, camera) {
+    draw(context, x, y, camera, deltaTime) {
         if (!(camera instanceof Camera)) {
             throw new TypeError("Camera must be a Camera.");
         }
@@ -46,26 +44,29 @@ class Unit extends GameEntity {
         }
 
         if(this.#movable.isMoving()) {
-            const updatedPos = this.#movable.move(super.getX(), super.getY());
+            const updatedPos = this.#movable.move(super.getX(), super.getY(), deltaTime);
             super.setX(updatedPos.x);
             super.setY(updatedPos.y);
-        } else {
-            this.setState('idle')
-        }
+        } 
         this.animatedSprite.setAnimationType(this.getState())
+        this.animatedSprite.updateAnimation(); 
         this.animatedSprite.draw(context, x, y, camera, this.selectable);
-        this.animatedSprite.updateAnimation();
+    }
+    onDeath(deathAnimation){
+        this.animatedSprite.setDeathAnimation(deathAnimation)
+        this.animatedSprite.isDying = true;
     }
 
-    attackUnit(unitId){
-        this.attacker.setTargetId(unitId)
-    }
-    setBonusDmg(bonus){
-        this.attacker.setAttackDmg(bonus);
+    isAnimationComplete() {
+        return this.animatedSprite.isAnimationComplete;
     }
 
     getHealth(){
         return this.#health
+    }
+    
+    setHealth(health){
+        this.#health = health;
     }
 
     /**
@@ -107,7 +108,6 @@ class Unit extends GameEntity {
     */
     setTarget(x, y) {
         this.#movable.setTarget(x, y);
-        this.setState('moving')
         const updatedPos = this.#movable.move(super.getX(), super.getY())
         super.setX(updatedPos.x);
         super.setY(updatedPos.y);
@@ -121,6 +121,7 @@ class Unit extends GameEntity {
     getColor() {
         return this.selectable.getColor();
     }
+
 }
 
 export default Unit;

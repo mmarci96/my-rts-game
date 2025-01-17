@@ -37,13 +37,22 @@ class SessionService {
 
         return units;
     }
-
+    static async deleteUnitById(unitId){
+        const unit = await Unit.findByIdAndDelete(unitId);
+        return unit;
+    }
     static async saveUnitsData(units) {
         if (!Array.isArray(units) || units.length === 0) {
             throw new BadRequestError("No units data provided to save", 400);
         }
 
-        const bulkOps = units.map(unit => {
+        // Separate units with 0 HP for deletion
+        const unitsToDelete = units.filter(unit => unit.health <= 0);
+
+        // Map remaining units for bulk operations
+        const bulkOps = units
+        .filter(unit => unit.health > 0) // Exclude units with 0 HP
+        .map(unit => {
             const { id, ...updateData } = unit;
 
             // Ensure the `id` field exists in each unit object
@@ -65,15 +74,31 @@ class SessionService {
             };
         });
 
-        // Execute the bulkWrite operation
+        // Execute the bulkWrite operation for updates
         const result = await Unit.bulkWrite(bulkOps);
 
+        // Remove units with 0 HP
+        let deleteResult = { deletedCount: 0 };
+        if (unitsToDelete.length > 0) {
+            const idsToDelete = unitsToDelete.map(unit => unit.id);
+
+            // Ensure `id` exists in the unitsToDelete list
+            if (idsToDelete.some(id => !id)) {
+                throw new BadRequestError("Some units marked for deletion are missing an id", 400);
+            }
+
+            deleteResult = await Unit.deleteMany({ _id: { $in: idsToDelete } });
+        }
+
+        // Return a summary of the operations
         return {
             matched: result.matchedCount,
             modified: result.modifiedCount,
-            upserted: result.upsertedCount
+            upserted: result.upsertedCount,
+            deleted: deleteResult.deletedCount // Add deletion result to the response
         };
     }
+
 }
 
 

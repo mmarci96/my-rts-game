@@ -11,14 +11,25 @@ class AnimatedSprite {
         this.frameY = 0;
         this.gameFrame = 0;
         this.staggerFrames = 6; // requestAnimationFrame(60FPS)/ 6 = 10 FPS
+        this.maxFrame = 5;
+        this.skullFrames = 0;
+        this.isAnimationComplete = false
     }
 
     updateAnimation() {
+        if (this.isDying && this.maxFrame === 6) {
+            if (this.skullFrames >= 7) {
+                this.frameY = 1;
+                this.isAnimationComplete = true; // Mark animation as complete
+            } else {
+                this.skullFrames++;
+            }
+        }
         if (this.gameFrame % this.staggerFrames === 0) {
-            if (this.frameX < 5) this.frameX++;
-                else this.frameX = 0;
+            this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
         }
         this.gameFrame++;
+
     }
 
     /**
@@ -67,6 +78,18 @@ class AnimatedSprite {
             );
         }
     }
+    setDeathAnimation(deathSprite){
+        this.staggerFrames = 8
+        this.skullFrames = 0; 
+        this.maxFrame = 6
+        this.frameWidth = 896 / 7
+        this.frameHeight = 256 / 2;
+        this.spriteSheet = deathSprite;
+    }
+
+    getSkullFrames(){
+        return this.skullFrames;
+    }
 
     /**
     * Checks weather the  provided x, y coordinates are on the camera width
@@ -76,10 +99,10 @@ class AnimatedSprite {
     * @returns {boolean}
     */
     checkOutOfBounds(camera, x, y) {
-        const minX = camera.getX() - camera.getWidth() - 2;
-        const maxX = camera.getX() + camera.getWidth() - 2;
-        const minY = camera.getY() - camera.getHeight() - 2;
-        const maxY = camera.getY() + camera.getHeight() - 2;
+        const minX = camera.getX() - camera.getWidth() ;
+        const maxX = camera.getX() + camera.getWidth() ;
+        const minY = camera.getY() - camera.getHeight();
+        const maxY = camera.getY() + camera.getHeight();
 
         return !(minY > y || minX > x || maxY < y || maxX < x);
     }
@@ -96,6 +119,9 @@ class AnimatedSprite {
             case 'idle':
                 this.frameY = 0
                 break
+            case 'cooldown':
+                this.frameY = 2;
+                break;
             case 'attackLeft1':
                 this.frameY = 2
                 break
@@ -114,6 +140,12 @@ class AnimatedSprite {
             case 'attackUp2':
                 this.frameY = 7
                 break
+            case 'dead':
+                this.frameY = 0
+                break;
+            case 'delete':
+                this.frameY = 1
+                break;
             default:
                 this.frameY = 0
                 break;

@@ -7,9 +7,9 @@ module.exports = class GameLogic {
     #gameMap
     #players
     #unitController
-    constructor(){
+    constructor(deleteUnit){
         this.#players = new Map();
-        this.#unitController = new UnitController;
+        this.#unitController = new UnitController(deleteUnit);
         this.commandCount = 0
     }
 
@@ -24,16 +24,14 @@ module.exports = class GameLogic {
     }
     
     handleCommand(command){
-        console.log(this.commandCount)
-        console.log(command);
         this.commandCount++
         const { action, unitId } = command;
         const unit = this.#unitController.getUnitById(unitId)
-        if(!(unit instanceof Unit)) throw new TypeError('Invalid unit');
         if(!unit) {
-            console.log('unit not found, command cannot resolve');
+            console.error('unit not found, command cannot resolve');
             return;
         }
+        if(!(unit instanceof Unit)) throw new TypeError('Invalid unit');
         switch (action) {
             case 'moving':
                 unit.movable.setTarget(command.targetX, command.targetY)

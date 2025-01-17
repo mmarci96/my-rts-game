@@ -2,6 +2,7 @@ import SelectionBox from "./SelectionBox.js";
 import Camera from "../Camera.js";
 import VectorTransformer from "../../utils/VectorTransformer.js";
 import Unit from "../../data/Unit.js";
+import UnitController from "../../logic/UnitController.js";
 
 class MouseEventHandler {
     #canvas;
@@ -29,10 +30,19 @@ class MouseEventHandler {
         this.#canvas = document.getElementById('ui-canvas');
         this.#canvas.width = window.innerWidth;
         this.#canvas.height = window.innerHeight;
-        this.#canvas.style.zIndex = '4';
+        this.#canvas.style.zIndex = '10';
         this.setCursor('default');
         this.hoveredEnemy = null;
         this.selectionActive = false;
+    }
+    
+    updateSelection(controller, color){
+        if(!(controller instanceof UnitController)){
+            throw new TypeError('Not a controller')
+        }
+
+        this.#units = controller.getUnitsByColor(color);
+        this.#enemyUnits = controller.getEnemyUnits(color);
     }
 
     /**
@@ -40,9 +50,7 @@ class MouseEventHandler {
      * @param { Array<Unit> } units
      * @param { function } mouseControl
      */
-    drawSelection(units, mouseControl, enemyUnits) {
-        this.#units = units;
-        this.#enemyUnits = enemyUnits;
+    drawSelection(mouseControl) {
         const ctx = this.#canvas.getContext('2d');
         let isSelecting = false;
         let startX = 0;
@@ -58,7 +66,7 @@ class MouseEventHandler {
         this.#canvas.addEventListener('mousemove', e => {
             // Handle selection drawing if currently selecting
             if (isSelecting) {
-                this.onSelecting(e.clientX, e.screenY, startX, startY);
+                this.onSelecting(e.clientX, e.clientY, startX, startY, ctx);
             }
             if(this.selectionActive){
                 this.handleHover(e.clientX, e.clientY); 
@@ -67,6 +75,8 @@ class MouseEventHandler {
 
         this.#canvas.addEventListener('mouseup', e => {
             if (e.button === 2) return;
+            this.#units.forEach(u => u.setSelected(false));
+            console.log(e.clientX, e.clientY)
             const rect = this.#canvas.getBoundingClientRect();
             const finalX = e.clientX - rect.left;
             const finalY = e.clientY - rect.top;
@@ -90,7 +100,7 @@ class MouseEventHandler {
             }
         });
     }
-    onSelecting(clientX, clientY, startX, startY){
+    onSelecting(clientX, clientY, startX, startY, ctx){
         const rect = this.#canvas.getBoundingClientRect();
         const screenX = clientX - rect.left;
         const screenY = clientY - rect.top;
@@ -98,7 +108,7 @@ class MouseEventHandler {
         const currentY = screenY;
         const width = currentX - startX;
         const height = currentY - startY;
-        
+
         ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
         ctx.strokeStyle = 'green';
         ctx.lineWidth = 1;
@@ -163,15 +173,24 @@ class MouseEventHandler {
     getTargetPosition(units, clientX, clientY) {
         const { worldX, worldY } = this.convertCursorPosition(clientX, clientY) 
         const commands = []
-
-        units.forEach((unit) => {
+        const gridSize = Math.round(Math.sqrt(units.length));
+        units.forEach((unit, index) => {
             if(unit.isSelected()){
                 if(this.hoveredEnemy){
                     const targetEnemy = this.hoveredEnemy
                     const attackCommand = this.createAttackCommand(targetEnemy,unit.getId())
                     commands.push(attackCommand)
                 } else {
-                    const moveCommand = this.createMoveUnitCommand(worldX, worldY, unit.getId())
+
+                    const { targetX, targetY } = this.createCheapGrid(
+                        unit.getX(),
+                        unit.getY(),
+                        worldX,
+                        worldY,
+                        gridSize,
+                        index
+                    );
+                    const moveCommand = this.createMoveUnitCommand(targetX, targetY, unit.getId())
                     commands.push(moveCommand)
                 }
             }
@@ -180,24 +199,25 @@ class MouseEventHandler {
     }
 
     /**
-     *
-     * @param {number} unitX
-     * @param {number} unitY
-     * @param {number} targetX
-     * @param {number} targetY
-     * @param {number} gridSize
-     * @param {number} i
-     * @returns {{row: number, col: number}}
-     */
-    createCheapGrid(unitX, unitY, targetX, targetY, gridSize, i) {
+    * @param {number} unitX
+    * @param {number} unitY
+    * @param {number} targetX
+    * @param {number} targetY
+    * @param {number} gridSize
+    * @param {number} i
+    * @returns {{row: number, col: number}}
+    */
+    createCheapGrid(unitX, unitY, tx, ty, gridSize, i) {
         let accX = 1.2;
         let accY = -1.2;
-        if (unitX > targetX) accX = -1.2;
-        if (unitY > targetY) accY = 1.2;
+        if (unitX > tx) accX = -1.2;
+        if (unitY > ty) accY = 1.2;
 
         const row = Math.floor(i / gridSize) * accX;
         const col = (i % gridSize) * accY;
-        return { row, col };
+        const targetX = tx + col;
+        const targetY = ty + row;
+        return { targetX, targetY };
     }
 
     setCursor(name){
