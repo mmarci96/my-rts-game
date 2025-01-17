@@ -9,13 +9,10 @@ module.exports = class UnitController {
 
     #handleDeath(deltaTime,unit){
         const id = unit.getId();
-        const isDead = unit.death(deltaTime);
-        if(isDead){
-            setTimeout(()=>{
-                this.#units.delete(id);
-            },2000)
-        }
+        const isDead = unit.death(deltaTime);    
+        console.log(id,isDead);
     }
+
     refreshUnits(deltaTime){
         //this.timePassed += deltaTime;
         //if (this.timePassed > 1){

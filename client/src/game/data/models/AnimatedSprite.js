@@ -11,46 +11,14 @@ class AnimatedSprite {
         this.frameY = 0;
         this.gameFrame = 0;
         this.staggerFrames = 6; // requestAnimationFrame(60FPS)/ 6 = 10 FPS
-        this.isDying = false; // Track death state
-        this.deathSpritesheet = null; // Placehold
     }
 
     updateAnimation() {
-        if (this.isDying) {
-            this.updateDeathAnimation(); // Handle death animation
-        } else {
-            if (this.gameFrame % this.staggerFrames === 0) {
-                if (this.frameX < 5) this.frameX++;
-                else this.frameX = 0;
-            }
-            this.gameFrame++;
-        }
-    }
-    updateDeathAnimation() {
         if (this.gameFrame % this.staggerFrames === 0) {
-            // Alternate between the two rows of the death spritesheet
-            if (this.frameY === 0) {
-                this.frameY = 1;
-            } else {
-                this.frameY = 0;
-            }
-
-            // Loop through frames horizontally
-            if (this.frameX < 5) this.frameX++;
-            else this.frameX = 0;
+            if (this.frameX < this.frameWidth) this.frameX++;
+                else this.frameX = 0;
         }
         this.gameFrame++;
-    }
-
-    /**
-     * Set the death animation state and load the appropriate spritesheet
-     * @param {HTMLImageElement} deathSpritesheet 
-     */
-    setDeathAnimation(deathSpritesheet) {
-        this.isDying = true;
-        this.deathSpritesheet = deathSpritesheet;
-        this.frameX = 0; // Reset animation frame
-        this.frameY = 0; // Start with the first row of the death spritesheet
     }
 
     /**
@@ -98,6 +66,11 @@ class AnimatedSprite {
                 128
             );
         }
+    }
+    setDeathAnimation(deathSprite){
+        this.frameWidth = 896 / 8;
+        this.frameHeight = 256 / 2;
+        this.spriteSheet = deathSprite;
     }
 
     /**
@@ -149,6 +122,12 @@ class AnimatedSprite {
             case 'attackUp2':
                 this.frameY = 7
                 break
+            case 'dead':
+                this.frameY = 0
+                break;
+            case 'delete':
+                this.frameY = 1
+                break;
             default:
                 this.frameY = 0
                 break;

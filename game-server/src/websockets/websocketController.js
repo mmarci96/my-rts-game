@@ -42,6 +42,7 @@ const websocketUpdater = (io, gameId) => {
         io.to(gameId).emit('gameState', gameData)
         count++;
         if(count >= saveRate){
+            console.log('data sent: ', gameData)
             saveGameState(gameData.units);
             count = 0;
         }

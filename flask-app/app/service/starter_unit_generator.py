@@ -1,4 +1,5 @@
 def create_units(size, colors):
+    warriorCount = 4
     start_x = 0
     start_y = 0
     units = []
@@ -27,16 +28,18 @@ def create_units(size, colors):
                 "type": "worker"
                 }
         units.append(worker)
-        warrior = {
-                "x": start_x+3,
-                "y": start_y+3,
-                "color": color,
-                "state": "idle",
-                "health": 16,
-                "speed": 8,
-                "type": "warrior"
-                }
-        units.append(warrior)
+        
+        for i in range(warriorCount):
+            warrior = {
+                    "x": start_x+3+i,
+                    "y": start_y+3+i,
+                    "color": color,
+                    "state": "idle",
+                    "health": 16,
+                    "speed": 8,
+                    "type": "warrior"
+                    }
+            units.append(warrior)
 
     return units
 

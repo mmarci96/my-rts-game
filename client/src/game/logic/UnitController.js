@@ -1,6 +1,7 @@
 import Unit from '../data/Unit.js';
 import Warrior from '../data/Warrior.js';
 import Worker from '../data/Worker.js';
+import AssetManager from '../ui/AssetManager.js';
 import Camera from '../ui/Camera.js';
 import GameMap from './GameMap.js';
 
@@ -8,13 +9,15 @@ class UnitController {
     #assetManager;
     #units;
     #unitCanvas;
+    static deadAnimation
 
     /**
      * The actual picture loader asset map
      * @param { Promise<HTMLElement> } assets
      */
     constructor(assets) {
-        this.#assetManager = assets;
+        if(!(assets instanceof AssetManager)) throw new TypeError('no pic')
+        this.#assetManager = assets
         this.#unitCanvas = document.getElementById('game-canvas');
         this.#units = new Map();
 
@@ -113,9 +116,15 @@ class UnitController {
             throw new Error(`Missing:name${type};health: ${health};position:x:${x},y:${y} id=${id}`);
         }
         const unit = this.#units.get(id);
-        unit.setTarget(x,y);
-        unit.setState(state);
+        if(!(unit instanceof Unit)) throw new TypeError('Not a unit')
         unit.setHealth(health);
+        unit.setState(state)
+        unit.setTarget(x,y);
+
+        if (unit.getState() !== 'dead' &&
+            state === 'dead' ){
+            unit.onDeath(this.#assetManager.getImage('dead'))
+        } 
     }
 
     /**
