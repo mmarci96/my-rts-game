@@ -19,7 +19,7 @@ spec:
         image: mmarci96/my-rts-game-flask-app:latest
         env:
           - name: MONGO_URI
-            value: mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/rts-game-db
+            value: monogourl
         resources:
           requests:
             memory: "64Mi"
