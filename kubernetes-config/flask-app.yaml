@@ -48,10 +48,10 @@ metadata:
   namespace: default
 spec:
   selector:
-    app: rts-game-flask-app
-  type: ClusterIP
+    app: rts-game-flask-app  # Must match the Flask app pod labels
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 5000
+      port: 5000 
+      targetPort: 5000  
+  type: ClusterIP  
 

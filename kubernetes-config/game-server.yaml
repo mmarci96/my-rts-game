@@ -1,4 +1,3 @@
-
 # RTS Game Server Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -33,7 +32,6 @@ spec:
               cpu: "500m"
 ---
 
-# RTS Game Server Service
 apiVersion: v1
 kind: Service
 metadata:
@@ -41,10 +39,10 @@ metadata:
   namespace: default
 spec:
   selector:
-    app: rts-game-server
-  type: ClusterIP
+    app: rts-game-server  # Must match the Express app pod labels
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8080
+      port: 8080  # ClusterIP service port
+      targetPort: 8080  # Pod container port
+  type: ClusterIP
 
