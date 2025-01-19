@@ -15,40 +15,30 @@ spec:
         app: rts-game-flask-app
     spec:
       containers:
-        - name: rts-game-flask-app
-          image: mmarci96/rts-game-flask-app:latest
-          env:
-            - name: MONGO_USER
-              valueFrom: 
-                secretKeyRef:
-                  name: mongo-credentials
-                  key: mongo-user
-            - name: MONGO_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-credentials
-                  key: mongo-password
-            - name: MONGO_URI
-              value: "mongodb://${MONGO_USER}:${MONGO_PASSWORD}@rts-game-mongodb:27017/rts-game-db"
-          resources:
-            requests:
-              memory: "128Mi"
-              cpu: "250m"
-            limits:
-              memory: "256Mi"
-              cpu: "500m"        
-          readinessProbe:
-            httpGet:
-              path: /home/health
-              port: 5000
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /home/health
-              port: 5000
-            initialDelaySeconds: 10
-            periodSeconds: 20
+      - name: rts-game-flask-app
+        image: mmarci96/rts-game-flask-app:latest
+        env:
+          - name: MONGO_URI
+            value: mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/rts-game-db
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"        
+        readinessProbe:
+          httpGet:
+            path: /home/health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /home/health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 20
 ---
 
 apiVersion: v1
