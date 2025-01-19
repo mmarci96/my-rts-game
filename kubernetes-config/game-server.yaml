@@ -21,8 +21,18 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-credentials
+                  key: mongo-user
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-credentials
+                  key: mongo-password
             - name: MONGO_URI
-              value: mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/rts-game-db
+              value: "mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@rts-game-db:27017/rts-game-db"
           resources:
             requests:
               memory: "128Mi"
