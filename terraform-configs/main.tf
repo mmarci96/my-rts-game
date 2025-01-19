@@ -2,7 +2,6 @@ provider "aws" {
   region = var.region
 }
 
-
 data "aws_availability_zones" "available" {
   filter {
     name   = "opt-in-status"
@@ -12,7 +11,7 @@ data "aws_availability_zones" "available" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "5.8.1"
+  version = "5.17.0"
 
   name = "rts-game-vpc"
   cidr = "10.0.0.0/16"
@@ -45,10 +44,10 @@ locals {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.0"
+  version = "20.33.0"
 
   cluster_name    = "rts-game-cluster"
-  cluster_version = "1.30"
+  cluster_version = "1.31"
 
   cluster_endpoint_public_access           = true
   enable_cluster_creator_admin_permissions = true
@@ -81,19 +80,10 @@ module "eks" {
     two = {
       name = "node-group-2"
 
-      instance_types = ["t3.small"]
-
-      min_size     = 1
-      max_size     = 2
-      desired_size = 1
-    }
-    three = {
-      name = "node-group-3"
-
       instance_types = ["t3.medium"]
 
       min_size     = 1
-      max_size     = 2
+      max_size     = 4
       desired_size = 1
     }
   }
@@ -115,5 +105,65 @@ module "irsa-ebs-csi" {
   provider_url                  = module.eks.oidc_provider
   role_policy_arns              = [data.aws_iam_policy.ebs_csi_policy.arn]
   oidc_fully_qualified_subjects = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
+}
+
+resource "aws_ecr_repository" "rts-game-repository" {
+  name                 = "rts-game-repository"
+  image_tag_mutability = "MUTABLE"
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  tags = {
+    Environment = "Production"
+    Team        = "DevOps"
+  }
+}
+
+resource "aws_ecr_repository_policy" "access_policy" {
+  repository = aws_ecr_repository.rts-game-repository.name
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowCrossAccountPull",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::390403884602:user/sarosdimarci@gmail.com"
+      },
+      "Action": [
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:BatchCheckLayerAvailability"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_ecr_lifecycle_policy" "destroy_policy" {
+  repository = aws_ecr_repository.rts-game-repository.name
+
+  policy = <<EOF
+{
+  "rules": [
+    {
+      "rulePriority": 1,
+      "description": "Expire untagged images after 30 days",
+      "selection": {
+        "tagStatus": "untagged",
+        "countType": "imageCountMoreThan",
+        "countNumber": 100
+      },
+      "action": {
+        "type": "expire"
+      }
+    }
+  ]
+}
+EOF
 }
 

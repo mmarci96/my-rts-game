@@ -20,3 +20,8 @@ output "cluster_name" {
   description = "Kubernetes Cluster Name"
   value       = module.eks.cluster_name
 }
+
+output "ecr_repository" {
+  description = "Docker Image Repository"
+  value       = aws_ecr_repository.rts-game-repository.repository_url
+}
