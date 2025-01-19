@@ -55,25 +55,31 @@ const displayGameOver = (winner) => {
     root.appendChild(gameOverScene);
     gameOverScene.innerText = 'Player: ' + winner + ", has won!";
 }
-   
+  
+const getIdFromUrl = (url) => {
+    const arr = url.split("/");
+    const lastIndex = arr.length - 1
+
+    return {
+        gameId: arr[lastIndex-1],
+        userId: arr[lastIndex]
+    }
+}
+
 const loadEvent = async () => {
     document.addEventListener('contextmenu', e => e.preventDefault());
 
-    const path = window.location.pathname.split("/");
-    const port = window.location.port
+    const url = window.location.pathname;
+    const { gameId, userId } = getIdFromUrl(url);
     
-    const prefix = path[1];
     if(prefix === 'mapview'){
-        const mapId = path[2];
-        const mapViewer = await GameLoader.loadMapViewer(mapId, port)
+        const mapId = userId 
+        const mapViewer = await GameLoader.loadMapViewer(mapId)
         if(mapViewer){
             mapViewer.loadMap();
         }
     }else{
-        const userId = path[3];
-        const gameId = path[2];
-        
-        const game = await GameLoader.loadGame(userId, gameId, createCommand, port)
+        const game = await GameLoader.loadGame(userId, gameId, createCommand)
         
         const socket = io();
         socketHandler(socket, game, userId, gameId);
