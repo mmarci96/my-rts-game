@@ -18,12 +18,12 @@ spec:
     spec:
       containers:
         - name: rts-game-server
-          image: mmarci96/my-rts-game-server:latest
+          image: mmarci96/rts-game-server:latest
           ports:
             - containerPort: 8080
           env:
             - name: MONGO_URI
-              value: 
+              value: mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/travel_time_db
           resources:
             requests:
               memory: "128Mi"
@@ -31,20 +31,6 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            failureThreshold: 3
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 20
-
 ---
 
 # RTS Game Server Service

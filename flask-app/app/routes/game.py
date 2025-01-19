@@ -1,10 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, g, Response
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, g
+from datetime import datetime
 from bson import ObjectId
-import json
 import os
-
-from pymongo import timeout
-
 
 from app.service.random_map_generator import generate_random_map
 from app.service.starter_unit_generator import create_units

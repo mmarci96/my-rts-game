@@ -7,7 +7,7 @@ const {Server} = require('socket.io');
 const websocketController = require('./websockets/websocketController.js')
 require('dotenv').config();
 
-const { MONGO_URI, PORT } = process.env
+const { MONGO_URI } = process.env
 
 const app = express()
 
@@ -32,10 +32,9 @@ const main = async () => {
     .then(() => console.log("Connected to db: ", MONGO_URI))
     .catch(err => console.error(err))
 
-    const port = parseInt(PORT)
     const fuck = 8080
     
-    server.listen(fuck,'0.0.0.0', () => console.log(`Server running on http://localhost:${PORT}`))
+    server.listen(fuck,'0.0.0.0', () => console.log(`Server running on http://localhost:${fuck}`))
 }
 
 
