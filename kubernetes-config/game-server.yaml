@@ -22,7 +22,7 @@ spec:
             - containerPort: 8080
           env:
             - name: MONGO_URI
-              value: mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/travel_time_db
+              value: mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/rts-game-db
           resources:
             requests:
               memory: "128Mi"

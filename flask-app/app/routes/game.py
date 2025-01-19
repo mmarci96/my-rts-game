@@ -168,13 +168,9 @@ def start():
 
     # Ensure user_id is being used in the URL
     mongo_uri = os.getenv("MONGO_URI", "local")
-    prefix = "http://localhost"
-    
-    if mongo_uri == 'local':
-        prefix = "http://localhost:5173"
-    
+
     # Construct the connection URL with correct variables
-    connection_url = f"{prefix}/play/{game_id}/{user_id}" 
+    connection_url = f"/play/{game_id}/{user_id}" 
 
 
     if game['status'] != "waiting":

@@ -20,6 +20,8 @@ spec:
         env:
           - name: MONGO_URI
             value: mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/rts-game-db
+          - name: PREFIX
+            value: acae352a30fb84414b15d8e4ea9d6651-2081088125.eu-north-1.elb.amazonaws.com           
         resources:
           requests:
             memory: "128Mi"
