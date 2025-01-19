@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-app
+  name: rts-game-flask-app
   namespace: default
   labels:
-    app: flask-app
+    app: rts-game-flask-app
 spec:
   selector:
     matchLabels:
-      app: flask-app
+      app: rts-game-flask-app
   template:
     metadata:
       labels:
-        app: flask-app
+        app: rts-game-flask-app
     spec:
       containers:
-      - name: flask-app
-        image: mmarci96/my-rts-game-flask-app:latest
+      - name: rts-game-flask-app
+        image: mmarci96/rts-game-flask-app:latest
         env:
           - name: MONGO_URI
-            value: monogourl
+            value: mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/rts-game-db
         resources:
           requests:
-            memory: "64Mi"
+            memory: "128Mi"
             cpu: "250m"
           limits:
-            memory: "128Mi"
+            memory: "256Mi"
             cpu: "500m"        
         readinessProbe:
           httpGet:
@@ -44,11 +44,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: flask-app
+  name: rts-game-flask-app
   namespace: default
 spec:
   selector:
-    app: flask-app
+    app: rts-game-flask-app
   type: ClusterIP
   ports:
     - protocol: TCP
