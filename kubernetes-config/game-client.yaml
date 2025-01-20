@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: rts-game-client
-          image: mmarci96/rts-game-client:latest 
+          image: 390403884602.dkr.ecr.eu-north-1.amazonaws.com/rts-game-client-ecr:latest
           resources:
             requests:
               cpu: "250m"
@@ -37,7 +37,7 @@ metadata:
   namespace: default
 spec:
   selector:
-    app: rts-game-client    # Match label of rts-game-client Deployment
+    app: rts-game-client 
   ports:
     - protocol: TCP
       port: 80

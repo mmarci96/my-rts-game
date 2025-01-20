@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 import GameLoader from './services/GameLoader';
 import Game from './game/Game';
+import Player from './game/data/Player';
 
 let pendingCommands = []
 
@@ -59,10 +60,18 @@ const displayGameOver = (winner) => {
 const getIdFromUrl = (url) => {
     const arr = url.split("/");
     const lastIndex = arr.length - 1
-
+    
     return {
         gameId: arr[lastIndex-1],
         userId: arr[lastIndex]
+    }
+}
+
+const redirectOnMissingTags = (url) => {
+    if(url.includes("home")) return;
+    
+    if(!url.includes("/play")){
+        window.location.replace(`${window.location}home`)
     }
 }
 
@@ -70,9 +79,13 @@ const loadEvent = async () => {
     document.addEventListener('contextmenu', e => e.preventDefault());
 
     const url = window.location.pathname;
-    const { gameId, userId } = getIdFromUrl(url);
+    redirectOnMissingTags(url);
     
-    if(prefix === 'mapview'){
+    const { gameId, userId } = getIdFromUrl(url);
+    console.log("Game id: ", gameId)
+    console.log("Player id: ", userId)
+    
+    if(url.includes("mapview")){
         const mapId = userId 
         const mapViewer = await GameLoader.loadMapViewer(mapId)
         if(mapViewer){

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: rts-game-flask-app
-        image: mmarci96/rts-game-flask-app:latest
+        image: 390403884602.dkr.ecr.eu-north-1.amazonaws.com/rts-game-flask-ecr:latest
         env:
           - name: MONGO_URI
             value: mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/rts-game-db

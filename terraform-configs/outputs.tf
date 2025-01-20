@@ -21,7 +21,9 @@ output "cluster_name" {
   value       = module.eks.cluster_name
 }
 
-output "ecr_repository" {
-  description = "Docker Image Repository"
-  value       = aws_ecr_repository.rts-game-repository.repository_url
+output "repositories" {
+  description = "Repository Names"
+  value       = var.ecr_repositories
 }
+
+

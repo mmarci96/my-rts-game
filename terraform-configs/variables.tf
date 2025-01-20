@@ -21,3 +21,36 @@ variable "azs" {
   description = "Availability Zones"
   default     = ["eu-north-1a", "eu-north-1b", "eu-north-1c"]
 }
+
+variable "ecr_repositories" {
+  type        = map(string)
+  description = "Map of repository names and their configurations"
+  default = {
+    "rts-game-client-ecr" = "RTS Game Client Repository"
+    "rts-game-server-ecr" = "RTS Game Server Repository"
+    "rts-game-flask-ecr"  = "RTS Game Flask App Repository"
+  }
+}
+
+variable "docker_images" {
+  description = "Map of Docker image names to their corresponding directories"
+  type = map(object({
+    directory       = string
+    repository_name = string
+  }))
+  default = {
+    client = {
+      directory       = "../client"
+      repository_name = "client-app"
+    }
+    flask_app = {
+      directory       = "../flask-app"
+      repository_name = "flask-app"
+    }
+    game_server = {
+      directory       = "../game-server"
+      repository_name = "game-server"
+    }
+  }
+}
+

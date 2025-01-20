@@ -69,11 +69,16 @@ module.exports = class Game {
     }
     connectPlayer(playerId, color){
         this.#gameLogic.addPlayer(playerId, color)
+        const connectionCount = this.#gameLogic.getPlayers().length;
+        if(connectionCount >= 2){
+            this.startGameLoop()
+        }
     }
     getConnectedPlayers(){
         return this.#gameLogic.getPlayers()
     }
     disconnectPlayer(playerId){
         this.#gameLogic.removePlayerById(playerId)
+        this.stopGameLoop();
     }
 }

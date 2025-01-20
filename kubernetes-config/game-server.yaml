@@ -6,7 +6,7 @@ metadata:
   labels:
     app: rts-game-server
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: rts-game-server
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: rts-game-server
-          image: mmarci96/rts-game-server:latest
+          image: 390403884602.dkr.ecr.eu-north-1.amazonaws.com/rts-game-server-ecr:latest
           ports:
             - containerPort: 8080
           env:
