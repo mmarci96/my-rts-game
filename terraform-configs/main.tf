@@ -134,7 +134,7 @@ resource "null_resource" "docker_build_and_push" {
       # Change to the project directory
       cd ${each.value.directory}
 
-      aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${data.aws_caller_identity.current.account_id}.dkr.ecr.us-east-1.amazonaws.com
+      aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com
 
       docker build -t ${each.value.repository_name}:latest .
 
