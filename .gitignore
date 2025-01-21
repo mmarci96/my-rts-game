@@ -161,7 +161,7 @@ override.tf.json
 # Ignore .terraform directory
 .terraform/
 .terraform.lock.hcl
-
+.terraform.tfstate.lock.info
 
 # Ignore Kubernetes secrets files
 *.secrets.yaml
