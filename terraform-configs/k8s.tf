@@ -1,3 +1,14 @@
+resource "kubernetes_secret" "shared_secrets" {
+  metadata {
+    name      = "app-secrets"
+    namespace = "default"
+  }
+
+  data = {
+    MONGO_URI  = base64encode(var.mongodb-uri-value)
+    SECRET_KEY = base64encode(var.secret-key-value)
+  }
+}
 
 resource "kubernetes_deployment" "rts_game_flask_app" {
   metadata {
@@ -27,13 +38,10 @@ resource "kubernetes_deployment" "rts_game_flask_app" {
           name  = "rts-game-flask-app"
           image = "${aws_ecr_repository.repositories["rts-game-flask-ecr"].repository_url}:latest"
 
-          env {
-            name  = "MONGO_URI"
-            value = var.mongobd-uri-value
-          }
-          env {
-            name  = "SECRET_KEY"
-            value = var.secret-key-value
+          env_from {
+            secret_ref {
+              name = kubernetes_secret.shared_secrets.metadata[0].name
+            }
           }
 
           resources {
@@ -190,9 +198,10 @@ resource "kubernetes_deployment" "rts_game_server" {
           name  = "rts-game-server"
           image = "${aws_ecr_repository.repositories["rts-game-server-ecr"].repository_url}:latest"
 
-          env {
-            name  = "MONGO_URI"
-            value = var.mongobd-uri-value
+          env_from {
+            secret_ref {
+              name = kubernetes_secret.shared_secrets.metadata[0].name
+            }
           }
 
           resources {
