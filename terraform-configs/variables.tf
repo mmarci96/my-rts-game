@@ -31,5 +31,14 @@ variable "docker_images" {
     repository_name = string
   }))
 }
+variable "mongodb-uri-value" {
+  description = "Connection uri to mongodb"
+  type        = string
+}
 
+variable "secret-key-value" {
+  description = "key encryption"
+  type        = string
+
+}
 

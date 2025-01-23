@@ -1,3 +1,0 @@
-Error: deleting EC2 Subnet (subnet-03a9a2bdaef9b7733): operation error EC2: DeleteSubnet, https response error StatusCode: 400, RequestID: ff3198f9-355f-482f-8004-e9899392db61, api error DependencyViolation: The subnet 'subnet-03a9a2bdaef9b7733' has dependencies and cannot be deleted.
-
-Error: deleting EC2 Internet Gateway (igw-005a905c0ced44743): detaching EC2 Internet Gateway (igw-005a905c0ced44743) from VPC (vpc-0de8574dd0417f69e): operation error EC2: DetachInternetGateway, https response error StatusCode: 400, RequestID: 3f9a5c18-7c50-4f4d-a8ef-ac76dcd37b8f, api error DependencyViolation: Network vpc-0de8574dd0417f69e has some mapped public address(es). Please unmap those public address(es) before detaching the gateway

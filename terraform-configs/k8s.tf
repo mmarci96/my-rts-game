@@ -1,9 +1,11 @@
 provider "kubernetes" {
-  config_path    = "~/.kube/config" # Path to your kubeconfig file
+  config_path    = "~/.kube/config"
   config_context = "arn:aws:eks:eu-north-1:390403884602:cluster/rts-game-cluster"
 }
 
 resource "kubernetes_deployment" "rts_game_flask_app" {
+
+  depends_on = [module.eks]
   metadata {
     name      = "rts-game-flask-app"
     namespace = "default"
@@ -32,11 +34,11 @@ resource "kubernetes_deployment" "rts_game_flask_app" {
           image = "${aws_ecr_repository.repositories["rts-game-flask-ecr"].repository_url}:latest"
           env {
             name  = "MONGO_URI"
-            value = "mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/db"
+            value = var.mongodb-uri-value
           }
           env {
             name  = "SECRET_KEY"
-            value = "very_secret"
+            value = var.secret-key-value
           }
 
           resources {
@@ -73,6 +75,7 @@ resource "kubernetes_deployment" "rts_game_flask_app" {
   }
 }
 resource "kubernetes_service" "rts_game_flask_app" {
+  depends_on = [module.eks]
   metadata {
     name      = "rts-game-flask-app"
     namespace = "default"
@@ -94,6 +97,7 @@ resource "kubernetes_service" "rts_game_flask_app" {
 }
 
 resource "kubernetes_deployment" "rts_game_client" {
+  depends_on = [module.eks]
   metadata {
     name      = "rts-game-client"
     namespace = "default"
@@ -142,6 +146,7 @@ resource "kubernetes_deployment" "rts_game_client" {
 }
 
 resource "kubernetes_service" "rts_game_client" {
+  depends_on = [module.eks]
   metadata {
     name      = "rts-game-client"
     namespace = "default"
@@ -164,6 +169,7 @@ resource "kubernetes_service" "rts_game_client" {
 
 
 resource "kubernetes_deployment" "rts_game_server" {
+  depends_on = [module.eks]
   metadata {
     name      = "rts-game-server"
     namespace = "default"
@@ -195,7 +201,7 @@ resource "kubernetes_deployment" "rts_game_server" {
 
           env {
             name  = "MONGO_URI"
-            value = "mongodb+srv://sarosdimarci4:qzDiAaBMcHE6cjU5@funcluster.tddj6.mongodb.net/db"
+            value = var.mongodb-uri-value
           }
 
           resources {
@@ -219,6 +225,7 @@ resource "kubernetes_deployment" "rts_game_server" {
 }
 
 resource "kubernetes_service" "rts_game_server" {
+  depends_on = [module.eks]
   metadata {
     name      = "rts-game-server"
     namespace = "default"
