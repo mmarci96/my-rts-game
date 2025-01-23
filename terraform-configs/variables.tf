@@ -32,12 +32,4 @@ variable "docker_images" {
   }))
 }
 
-variable "mongodb-uri-value" {
-  description = "Storing the value of the connection url"
-  type        = string
-}
-variable "secret-key-value" {
-  description = "For hasing pws"
-  type        = string
-}
 
