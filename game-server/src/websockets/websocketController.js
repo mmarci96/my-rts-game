@@ -28,7 +28,7 @@ const loadGameState = async gameId => {
 }
 
 const saveGameState = unitsList => {
-     //SessionService.saveUnitsData(unitsList)
+    SessionService.saveUnitsData(unitsList)
     console.log("Not saving for now!", unitsList)
 }
 
@@ -76,7 +76,7 @@ const websocketController = (io) => {
             socket.join(gameId)
             io.to(gameId).emit('gameState', gameData)
             if(!games[gameId].game.isRunning()){
-                //games[gameId].game.startGameLoop()
+                games[gameId].game.startGameLoop()
                 const { color } = startData.players
                     .find(p => p.userId.toString() === userId)
                 

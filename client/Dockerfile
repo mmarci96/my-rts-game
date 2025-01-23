@@ -1,5 +1,5 @@
 # Build the client app
-FROM node:23.4.0-alpine AS client
+FROM node:18-alpine AS client
 
 WORKDIR /src
 
