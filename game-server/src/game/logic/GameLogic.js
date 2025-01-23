@@ -78,7 +78,6 @@ module.exports = class GameLogic {
         this.getPlayers().forEach(({ playerId, color }) => {
             const playerUnits = this.#unitController.getUnitsByColor(color)
             if(unitSize === playerUnits.length){
-                console.log('hiii?')
                 winner = { winner: playerId, color: color, points: 2 }
             }
         })

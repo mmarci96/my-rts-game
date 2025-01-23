@@ -57,6 +57,14 @@ module.exports = class UnitController {
         })
     }
 
+    handleMovement(unit, deltaTime){
+        if (unit.getTargetId() !== null) {
+            const targetUnit = this.#units.get(unit.getTargetId())
+            unit.setTarget(targetUnit.getX(), targetUnit.getY())
+        }
+        unit.updatePosition(deltaTime)
+    }
+
     handleAttack(unit){
         if(!(unit instanceof Unit))throw new TypeError('Unit type bad!');
 
@@ -73,12 +81,11 @@ module.exports = class UnitController {
         if(distance <= attackRange){
             unit.attackUnit(targetUnit);
         } else {
-            const directionX = dx / distance; // Normalize the direction vector
+            const directionX = dx / distance;
             const directionY = dy / distance;
 
             const targetX = targetUnit.getX() - directionX * (attackRange-0.1);
             const targetY = targetUnit.getY() - directionY * (attackRange-0.1);
-            // Set the unit's state and move it towards the calculated position
             unit.setState('moving');
             unit.movable.setTarget(targetX, targetY);
         }
@@ -100,14 +107,11 @@ module.exports = class UnitController {
             const distance = Math.sqrt(dx ** 2 + dy ** 2);
 
             if (distance < bufferDistance) {
-                // Units are too close; adjust position of the idleUnit slightly
                 const overlap = bufferDistance - distance;
 
-                // Calculate normalized direction vector
                 const directionX = dx / distance || (Math.random() - 0.5);
                 const directionY = dy / distance || (Math.random() - 0.5);
 
-                // Move the idle unit slightly away
                 idleUnit.setX(idleUnit.getX() - directionX * overlap);
                 idleUnit.setY(idleUnit.getY() - directionY * overlap);
 

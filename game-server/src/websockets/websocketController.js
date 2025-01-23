@@ -29,7 +29,6 @@ const loadGameState = async gameId => {
 
 const saveGameState = unitsList => {
     SessionService.saveUnitsData(unitsList)
-    console.log("Not saving for now!", unitsList)
 }
 
 const getGameState = (gameId) => {
@@ -70,17 +69,19 @@ const websocketController = (io) => {
                 player: userId, 
                 game: gameId
             }
+            console.log("userid: ", userId)
+            console.log('gameid: ', gameId)
             const startData = await loadGameState(gameId)
 
             const gameData = getGameState(gameId)
             socket.join(gameId)
             io.to(gameId).emit('gameState', gameData)
+            const { color } = startData.players
+            .find(p => p.userId.toString() === userId)
+
+            games[gameId].game.connectPlayer(userId, color)           
             if(!games[gameId].game.isRunning()){
                 games[gameId].game.startGameLoop()
-                const { color } = startData.players
-                    .find(p => p.userId.toString() === userId)
-                
-                games[gameId].game.connectPlayer(userId, color)
                 websocketUpdater(io,gameId);
             }
         })
@@ -92,17 +93,17 @@ const websocketController = (io) => {
                 games[gameId].game.handlePlayerCommand(command)
             });
         });
-        
+        socket.on('disconnect', () => {
+            console.log('Connection ended: ', socket.id)
+
+            const gameId = players[socket.id].game
+            games[gameId].game.disconnectPlayer(players[socket.id].player);
+            delete players[socket.id]
+        })
+
     })
 
 
-    io.on('disconnect', socket => {
-        console.log('Connection ended: ', socket.io)
-        
-        delete players[socket.id]
-        const gameId = players[socket.id].game
-        games[gameId].game.disconnectPlayer(players[socket.id].player);
-    })
 }
 
 
