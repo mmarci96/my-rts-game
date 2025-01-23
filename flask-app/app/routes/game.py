@@ -1,9 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, g, Response
-from bson import ObjectId
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, g
 from datetime import datetime
-import json
+from bson import ObjectId
 import os
-
 
 from app.service.random_map_generator import generate_random_map
 from app.service.starter_unit_generator import create_units
@@ -85,21 +83,16 @@ def lobby(game_id):
 
 @game_bp.route('/lobby-stream/<game_id>', methods=['GET'])
 def lobby_stream(game_id):
-    def stream():
-        while True:
-            mongo = g.mongo
-            game = mongo.db.games.find_one({"_id": ObjectId(game_id)})
-            players = game['players']
+        mongo = g.mongo
+        game = mongo.db.games.find_one({"_id": ObjectId(game_id)})
+        players = game['players']
 
-            all_ready = all(player["isReady"] for player in players)
-            data = {
-                    "players": [{"username": p["username"], "color": p["color"], "isReady": p["isReady"]} for p in players],
-                    "allReady": all_ready,
-                    }
-            yield f"data: {json.dumps(data)}\n\n"
-            time.sleep(2)  # Adjust frequency as needed
-
-    return Response(stream(), mimetype="text/event-stream")
+        all_ready = all(player["isReady"] for player in players)
+        data = {
+                "players": [{"username": p["username"], "color": p["color"], "isReady": p["isReady"]} for p in players],
+                "allReady": all_ready,
+                }
+        return jsonify(data)
 
 @game_bp.route('/update-player-status/<game_id>', methods=['POST'])
 def update_player_status(game_id):
@@ -175,13 +168,9 @@ def start():
 
     # Ensure user_id is being used in the URL
     mongo_uri = os.getenv("MONGO_URI", "local")
-    prefix = "http://localhost"
-    
-    if mongo_uri == 'local':
-        prefix = "http://localhost:5173"
-    
+
     # Construct the connection URL with correct variables
-    connection_url = f"{prefix}/play/{game_id}/{user_id}" 
+    connection_url = f"/play/{game_id}/{user_id}" 
 
 
     if game['status'] != "waiting":

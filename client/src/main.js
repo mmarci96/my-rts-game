@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 import GameLoader from './services/GameLoader';
 import Game from './game/Game';
+import Player from './game/data/Player';
 
 let pendingCommands = []
 
@@ -55,25 +56,43 @@ const displayGameOver = (winner) => {
     root.appendChild(gameOverScene);
     gameOverScene.innerText = 'Player: ' + winner + ", has won!";
 }
-   
+  
+const getIdFromUrl = (url) => {
+    const arr = url.split("/");
+    const lastIndex = arr.length - 1
+    
+    return {
+        gameId: arr[lastIndex-1],
+        userId: arr[lastIndex]
+    }
+}
+
+const redirectOnMissingTags = (url) => {
+    if(url.includes("home")) return;
+    
+    if(!url.includes("/play")){
+        window.location.replace(`${window.location}home`)
+    }
+}
+
 const loadEvent = async () => {
     document.addEventListener('contextmenu', e => e.preventDefault());
 
-    const path = window.location.pathname.split("/");
-    const port = window.location.port
+    const url = window.location.pathname;
+    redirectOnMissingTags(url);
     
-    const prefix = path[1];
-    if(prefix === 'mapview'){
-        const mapId = path[2];
-        const mapViewer = await GameLoader.loadMapViewer(mapId, port)
+    const { gameId, userId } = getIdFromUrl(url);
+    console.log("Game id: ", gameId)
+    console.log("Player id: ", userId)
+    
+    if(url.includes("mapview")){
+        const mapId = userId 
+        const mapViewer = await GameLoader.loadMapViewer(mapId)
         if(mapViewer){
             mapViewer.loadMap();
         }
     }else{
-        const userId = path[3];
-        const gameId = path[2];
-        
-        const game = await GameLoader.loadGame(userId, gameId, createCommand, port)
+        const game = await GameLoader.loadGame(userId, gameId, createCommand)
         
         const socket = io();
         socketHandler(socket, game, userId, gameId);

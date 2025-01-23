@@ -19,7 +19,7 @@
 
     <select name="color" required>
         {% for color in available_colors %}
-            <option value="{{ color }}">{{ color.capitalize() }}</option>
+        <option value="{{ color }}">{{ color.capitalize() }}</option>
         {% endfor %}
     </select>
     <button type="submit">Join Lobby</button>
@@ -32,16 +32,28 @@
     <button type="submit">Leave Game</button>
 </form>
 
-<!-- Button for starting the game -->
+<!-- Existing content -->
 <form method="POST" action="{{ url_for('game.start') }}">
-    <input name="game_id" type="text" value="{{ game['_id'] }}"   />
-    <button type="submit">Start Game</button>
+    <input name="game_id" type="hidden" value="{{ game['_id'] }}" />
+    <button type="submit" id="start-game-button" style="display: none;">Start Game</button>
 </form>
 
 <script>
-    const eventSource = new EventSource("{{ url_for('game.lobby_stream', game_id=game['_id']) }}");
-    eventSource.onmessage = function(event) {
-        const data = JSON.parse(event.data);
+    const updateLobby = async () => {
+        try {
+            const res = await fetch("{{ url_for('game.lobby_stream', game_id=game['_id']) }}");
+            if (!res.ok) {
+                console.error("Failed to fetch lobby data.");
+                return;
+            }
+            const data = await res.json();
+            return data;
+        } catch (error) {
+            console.error("Error during lobby update:", error);
+        }
+    };
+
+    const updateDom = (data) => {
         const playersList = document.querySelector("ul#players-list");
         playersList.innerHTML = ""; // Clear the current list
 
@@ -52,6 +64,7 @@
             playersList.appendChild(li);
         });
 
+        // Update the visibility of the Start Game button
         const startGameButton = document.getElementById("start-game-button");
         if (data.allReady) {
             startGameButton.style.display = "block";
@@ -59,5 +72,13 @@
             startGameButton.style.display = "none";
         }
     };
+
+    // Periodically fetch and update the lobby data
+    const updateInterval = setInterval(async () => {
+        const data = await updateLobby();
+        if (data) {
+            updateDom(data);
+        }
+    }, 1000); // Fetch every 1 second
 </script>
 {% endblock %}

@@ -136,3 +136,44 @@ __pycache__
 
 .idea
 .vite
+
+
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.backup
+
+# Crash log for debugging
+crash.log
+
+# Ignore Terraform variable files with sensitive data
+*.tfvars
+*.tfvars.json
+
+# Ignore override files (typically not checked in)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore generated plan files
+*.tfplan
+
+# Ignore .terraform directory
+.terraform/
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+terraform.tfstate.**
+
+# Ignore Kubernetes secrets files
+*.secrets.yaml
+*.secrets.json
+
+# Ignore Helm chart artifacts
+charts/
+*.tgz
+
+# Ignore Kustomize build output
+kustomization.yaml.build/
+
+# Ignore kubectl config backups
+.kubeconfig.*

@@ -1,6 +1,7 @@
 
 from flask import Flask, g
 from flask_pymongo import PyMongo
+from dotenv import load_dotenv
 import os
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from werkzeug.wrappers import Response
@@ -13,11 +14,12 @@ from .routes.map import map_bp
 mongo = PyMongo()
 
 def create_app():
+    load_dotenv()
     app = Flask(__name__)
     app.secret_key = os.getenv("SECRET_KEY", "default_secret_key")
 
     # MongoDB configuration
-    app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/mydatabase")
+    app.config["MONGO_URI"] = os.getenv("MONGO_URI")
     mongo.init_app(app)
 
     @app.before_request

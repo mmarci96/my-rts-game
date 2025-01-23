@@ -28,7 +28,8 @@ const loadGameState = async gameId => {
 }
 
 const saveGameState = unitsList => {
-     SessionService.saveUnitsData(unitsList)
+    SessionService.saveUnitsData(unitsList)
+    console.log("Not saving for now!", unitsList)
 }
 
 const getGameState = (gameId) => {
