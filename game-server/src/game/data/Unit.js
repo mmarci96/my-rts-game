@@ -65,7 +65,6 @@ module.exports = class Unit extends GameEntity {
         if(targetUnit.damagable.getHealth() <= 0){
             this.damageDealer.setTargetId(null);
             this.setState('idle');
-            console.log('finished');
             return 'no-target'
         }
 

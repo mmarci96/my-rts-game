@@ -57,6 +57,14 @@ module.exports = class UnitController {
         })
     }
 
+    handleMovement(unit, deltaTime){
+        if (unit.getTargetId() !== null) {
+            const targetUnit = this.#units.get(unit.getTargetId())
+            unit.setTarget(targetUnit.getX(), targetUnit.getY())
+        }
+        unit.updatePosition(deltaTime)
+    }
+
     handleAttack(unit){
         if(!(unit instanceof Unit))throw new TypeError('Unit type bad!');
 

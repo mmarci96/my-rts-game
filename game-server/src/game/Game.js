@@ -36,6 +36,7 @@ module.exports = class Game {
         console.log("Starting game loop...")
         let lastTime = Date.now();
         const interval = 50;
+        console.log(this.#gameLogic.getPlayers())
 
         this.gameLoopInterval = setInterval(() => {
             if(this.#gameLogic.isGameOver()){
@@ -70,9 +71,10 @@ module.exports = class Game {
     connectPlayer(playerId, color){
         this.#gameLogic.addPlayer(playerId, color)
         const connectionCount = this.#gameLogic.getPlayers().length;
-        // if(connectionCount >= 2){
-        //    this.startGameLoop()
-        // }
+        console.log(connectionCount)
+        if(connectionCount >= 2){
+            //this.startGameLoop()
+        }
     }
     getConnectedPlayers(){
         return this.#gameLogic.getPlayers()
