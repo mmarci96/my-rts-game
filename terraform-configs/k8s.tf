@@ -1,6 +1,11 @@
 provider "kubernetes" {
-  config_path    = "~/.kube/config"
-  config_context = "arn:aws:eks:eu-north-1:390403884602:cluster/rts-game-cluster"
+  config_path = "~/.kube/config"
+  # config_context = "arn:aws:eks:eu-north-1:390403884602:cluster/rts-game-cluster"
+  # exec {
+  #   command     = "aws"
+  #   args        = ["eks", "update-kubeconfig", "--name", "rts-game-cluster", "--region", var.region]
+  #   api_version = "client.authentication.k8s.io/v1alpha1"
+  # }
 }
 
 resource "kubernetes_deployment" "rts_game_flask_app" {
