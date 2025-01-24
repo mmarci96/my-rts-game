@@ -31,4 +31,9 @@ output "ecr_repository_urls" {
   description = "The URLs of the ECR repositories."
 }
 
+output "rts_game_client_external_ip" {
+  value       = kubernetes_service.rts_game_client.status[0].load_balancer[0].ingress[0].hostname
+  description = "External IP for the RTS Game Client service"
+}
+
 
