@@ -5,6 +5,15 @@ import VectorTransformer from "../../utils/VectorTransformer.js";
 
 class Building extends GameEntity {
     #sprite
+    /**
+    * @param {number} x
+    * @param {number} y
+    * @param {string} id
+    * @param {number} width
+    * @param {string} color
+    * @param {number} height
+    * @param {CanvasImageSource} sprite 
+    */
     constructor(x, y, width, height, id, color, sprite) {
         super(x, y);
         this.width = width;
@@ -13,6 +22,13 @@ class Building extends GameEntity {
         this.#sprite = sprite
     }
 
+    /**
+    * @param {number} y
+    * @param {number} x
+    * @param {CanvasRenderingContext2D} context
+    * @param {Camera} camera
+    * @param {number} deltaTime 
+    */
     draw(context, camera, x, y, deltaTime) {
         this.context = context
         this.camera = camera
@@ -50,21 +66,33 @@ class Building extends GameEntity {
     }
 
     refresh(){
-        console.log('refresh')
         this.draw(this.context,this.camera)
     }
 
+    /**
+    * @returns string
+    */
     getId(){
         return this.selectable.getId();
     }
+
+    /**
+    * @param {boolean} selected 
+    */
     setSelected(selected) {
         this.selectable.select(selected)
     }
 
+    /**
+    *@returns boolean
+    */
     isSelected() {
         return this.selectable.isSelected();
     }
 
+    /**
+    *@returns string
+    */
     getColor(){
         return this.selectable.getColor()
     }
