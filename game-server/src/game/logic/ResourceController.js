@@ -9,7 +9,7 @@ module.exports = class ResourceController {
     }
 
     loadResources(resources){
-        resources.forEach(resource => {
+        resources?.forEach(resource => {
             const resourceField = new ResourceField({
                 resourceId: resource["_id"],
                 x: resource["x"],

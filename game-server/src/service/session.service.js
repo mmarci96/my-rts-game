@@ -71,6 +71,7 @@ class SessionService {
         }
 
         const buildingIds = session["buildings"]
+        console.log(buildingIds)
         const buildings = await BuildingModel.find({
             "_id": { $in: [
                 ...buildingIds

@@ -17,10 +17,11 @@ const loadGameState = async gameId => {
     const units = await SessionService.getUnitsBySessionId(gameData.sessionId)
     const resources = await SessionService.getResourcesFromSessionId(gameData.sessionId)
     const buildings = await SessionService.getBuildingsFromSessionId(gameData.sessionId)
+    console.log("Loading game state: ",buildings)
     const mapData = await MapService.getMapById(gameData.mapId)
-    console.log('Current games:\n',games, '\n')
+    //console.log('Current games:\n',games, '\n')
     if(games[gameId] !== 'undefined'){
-        const game = new Game(gameId,units,mapData);
+        const game = new Game(gameId,units,mapData, resources, buildings);
         games[gameId] = {
             gameData,
             game
@@ -38,6 +39,7 @@ const getGameState = (gameId) => {
     const gameState = {
         gameData,
         units: game.getGameState().units,
+        buildings: game.getGameState().buildings,
         winner: game.winner
     }
     return gameState
@@ -71,15 +73,15 @@ const websocketController = (io) => {
                 player: userId, 
                 game: gameId
             }
-            console.log("userid: ", userId)
-            console.log('gameid: ', gameId)
+            //console.log("userid: ", userId)
+            //console.log('gameid: ', gameId)
             const startData = await loadGameState(gameId)
 
             const gameData = getGameState(gameId)
             socket.join(gameId)
             io.to(gameId).emit('gameState', gameData)
             const { color } = startData.players
-            .find(p => p.userId.toString() === userId)
+                .find(p => p.userId.toString() === userId)
 
             games[gameId].game.connectPlayer(userId, color)           
             if(!games[gameId].game.isRunning()){

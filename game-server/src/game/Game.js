@@ -15,7 +15,7 @@ module.exports = class Game {
     }
 
     loadGame(map, units){
-        console.log("load the game", map, units)
+        //console.log("load the game", map, units)
         //this.#gameLogic.loadMap(map)
         //this.#gameLogic.loadUnits(units)
     }
@@ -39,7 +39,7 @@ module.exports = class Game {
         console.log("Starting game loop...")
         let lastTime = Date.now();
         const interval = 50;
-        console.log(this.#gameLogic.getPlayers())
+        //console.log(this.#gameLogic.getPlayers())
 
         this.gameLoopInterval = setInterval(() => {
             if(this.#gameLogic.isGameOver()){

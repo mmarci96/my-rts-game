@@ -5,18 +5,19 @@ module.exports = class BuildingController {
 
     constructor(buildings){
         this.#buildings = new Map();
+        this.loadBuildings(buildings)
 
     }
 
     loadBuildings(buildings){
         buildings.forEach(building => {
             const createBuilding = new Building({
-                buildingId: building["_id"],
-                x: unit["x"],
-                y: unit["y"],
-                color: unit["color"],
-                health: unit["health"],
-                type: unit["type"]
+                buildingId: building["_id"].toString(),
+                x: building["x"],
+                y: building["y"],
+                color: building["color"],
+                health: building["health"],
+                type: building["type"]
             }) 
             this.#buildings.set(
                 createBuilding.getId(), createBuilding
@@ -29,7 +30,7 @@ module.exports = class BuildingController {
     }
 
     getBuildings(){
-        return [...this.#buildings.values()]
+         return [...this.#buildings.values()]
             .flatMap(building => ({
                 id: building.getId(),
                 x: building.getX(),
