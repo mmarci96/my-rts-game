@@ -1,8 +1,10 @@
 import GameEntity from "../data/models/GameEntity";
 import GameMap from "../logic/GameMap";
+import Unit from "../data/Unit";
 
 class DrawGameCanvas {
     #gameEntities
+    #deadUnits
     #camera
     gameCanvas
 
@@ -10,6 +12,7 @@ class DrawGameCanvas {
         this.#camera = camera;
         this.#gameEntities = new Set();
         this.gameCanvas = document.getElementById('game-canvas');
+        this.#deadUnits = new Set(); 
 
         this.gameCanvas.width = GameMap.WIDTH;
         this.gameCanvas.height = GameMap.HEIGHT;
@@ -39,7 +42,13 @@ class DrawGameCanvas {
         if(!(entityList instanceof Array)){
             throw new TypeError("must be array")
         }
+
         entityList.forEach(entity => {
+            if(entity instanceof Unit && entity.getState() === 'dead' && entity.isAnimationComplete()){
+                console.log(entity)
+                this.removeGameEntity(entity)
+                return; 
+            }
             this.addGameEntity(entity)
         })
     }
