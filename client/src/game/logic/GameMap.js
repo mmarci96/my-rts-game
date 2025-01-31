@@ -1,7 +1,5 @@
-import Building from "../data/models/Building.js";
 import Camera from "../ui/Camera.js";
 import VectorTransformer from '../utils/VectorTransformer.js'
-import BuildingController from "./BuildingController.js";
 
 class GameMap {
     static WIDTH = window.innerWidth;
@@ -11,7 +9,6 @@ class GameMap {
     #map;
     #camera;
     #assets;
-    #buildingController;
 
     /**
        * Holds the map array and prints the map by making a map with a switch case basically
@@ -19,17 +16,13 @@ class GameMap {
        * @param {Camera} camera - The camera instance.
        * @param {AssetManager} assets - Preloaded assets.
        */
-    constructor(map, camera, assets, buildingController) {
-        if(!(buildingController instanceof BuildingController)){
-            throw new TypeError("not a buildingcontroller")
-        }
+    constructor(map, camera, assets, ) {
         if (!(camera instanceof Camera)) {
             throw new TypeError('Not a valid camera!');
         }
         this.#map = map;
         this.#camera = camera;
         this.#assets = assets; // Store the AssetManager
-        this.#buildingController = buildingController;
 
         this.canvas = document.getElementById("map-canvas");
         this.canvas.style.zIndex = '0';
@@ -78,14 +71,7 @@ class GameMap {
 
                 ctx.drawImage(tilesetImage, px, py - position.z);
             }
-        }
-        this.#buildingController.getBuildings().forEach(building => {
-            if(!(building instanceof Building)){
-                throw new TypeError("Not a building!")
-            }
-            console.log("Drawing building with id: ", building.getId())
-            building.draw(ctx, camera)
-        })
+        }        
     }
 
     getMapSize(){
