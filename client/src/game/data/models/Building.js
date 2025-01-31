@@ -29,6 +29,9 @@ class Building extends GameEntity {
         context.drawImage(this.#sprite, px, py )
         
     }
+    getId(){
+        return this.selectable.getId();
+    }
 }
 
 export default Building;

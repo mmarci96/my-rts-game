@@ -7,6 +7,9 @@ class House extends Building {
     draw(ctx, camera){
         super.draw(ctx, camera)
     }
+    getId(){
+        return super.getId()
+    }
 }
 
 export default House;
