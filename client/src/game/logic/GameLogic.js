@@ -7,6 +7,7 @@ import MouseEventHandler from "../ui/control/MouseEventHandler.js";
 import Player from "../data/Player.js";
 import House from "../data/House.js";
 import BuildingController from "./BuildingController.js";
+import DrawGameCanvas from "../ui/DrawGameCanvas.js";
 
 class GameLogic {
     #camera;
@@ -21,6 +22,7 @@ class GameLogic {
     #buildingController;
     #player
     isInitialized = false;
+    #gameCanvas;
 
     /**
     * @param { string [] } map 
@@ -34,6 +36,8 @@ class GameLogic {
         this.#mapData = map;
         this.#camera = new Camera(16, 16, 14, 14);
         this.isRunning = false;
+        this.#gameCanvas = new DrawGameCanvas(this.#camera)
+        this.#gameCanvas.aimationLoop();
 
         if(player.getColor() === 'blue'){
             const camOffSet = Math.sqrt(map.length*map.length)
@@ -45,11 +49,11 @@ class GameLogic {
         this.#buildingController.loadBuildings(this.loadBuildings())
 
         this.#gameMap = new GameMap(
-            this.#mapData, this.#camera, this.#assets, this.#buildingController
+            this.#mapData, this.#camera, this.#assets
         )
 
         this.#unitController = new UnitController(this.#assets);
-        this.#unitController.animationLoop(this.#camera)
+        //this.#unitController.animationLoop(this.#camera)
         
         this.#keyHandler = new KeyEventHandler(this.#camera);
 
@@ -58,7 +62,7 @@ class GameLogic {
         this.#mouseHandler = new MouseEventHandler(
                 this.#camera, 
             this.#selectionBox, 
-            this.#assets, 
+            this.#assets,
             this.#buildingController
         );
     }
@@ -90,7 +94,15 @@ class GameLogic {
         if(this.isRunning){
             this.#unitController.refreshUnits(units)
             this.#mouseHandler.updateSelection(this.#unitController, this.#player.getColor())
+            this.updateAnimations()
         }
+    }
+
+    updateAnimations(){
+        const units = this.#unitController.getUnits();
+        const buildings = this.#buildingController.getBuildings();
+        const entities =  Array.of(...units, ...buildings)
+        this.#gameCanvas.updateGameEntities(entities)
     }
 
     loadBuildings(){
