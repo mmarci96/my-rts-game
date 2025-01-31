@@ -11,13 +11,17 @@ class MouseEventHandler {
     #units
     #assets
     #enemyUnits
+    #buildingController
+    #playerBuildings
+    #enemyBuildings
+    #selectables = []
 
     /**
      *
      * @param { Camera }camera
      * @param { SelectionBox } selectionBox
      */
-    constructor(camera, selectionBox, assets) {
+    constructor(camera, selectionBox, assets, buildingController) {
         if (!(selectionBox instanceof SelectionBox)) {
             throw new TypeError('SelectionBox requires selectionBox');
         }
@@ -34,6 +38,7 @@ class MouseEventHandler {
         this.setCursor('default');
         this.hoveredEnemy = null;
         this.selectionActive = false;
+        this.#buildingController = buildingController
     }
     
     updateSelection(controller, color){
@@ -43,6 +48,9 @@ class MouseEventHandler {
 
         this.#units = controller.getUnitsByColor(color);
         this.#enemyUnits = controller.getEnemyUnits(color);
+        this.#playerBuildings = this.#buildingController.getBuildingsByColor(color);
+        this.#enemyBuildings = this.#buildingController.getEnemyBuildings(color)
+        
     }
 
     /**
@@ -84,8 +92,11 @@ class MouseEventHandler {
             this.#selectionBox.drawBox(startX, startY, finalX, finalY);
             ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
             isSelecting = false;
+            this.#selectables.push(...this.#units, ...this.#playerBuildings);
+            console.log(this.#selectables)
 
-            const selectedUnits = this.#selectionBox.handleSelecting(this.#units, this.#camera);
+            const selectedUnits = this.#selectionBox.handleSelecting(this.#selectables, this.#camera);
+            this.#selectables = []
             if(selectedUnits.length > 0){
                 this.selectionActive = true;
             } else {
@@ -115,6 +126,7 @@ class MouseEventHandler {
         ctx.strokeRect(startX, startY, width, height);
 
     }
+    //handleBuildingSelection()
     handleHover(clientX, clientY){
         const hovering = this.#enemyUnits.find(eunit => {
             const { worldX, worldY } = this.convertCursorPosition(clientX, clientY);

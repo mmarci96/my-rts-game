@@ -56,7 +56,10 @@ class GameLogic {
         this.#selectionBox = new SelectionBox();
         
         this.#mouseHandler = new MouseEventHandler(
-                this.#camera, this.#selectionBox, this.#assets
+                this.#camera, 
+            this.#selectionBox, 
+            this.#assets, 
+            this.#buildingController
         );
     }
     setupGame(){
@@ -94,10 +97,10 @@ class GameLogic {
         const redId = 'redhouse_id'
         const blueId = 'bluehouse_id'
         const houseRed = new House(
-            5,5,128,128,redId, 'red', this.#assets.getImage('house_red')
+            5,5,128,196,redId, 'red', this.#assets.getImage('house_red')
         )
         const houseBlue = new House(
-            42,42,128,128,blueId, 'blue', this.#assets.getImage('house_blue')
+            42,42,128,196,blueId, 'blue', this.#assets.getImage('house_blue')
         )
         console.log(houseBlue.getId())
         console.log(houseRed.getId())

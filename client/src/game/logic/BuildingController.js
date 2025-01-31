@@ -18,6 +18,22 @@ class BuildingController {
             this.#buildings.set(building.getId(), building)
         });
     }
+
+    getBuildingsByColor(color){
+       return this.getBuildings().filter(building => building.getColor() === color);
+    }
+    getEnemyBuildings(color) {
+        return this.getBuildings().filter(building => building.getColor() !== color)
+    }
+
+    refreshBuilding(){
+        this.getBuildings().forEach(building => {
+            if(!(building instanceof Building)){
+                throw new TypeError('not build')
+            }
+            building.refresh();
+        })
+    }
 }
 
 export default BuildingController;

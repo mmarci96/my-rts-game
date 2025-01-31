@@ -2,6 +2,9 @@ import Camera from "../Camera.js";
 import Unit from "../../data/Unit.js";
 import GameMap from "../../logic/GameMap.js";
 import VectorTransformer from "../../utils/VectorTransformer.js";
+import Selectable from "../../data/models/Selectable.js";
+import GameEntity from "../../data/models/GameEntity.js";
+import Building from "../../data/models/Building.js";
 
 class SelectionBox {
     #startX
@@ -30,15 +33,15 @@ class SelectionBox {
     }
 
     /**
-     * @param {Array<Unit>} units
+     * @param {Array<Unit>} selectablesList
      * @param { Camera } camera
      * @returns {Unit[]}
     */
-    handleSelecting(units, camera) {
+    handleSelecting(selectablesList, camera) {
         if (!(camera instanceof Camera)) {
             throw new Error("Camera is not supported");
         }
-        if (!(units instanceof Array)) {
+        if (!(selectablesList instanceof Array)) {
             throw new Error("Units is not supported");
         }
 
@@ -49,16 +52,21 @@ class SelectionBox {
             bottom: Math.max(this.#startY, this.#finalY) + 28,
         };
 
-        return units.filter((unit) => {
-            if (!(unit instanceof Unit)) {
+        return selectablesList.filter((selectable) => {
+            if (!(selectable.selectable instanceof Selectable)) {
                 throw new TypeError("Unit is not supported");
             }
+            if(!(selectable instanceof GameEntity)){
+                throw new TypeError("Unit is not entity");
+            }
+
             const { px, py } = VectorTransformer.positionToCanvas({
-                posX: unit.getX(),
-                posY: unit.getY(),
+                posX: selectable.getX(),
+                posY: selectable.getY(),
                 cameraX: camera.getX(),
                 cameraY: camera.getY()
             });
+
             const unitRect = {
                 left: px,
                 top: py,
@@ -73,8 +81,9 @@ class SelectionBox {
                     selectionRect.top <= unitRect.bottom
             );
 
-            unit.setSelected(isPartiallyInside);
-            return unit.isSelected()
+            selectable.setSelected(isPartiallyInside);
+            
+            return selectable.isSelected()
         });
     }
 
