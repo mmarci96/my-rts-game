@@ -35,7 +35,7 @@ class Unit extends GameEntity {
     * @param { number } y
     * @param { Camera } camera
     */
-    draw(context, x, y, camera, deltaTime) {
+    draw(context,camera, x,y,deltaTime) {
         if (!(camera instanceof Camera)) {
             throw new TypeError("Camera must be a Camera.");
         }

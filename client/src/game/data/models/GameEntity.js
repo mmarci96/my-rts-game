@@ -4,8 +4,8 @@ class GameEntity {
         this.y = y;
     }
 
-    draw(context, x, y, camera) {
-
+    draw(context, camera, x, y, deltaTime) {
+        throw new Error('Abstrct method, this need to be implemented!')
     }
 
     getX() {

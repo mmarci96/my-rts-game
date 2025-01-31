@@ -13,7 +13,7 @@ class Building extends GameEntity {
         this.#sprite = sprite
     }
 
-    draw(context, camera) {
+    draw(context, camera, x, y, deltaTime) {
         this.context = context
         this.camera = camera
         if(!(context instanceof CanvasRenderingContext2D)){
