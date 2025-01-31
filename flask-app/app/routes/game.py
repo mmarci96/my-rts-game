@@ -4,7 +4,7 @@ from bson import ObjectId
 import os
 
 from app.service.random_map_generator import generate_random_map
-from app.service.starter_unit_generator import create_units
+from app.service.starter_data_generator import create_units
 
 game_bp = Blueprint('game', __name__)
 

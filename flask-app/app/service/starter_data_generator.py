@@ -40,7 +40,36 @@ def create_units(size, colors):
                     "type": "warrior"
                     }
             units.append(warrior)
-
+     
     return units
 
+def create_buildings(size, colors):
+    start_x = 0
+    start_y = 0
+    buildings = []
+
+    for color in colors:
+        if color == 'red':
+            start_x = 6
+            start_y = 5
+        elif color == 'blue':
+            start_x = size - 8
+            start_y = size - 8
+        elif color == 'yellow':
+            start_y = size - 8
+            start_x = 8
+        elif color == 'purple':
+            start_x = size - 8
+            start_y = 6
+
+        building = {
+                "x": start_x+6,
+                "y": start_y+6,
+                "color": color,
+                "health": 200,
+                "type": "main",
+                }
+        buildings.append(building)
+        
+    return buildings
 
