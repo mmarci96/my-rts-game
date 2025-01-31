@@ -1,6 +1,7 @@
 import Building from "../data/models/Building.js";
 import Camera from "../ui/Camera.js";
 import VectorTransformer from '../utils/VectorTransformer.js'
+import BuildingController from "./BuildingController.js";
 
 class GameMap {
     static WIDTH = window.innerWidth;
@@ -10,7 +11,7 @@ class GameMap {
     #map;
     #camera;
     #assets;
-    #buildings;
+    #buildingController;
 
     /**
        * Holds the map array and prints the map by making a map with a switch case basically
@@ -18,14 +19,17 @@ class GameMap {
        * @param {Camera} camera - The camera instance.
        * @param {AssetManager} assets - Preloaded assets.
        */
-    constructor(map, camera, assets, buildings) {
+    constructor(map, camera, assets, buildingController) {
+        if(!(buildingController instanceof BuildingController)){
+            throw new TypeError("not a buildingcontroller")
+        }
         if (!(camera instanceof Camera)) {
             throw new TypeError('Not a valid camera!');
         }
         this.#map = map;
         this.#camera = camera;
         this.#assets = assets; // Store the AssetManager
-        this.#buildings = buildings;
+        this.#buildingController = buildingController;
 
         this.canvas = document.getElementById("map-canvas");
         this.canvas.style.zIndex = '0';
@@ -75,10 +79,11 @@ class GameMap {
                 ctx.drawImage(tilesetImage, px, py - position.z);
             }
         }
-        [...this.#buildings.values()].forEach(building => {
+        this.#buildingController.getBuildings().forEach(building => {
             if(!(building instanceof Building)){
                 throw new TypeError("Not a building!")
             }
+            console.log("Drawing building with id: ", building.getId())
             building.draw(ctx, camera)
         })
     }
@@ -87,39 +92,6 @@ class GameMap {
         const mapHeight = this.#map.length;
         const mapWidth = this.#map[0].length;
         return { mapWidth, mapHeight };
-    }
-
-    /**
-       * I added this then realized I have no emojis installed on my IDE xd
-       * @param { string } char
-       * @returns { string }
-       */
-    #tileMapper(char) {
-        let name = 'empty'
-        switch (char) {
-            // Background (non-collidable) tiles (64 total)
-            case '.':
-                name = 'grass1'; // Grass
-                break;
-            case 'p':
-                name = 'pavement1'; // Pine forest (non-collidable)
-                break;
-            case 'v':
-                name = 'pavement2'; // Active volcano (collidable)
-                break;
-            case 'm':
-                name = 'stone'; // Impassable mountain
-                break;
-            case 'c':
-                name = 'stone2'; // Large cactus (collidable)
-                break;
-            case '#':
-                name = 'water1'
-                break;
-            default:
-                console.error("Unknown unit: " + char);
-        }
-        return name;
     }
 }
 

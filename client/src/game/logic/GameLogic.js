@@ -6,6 +6,7 @@ import UnitController from "./UnitController.js";
 import MouseEventHandler from "../ui/control/MouseEventHandler.js";
 import Player from "../data/Player.js";
 import House from "../data/House.js";
+import BuildingController from "./BuildingController.js";
 
 class GameLogic {
     #camera;
@@ -17,8 +18,8 @@ class GameLogic {
     #assets;
     #commandHandler
     #unitController;
+    #buildingController;
     #player
-    #buildings;
     isInitialized = false;
 
     /**
@@ -40,11 +41,11 @@ class GameLogic {
         }
         this.#assets = assets;
         
-        this.#buildings = new Map();
-        this.loadBuildings();
+        this.#buildingController = new BuildingController();
+        this.#buildingController.loadBuildings(this.loadBuildings())
 
         this.#gameMap = new GameMap(
-            this.#mapData, this.#camera, this.#assets, this.#buildings
+            this.#mapData, this.#camera, this.#assets, this.#buildingController
         )
 
         this.#unitController = new UnitController(this.#assets);
@@ -98,8 +99,9 @@ class GameLogic {
         const houseBlue = new House(
             42,42,128,128,blueId, 'blue', this.#assets.getImage('house_blue')
         )
-        this.#buildings.set(redId, houseRed)
-        this.#buildings.set(blueId, houseBlue)
+        console.log(houseBlue.getId())
+        console.log(houseRed.getId())
+        return [houseBlue, houseRed]
 
     }
 
