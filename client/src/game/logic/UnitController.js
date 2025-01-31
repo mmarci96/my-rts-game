@@ -2,7 +2,6 @@ import Unit from '../data/Unit.js';
 import Warrior from '../data/Warrior.js';
 import Worker from '../data/Worker.js';
 import AssetManager from '../ui/AssetManager.js';
-import Camera from '../ui/Camera.js';
 import GameMap from './GameMap.js';
 
 class UnitController {
@@ -11,9 +10,9 @@ class UnitController {
     #unitCanvas;
 
     /**
-     * The actual picture loader asset map
-     * @param { Promise<HTMLElement> } assets
-     */
+    * The actual picture loader asset map
+    * @param { Promise<HTMLElement> } assets
+    */
     constructor(assets) {
         if(!(assets instanceof AssetManager)) throw new TypeError('no pic')
         this.#assetManager = assets
@@ -42,6 +41,9 @@ class UnitController {
             }));
     }
 
+    /**
+    * @returns { Array<Unit> }
+    */
     getUnits(){
         return [...this.#units.values()]
     }
@@ -82,7 +84,7 @@ class UnitController {
             } else {
                 this.loadUnit({...unitData});
             }
-            // Mark this unit as processed
+
             existingUnitIds.delete(unitData["id"]);
         });
         [...existingUnitIds.keys()].forEach(unitId => {
@@ -91,7 +93,7 @@ class UnitController {
     }
 
     updateUnit({...props}){
-        const {type, id, health, x, y, state, color, targetX, targetY, speed } = props;
+        const {type, id, health, x, y, state } = props;
         if (!type || !id || !x || !y || health === null) {
             throw new Error(`Missing:name${type};health: ${health};position:x:${x},y:${y} id=${id}`);
         }

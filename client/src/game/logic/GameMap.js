@@ -11,11 +11,11 @@ class GameMap {
     #assets;
 
     /**
-       * Holds the map array and prints the map by making a map with a switch case basically
-       * @param {[]} map - The map data.
-       * @param {Camera} camera - The camera instance.
-       * @param {AssetManager} assets - Preloaded assets.
-       */
+    * Holds the map array and prints the map by making a map with a switch case basically
+    * @param {[]} map - The map data.
+    * @param {Camera} camera - The camera instance.
+    * @param {AssetManager} assets - Preloaded assets.
+    */
     constructor(map, camera, assets, ) {
         if (!(camera instanceof Camera)) {
             throw new TypeError('Not a valid camera!');
@@ -31,9 +31,9 @@ class GameMap {
     }
 
     /**
-       * Renders the map onto a canvas.
-       * @returns { void }
-       */
+    * Renders the map onto a canvas.
+    * @returns { void }
+    */
     drawMap() {
         const camera = this.#camera;
         const ctx = this.canvas.getContext('2d');

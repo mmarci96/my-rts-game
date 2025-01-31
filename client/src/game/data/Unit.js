@@ -70,7 +70,6 @@ class Unit extends GameEntity {
     }
 
     /**
-    *
     * @returns { string } state
     */
     getState() {

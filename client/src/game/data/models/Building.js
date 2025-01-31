@@ -14,7 +14,7 @@ class Building extends GameEntity {
     * @param {number} height
     * @param {CanvasImageSource} sprite 
     */
-    constructor(x, y, width, height, id, color, sprite) {
+    constructor({x, y, width, height, id, color, sprite}) {
         super(x, y);
         this.width = width;
         this.height = height;

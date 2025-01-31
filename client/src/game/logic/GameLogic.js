@@ -5,7 +5,6 @@ import SelectionBox from "../ui/control/SelectionBox.js";
 import UnitController from "./UnitController.js";
 import MouseEventHandler from "../ui/control/MouseEventHandler.js";
 import Player from "../data/Player.js";
-import House from "../data/House.js";
 import BuildingController from "./BuildingController.js";
 import DrawGameCanvas from "../ui/DrawGameCanvas.js";
 
@@ -31,41 +30,34 @@ class GameLogic {
         if(!(player instanceof Player)){
             throw new TypeError('Invalid player')
         }
+        this.isRunning = false;
         this.#commandHandler = commandHandler
         this.#player = player
         this.#mapData = map;
         this.#camera = new Camera(16, 16, 14, 14);
-        this.isRunning = false;
-        this.#gameCanvas = new DrawGameCanvas(this.#camera)
-        this.#gameCanvas.aimationLoop();
+        this.#assets = assets;
+        this.#gameMap = new GameMap(this.#mapData, this.#camera, this.#assets)
 
         if(player.getColor() === 'blue'){
             const camOffSet = Math.sqrt(map.length*map.length)
             this.#camera.moveCamera(camOffSet/2, camOffSet/2)
         }
-        this.#assets = assets;
-        
-        this.#buildingController = new BuildingController();
-        this.#buildingController.loadBuildings(this.loadBuildings())
 
-        this.#gameMap = new GameMap(
-            this.#mapData, this.#camera, this.#assets
-        )
-
+        this.#gameCanvas = new DrawGameCanvas(this.#camera)
+        this.#gameCanvas.aimationLoop();
         this.#unitController = new UnitController(this.#assets);
-        //this.#unitController.animationLoop(this.#camera)
-        
-        this.#keyHandler = new KeyEventHandler(this.#camera);
+        this.#buildingController = new BuildingController(this.#assets);
 
+        this.#keyHandler = new KeyEventHandler(this.#camera);
         this.#selectionBox = new SelectionBox();
-        
         this.#mouseHandler = new MouseEventHandler(
-                this.#camera, 
+            this.#camera, 
             this.#selectionBox, 
             this.#assets,
             this.#buildingController
         );
     }
+
     setupGame(){
         this.loadMap();
         this.setupControl();
@@ -88,13 +80,19 @@ class GameLogic {
 
     getUnitData(){
         return units = this.#unitController.getAllUnits()
-
     }
+
     updateUnits(units){
         if(this.isRunning){
             this.#unitController.refreshUnits(units)
             this.#mouseHandler.updateSelection(this.#unitController, this.#player.getColor())
             this.updateAnimations()
+        }
+    }
+
+    updateBuildings(buildings){
+        if(this.isRunning){
+            this.#buildingController.loadBuildings(buildings) 
         }
     }
 
@@ -105,20 +103,6 @@ class GameLogic {
         this.#gameCanvas.updateGameEntities(entities)
     }
 
-    loadBuildings(){
-        const redId = 'redhouse_id'
-        const blueId = 'bluehouse_id'
-        const houseRed = new House(
-            5,5,128,196,redId, 'red', this.#assets.getImage('house_red')
-        )
-        const houseBlue = new House(
-            42,42,128,196,blueId, 'blue', this.#assets.getImage('house_blue')
-        )
-        console.log(houseBlue.getId())
-        console.log(houseRed.getId())
-        return [houseBlue, houseRed]
-
-    }
 
 }
 
