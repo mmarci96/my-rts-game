@@ -44,16 +44,19 @@ class SessionService {
         if(!sessionId){
             throw new BadRequestError("No session id", 403)
         }
+
         const session = await Session.findById(sessionId)
         if(!session) {
             throw new BadRequestError(`No session with id: ${sessionId}`, 404)
         }
+
         const resourceFieldIds = session["resources"]
         const resources = await ResourceModel.find({
             "_id": { $in: [
                 ...resourceFieldIds
             ]}
         })
+
         return resources;
     }
 
@@ -61,16 +64,19 @@ class SessionService {
         if(!sessionId){
             throw new BadRequestError("No session id", 403)
         }
+
         const session = await Session.findById(sessionId)
         if(!session){
             throw new BadRequestError("No session found by id", 404)
         }
+
         const buildingIds = session["buildings"]
         const buildings = await BuildingModel.find({
             "_id": { $in: [
                 ...buildingIds
             ]}
         })
+
         return buildings
     }
 
