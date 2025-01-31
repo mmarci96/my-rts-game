@@ -3,9 +3,10 @@ const GameLogic = require("./logic/GameLogic")
 module.exports = class Game {
     #gameId
     #gameLogic
-    constructor(gameId, units, map){
+
+    constructor(gameId, units, map, resources, buildings){
         this.#gameId = gameId;
-        this.#gameLogic = new GameLogic(units, map);
+        this.#gameLogic = new GameLogic(units, map, resources, buildings);
         this.running = false;
     }
 
@@ -22,6 +23,8 @@ module.exports = class Game {
     getGameState(){
         return {
             units: this.#gameLogic.getUnits(),
+            buildings: this.#gameLogic.getBuildings(),
+            resources: this.#gameLogic.getResources(),
             map: []
         }
     }

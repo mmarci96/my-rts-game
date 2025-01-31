@@ -15,10 +15,12 @@ const deleteUnits = (unitId) => {
 const loadGameState = async gameId => {
     const gameData = await GameService.getGameById(gameId)
     const units = await SessionService.getUnitsBySessionId(gameData.sessionId)
+    const resources = await SessionService.getResourcesFromSessionId(gameData.sessionId)
+    const buildings = await SessionService.getBuildingsFromSessionId(gameData.sessionId)
     const mapData = await MapService.getMapById(gameData.mapId)
     console.log('Current games:\n',games, '\n')
     if(games[gameId] !== 'undefined'){
-        const game = new Game(gameId,units, mapData);
+        const game = new Game(gameId,units,mapData);
         games[gameId] = {
             gameData,
             game

@@ -2,21 +2,37 @@ const GameMap = require("./GameMap")
 const Player = require("../data/Player")
 const UnitController = require("./UnitController")
 const Unit = require("../data/Unit")
+const BuildingController = require("./BuildingController")
+const ResourceController = require("./ResourceController")
 
 module.exports = class GameLogic {
     #gameMap
     #players
     #unitController
-    constructor(units, gameMap){
+    #buildingController
+    #resourceController
+
+    constructor(units, gameMap, resources, buildings){
         this.#players = new Map();
         this.#unitController = new UnitController(units);
+        this.#buildingController = new BuildingController(buildings)
+        this.#resourceController = new ResourceController(resources)
         this.#gameMap = new GameMap(gameMap);
         this.commandCount = 0
+    }
+
+    getResources(){
+        return this.#resourceController.getResources()
+    }
+
+    getBuildings(){
+        return this.#buildingController.getBuildings();
     }
 
     getUnits(){
         return this.#unitController.getUnits();
     }
+
     updateUnits(deltaTime){
         this.#unitController.refreshUnits(deltaTime);
     }
