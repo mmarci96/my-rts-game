@@ -9,8 +9,12 @@ router.get('/sessions/:sessionId', async(req, res, next) => {
     try {
         const { sessionId } = req.params
         const units = await SessionService.getUnitsBySessionId(sessionId)
+        const buildings = await SessionService.getBuildingsFromSessionId(sessionId)
+        const resources = await SessionService.getResourcesFromSessionId(sessionId)
 
-        res.send(units)
+        res.send({
+            units, buildings, resources
+        })
     } catch (error) {
        next(error) 
     }
