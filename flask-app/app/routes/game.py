@@ -189,6 +189,8 @@ def start():
 
     game_session = {
         "units": [],
+        "resources": [],
+        "buildings": [],
         "updatedAt": datetime.now(),
         "createdAt": datetime.now(),
     }
@@ -201,12 +203,12 @@ def start():
 
     buildings = create_buildings(len(game_map["tiles"]), colors)
     for building in buildings:
-        building_id = mongo.db.buildings.insert_one(building)
+        building_id = mongo.db.buildings.insert_one(building).inserted_id
         game_session["buildings"].append(building_id)
 
     wheat_fields = create_wheat_fields(buildings)
     for wheat_field in wheat_fields:
-        resource_id = mongo.db.resources.insert_one(wheat_field)
+        resource_id = mongo.db.resources.insert_one(wheat_field).inserted_id
         game_session["resources"].append(resource_id)
 
     # Save the map and session
