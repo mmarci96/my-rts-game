@@ -18,6 +18,7 @@ class GameLogic {
     #commandHandler
     #unitController;
     #player
+    #buildings;
     isInitialized = false;
 
     /**
@@ -38,8 +39,12 @@ class GameLogic {
             this.#camera.moveCamera(camOffSet/2, camOffSet/2)
         }
         this.#assets = assets;
+        
+        this.#buildings = new Map();
+        this.loadBuildings();
+
         this.#gameMap = new GameMap(
-            this.#mapData, this.#camera, this.#assets
+            this.#mapData, this.#camera, this.#assets, this.#buildings
         )
 
         this.#unitController = new UnitController(this.#assets);
@@ -64,7 +69,6 @@ class GameLogic {
     }
 
     loadMap() {
-        this.drawHouse();
         this.#gameMap.drawMap()
         this.#keyHandler = new KeyEventHandler(this.#camera);
         this.#keyHandler.setupCameraControl(this.#gameMap);	
@@ -85,13 +89,18 @@ class GameLogic {
         }
     }
 
-    drawHouse(){
-        const houseRed = new House(5,5,128,128,'idhouse_red', 'red', this.#assets.getImage('house_red'))
-        const houseBlue = new House(42,42,128,128,'idhouse_blue', 'blue', this.#assets.getImage('house_blue'))
-        const gameCanvas = document.getElementById('map-canvas')
-        const ctx = gameCanvas.getContext('2d')
-        houseRed.draw(ctx, this.#camera)
-        houseBlue.draw(ctx, this.#camera)
+    loadBuildings(){
+        const redId = 'redhouse_id'
+        const blueId = 'bluehouse_id'
+        const houseRed = new House(
+            5,5,128,128,redId, 'red', this.#assets.getImage('house_red')
+        )
+        const houseBlue = new House(
+            42,42,128,128,blueId, 'blue', this.#assets.getImage('house_blue')
+        )
+        this.#buildings.set(redId, houseRed)
+        this.#buildings.set(blueId, houseBlue)
+
     }
 
 }
