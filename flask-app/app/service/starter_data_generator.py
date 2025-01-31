@@ -73,3 +73,21 @@ def create_buildings(size, colors):
         
     return buildings
 
+def create_wheat_fields(buildings):
+    wheat_fields = []
+    
+    offsets = [(-2, 0), (2, 0), (0, -2), (0, 2)]  # Wheat fields positioned around buildings
+
+    for building in buildings:
+        x, y = building["x"], building["y"]
+        for dx, dy in offsets:
+            wheat_field = {
+                "x": x + dx,
+                "y": y + dy,
+                "availableResource": 100,
+                "type": "wheat",
+            }
+            wheat_fields.append(wheat_field)
+
+    return wheat_fields
+

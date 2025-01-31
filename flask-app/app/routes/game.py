@@ -4,7 +4,7 @@ from bson import ObjectId
 import os
 
 from app.service.random_map_generator import generate_random_map
-from app.service.starter_data_generator import create_units
+from app.service.starter_data_generator import create_units, create_buildings, create_wheat_fields
 
 game_bp = Blueprint('game', __name__)
 
@@ -198,6 +198,16 @@ def start():
     for unit in units:
         unit_id = mongo.db.units.insert_one(unit).inserted_id
         game_session["units"].append(unit_id)
+
+    buildings = create_buildings(len(game_map["tiles"]), colors)
+    for building in buildings:
+        building_id = mongo.db.buildings.insert_one(building)
+        game_session["buildings"].append(building_id)
+
+    wheat_fields = create_wheat_fields(buildings)
+    for wheat_field in wheat_fields:
+        resource_id = mongo.db.resources.insert_one(wheat_field)
+        game_session["resources"].append(resource_id)
 
     # Save the map and session
     map_id = mongo.db.maps.insert_one(game_map).inserted_id
