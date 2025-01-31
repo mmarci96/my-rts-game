@@ -42,6 +42,10 @@ class UnitController {
             }));
     }
 
+    getUnits(){
+        return [...this.#units.values()]
+    }
+
     /**
     * Makes an array from the Map of units and filters them. 
     * @param { string } color  
@@ -60,32 +64,6 @@ class UnitController {
     getEnemyUnits(allyColor){
         return[...this.#units.values()]
             .filter(unit => unit.getColor() !== allyColor)
-    }
-
-    /**
-    * Merges together logic to animate the sprites state and movement
-    * @param { Camera } camera 
-    */
-    animationLoop(camera) {
-        const canvas = this.#unitCanvas;
-        const context = canvas.getContext('2d');
-        let lastTime = Date.now();
-
-        const animate = () => {
-            const now = Date.now();
-            const deltaTime = (now - lastTime) / 1000
-            lastTime = now;
-            
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            [...this.#units.values()].forEach(unit => {
-                if (!(unit instanceof Unit)) {
-                    throw new Error('Unknown unit: ' + unit);
-                }
-                unit.draw(context, unit.getX(), unit.getY(), camera, deltaTime);
-            });
-            requestAnimationFrame(animate);
-        };
-        animate();
     }
 
     /**
