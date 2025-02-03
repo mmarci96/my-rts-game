@@ -2,6 +2,7 @@ import Camera from "../../ui/Camera.js";
 import GameEntity from "./GameEntity.js";
 import Selectable from "./Selectable.js";
 import VectorTransformer from "../../utils/VectorTransformer.js";
+import Attackable from "./Attackable.js";
 
 class Building extends GameEntity {
     #sprite
@@ -14,11 +15,12 @@ class Building extends GameEntity {
     * @param {number} height
     * @param {CanvasImageSource} sprite 
     */
-    constructor({x, y, width, height, id, color, sprite}) {
+    constructor({x, y, width, height, id, color, sprite, health}) {
         super(x, y);
         this.width = width;
         this.height = height;
         this.selectable = new Selectable(id, color);
+        this.attackable = new Attackable(health);
         this.#sprite = sprite
     }
 
@@ -94,6 +96,13 @@ class Building extends GameEntity {
     */
     getColor(){
         return this.selectable.getColor()
+    }
+
+    getHealth(){
+        return this.attackable.getHealth()
+    }
+    getMaxHealth(){
+        return 160;
     }
 
 }

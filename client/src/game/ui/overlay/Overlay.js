@@ -51,7 +51,7 @@ class Overlay {
         if(!units.size && !buildings.size){
             console.log("nothing is selected!")
         }
-        if(units.size && !buildings.size){
+        if(units.size){
             console.log("only units are selected!")
             const selectionDetails = document.createElement("ul")
             selectionDetails.id = "selectionList"
@@ -68,6 +68,9 @@ class Overlay {
                 selectionDetails.appendChild(unitElement)
             })
         }
+        if(!units.size && buildings.size === 1){
+            console.log("Display the buildings controls")
+        }
     }
 
 
@@ -75,34 +78,27 @@ class Overlay {
         const unitCard = document.createElement("li");
         unitCard.classList.add("unit-card"); // Add a class for styling
 
-        // Health container
         const healthContainer = document.createElement("div");
         healthContainer.classList.add("health-container");
 
-        // Health text
         const healthText = document.createElement("span");
         healthText.textContent = `HP: ${currentHp}/${maxHp}`;
         healthText.classList.add("health-text");
 
-        // Full health bar (background)
         const healthBarContainer = document.createElement("div");
         healthBarContainer.classList.add("health-bar-container");
 
-        // Actual health bar (fills up based on percentage)
         const healthBar = document.createElement("div");
         healthBar.classList.add("health-bar");
 
-        // Calculate width percentage
         const healthPercentage = (currentHp / maxHp) * 100;
         healthBar.style.width = `${healthPercentage}%`;
 
-        // Append health elements
         healthBarContainer.appendChild(healthBar);
         healthContainer.appendChild(healthText);
         healthContainer.appendChild(healthBarContainer);
         unitCard.appendChild(healthContainer);
 
-        // Unit type text
         const typeText = document.createElement("div");
         typeText.classList.add("unit-type");
         typeText.textContent = unitType;
