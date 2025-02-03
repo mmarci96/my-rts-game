@@ -8,8 +8,8 @@ class Overlay {
     #currentPlayer
     #isVisible
 
-    constructor(currentPlayer){
-        if(!(currentPlayer instanceof Player)){
+    constructor(currentPlayer) {
+        if (!(currentPlayer instanceof Player)) {
             throw new TypeError("must be player")
         }
         this.#currentPlayer = currentPlayer;
@@ -32,45 +32,52 @@ class Overlay {
         }
     }
 
-    displayUnitSelection(selectedList){
+    displayUnitSelection(selectedList) {
         console.log(selectedList)
         const units = new Set()
         this.#overlayDiv.innerHTML = "";
         const buildings = new Set()
+        const selectionDetails = document.createElement("ul")
+        selectionDetails.id = "selectionList"
+        selectionDetails.style.display = "flex"
+        this.#overlayDiv.appendChild(selectionDetails);
         selectedList.forEach(selectedEntity => {
-            if(!(selectedEntity.selectable instanceof Selectable)){
+            if (!(selectedEntity.selectable instanceof Selectable)) {
                 throw new TypeError("How did you even select this?")
             }
-            if(selectedEntity instanceof Unit){
+            if (selectedEntity instanceof Unit) {
                 units.add(selectedEntity)
-            } else if (selectedEntity instanceof Building){
+            } else if (selectedEntity instanceof Building) {
                 buildings.add(selectedEntity)
             }
 
         })
-        if(!units.size && !buildings.size){
+        if (!units.size && !buildings.size) {
             console.log("nothing is selected!")
         }
-        if(units.size){
-            console.log("only units are selected!")
-            const selectionDetails = document.createElement("ul")
-            selectionDetails.id = "selectionList"
-            selectionDetails.style.display = "flex"
-            this.#overlayDiv.appendChild(selectionDetails);
-            units.forEach(unit => {
-                if(!(unit instanceof Unit)){
-                    throw new TypeError("not unit")
-                }
-                const hp = unit.getHealth()
-                const maxHp = unit.getMaxHealth()
-                const type = unit.getClassName()  
-                const unitElement = this.createUnitCard(type, hp, maxHp)
-                selectionDetails.appendChild(unitElement)
-            })
+        if (units.size) {
+            this.displaySelection(units, selectionDetails)
+            if (buildings.size) {
+                this.displaySelection(buildings, selectionDetails)
+            }
         }
-        if(!units.size && buildings.size === 1){
+        if (!units.size && buildings.size === 1) {
             console.log("Display the buildings controls")
+            this.displaySelection(buildings, selectionDetails)
         }
+    }
+
+    displaySelection(selectionList, selectionDetails) {
+        selectionList.forEach(unit => {
+            //if(!(unit instanceof Unit)){
+            //    throw new TypeError("not unit")
+            //}
+            const hp = unit.getHealth()
+            const maxHp = unit.getMaxHealth()
+            const type = unit.getClassName()
+            const unitElement = this.createUnitCard(type, hp, maxHp)
+            selectionDetails.appendChild(unitElement)
+        })
     }
 
 

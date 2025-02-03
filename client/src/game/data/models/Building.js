@@ -15,7 +15,7 @@ class Building extends GameEntity {
     * @param {number} height
     * @param {CanvasImageSource} sprite 
     */
-    constructor({x, y, width, height, id, color, sprite, health}) {
+    constructor({ x, y, width, height, id, color, sprite, health }) {
         super(x, y);
         this.width = width;
         this.height = height;
@@ -34,19 +34,19 @@ class Building extends GameEntity {
     draw(context, camera, x, y, deltaTime) {
         this.context = context
         this.camera = camera
-        if(!(context instanceof CanvasRenderingContext2D)){
+        if (!(context instanceof CanvasRenderingContext2D)) {
             throw new TypeError('invalid canvas')
         }
-        if(!(camera instanceof Camera)){
+        if (!(camera instanceof Camera)) {
             throw new TypeError('camera invalid')
         }
         const { px, py } = VectorTransformer.positionToCanvas({
-            posX:super.getX(),
+            posX: super.getX(),
             posY: super.getY(),
             cameraX: camera.getX(),
             cameraY: camera.getY()
         })
-        if(this.isSelected()){
+        if (this.isSelected()) {
             context.save();
             context.beginPath();
             context.arc(
@@ -62,18 +62,18 @@ class Building extends GameEntity {
             context.restore();
 
         }
-        context.drawImage(this.#sprite, px - this.width / 2, py - this.height / 2 );
+        context.drawImage(this.#sprite, px - this.width / 2, py - this.height / 2);
 
     }
 
-    refresh(){
-        this.draw(this.context,this.camera)
+    refresh() {
+        this.draw(this.context, this.camera)
     }
 
     /**
     * @returns string
     */
-    getId(){
+    getId() {
         return this.selectable.getId();
     }
 
@@ -94,15 +94,15 @@ class Building extends GameEntity {
     /**
     *@returns string
     */
-    getColor(){
+    getColor() {
         return this.selectable.getColor()
     }
 
-    getHealth(){
+    getHealth() {
         return this.attackable.getHealth()
     }
-    getMaxHealth(){
-        return 160;
+    getMaxHealth() {
+        return 200;
     }
 
 }
