@@ -8,11 +8,11 @@ class DrawGameCanvas {
     #camera
     gameCanvas
 
-    constructor(camera){
+    constructor(camera) {
         this.#camera = camera;
         this.#gameEntities = new Set();
         this.gameCanvas = document.getElementById('game-canvas');
-        this.#deadUnits = new Set(); 
+        this.#deadUnits = new Set();
 
         this.gameCanvas.width = GameMap.WIDTH;
         this.gameCanvas.height = GameMap.HEIGHT;
@@ -20,40 +20,40 @@ class DrawGameCanvas {
 
     }
 
-    addGameEntity(gameEntity){
-        if(!gameEntity){
+    addGameEntity(gameEntity) {
+        if (!gameEntity) {
             return
         }
-        if(!(gameEntity instanceof GameEntity)){
+        if (!(gameEntity instanceof GameEntity)) {
             throw new TypeError("not entity")
         }
-        if(!this.#gameEntities.has(gameEntity)){
+        if (!this.#gameEntities.has(gameEntity)) {
             this.#gameEntities.add(gameEntity)
         }
     }
 
-    removeGameEntity(gameEntity){
-        if(gameEntity){
+    removeGameEntity(gameEntity) {
+        if (gameEntity) {
             this.#gameEntities.delete(gameEntity)
         }
     }
 
-    updateGameEntities(entityList){
-        if(!(entityList instanceof Array)){
+    updateGameEntities(entityList) {
+        if (!(entityList instanceof Array)) {
             throw new TypeError("must be array")
         }
 
         entityList.forEach(entity => {
-            if(entity instanceof Unit && entity.getState() === 'dead' && entity.isAnimationComplete()){
+            if (entity instanceof Unit && entity.getState() === 'dead' && entity.isAnimationComplete()) {
                 console.log(entity)
                 this.removeGameEntity(entity)
-                return; 
+                return;
             }
             this.addGameEntity(entity)
         })
     }
 
-    aimationLoop(){
+    aimationLoop() {
         const canvas = this.gameCanvas;
         const camera = this.#camera
         const context = canvas.getContext('2d');
@@ -63,14 +63,14 @@ class DrawGameCanvas {
             const now = Date.now();
             const deltaTime = (now - lastTime) / 1000
             lastTime = now;
-            
+
             context.clearRect(0, 0, canvas.width, canvas.height);
             this.#gameEntities.forEach(entity => {
-                if(!(entity instanceof GameEntity)){
+                if (!(entity instanceof GameEntity)) {
                     throw new TypeError("not valid entity")
                 }
                 entity.draw(context, camera, entity.getX(), entity.getY(), deltaTime);
-            }) 
+            })
             requestAnimationFrame(animate);
         };
         animate();

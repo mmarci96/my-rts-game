@@ -12,7 +12,7 @@ class Camera {
      * @param { number } width
      * @param { number } height
      */
-    constructor(x, y,width, height) {
+    constructor(x, y, width, height) {
         this.#x = x
         this.#y = y
         this.#width = width
