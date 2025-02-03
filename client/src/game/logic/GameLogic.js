@@ -7,6 +7,7 @@ import MouseEventHandler from "../ui/control/MouseEventHandler.js";
 import Player from "../data/Player.js";
 import BuildingController from "./BuildingController.js";
 import DrawGameCanvas from "../ui/DrawGameCanvas.js";
+import Overlay from "../ui/overlay/Overlay.js";
 
 class GameLogic {
     #camera;
@@ -22,6 +23,7 @@ class GameLogic {
     #player
     isInitialized = false;
     #gameCanvas;
+    #uiOverlay
 
     /**
     * @param { string [] } map 
@@ -37,6 +39,8 @@ class GameLogic {
         this.#camera = new Camera(16, 16, 14, 14);
         this.#assets = assets;
         this.#gameMap = new GameMap(this.#mapData, this.#camera, this.#assets)
+        this.#uiOverlay = new Overlay(player);
+        
 
         if(player.getColor() === 'blue'){
             const camOffSet = Math.sqrt(map.length*map.length)
@@ -54,7 +58,8 @@ class GameLogic {
             this.#camera, 
             this.#selectionBox, 
             this.#assets,
-            this.#buildingController
+            this.#buildingController,
+            this.#uiOverlay
         );
     }
 
