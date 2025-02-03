@@ -106,6 +106,7 @@ class MouseEventHandler {
                 this.selectionActive = false;
                 this.#uiOverlay.setInvisible()
             }
+            this.#uiOverlay.displayUnitSelection(selectedUnits)
         });
         this.#canvas.addEventListener('mousedown', e => {
             if (e.button === 2) {

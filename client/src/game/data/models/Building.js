@@ -45,7 +45,6 @@ class Building extends GameEntity {
             cameraY: camera.getY()
         })
         if(this.isSelected()){
-            console.log("selected building!")
             context.save();
             context.beginPath();
             context.arc(
