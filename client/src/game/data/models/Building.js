@@ -131,7 +131,7 @@ class Building extends GameEntity {
         return 200;
     }
     getAvailableActions() {
-        return super.getAvailableActions()
+        //return super.getAvailableActions()
     }
 
 }

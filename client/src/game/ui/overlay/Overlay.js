@@ -1,6 +1,7 @@
 import Player from "../../data/Player"
 import Unit from "../../data/Unit"
 import Building from "../../data/models/Building"
+import GameEntity from "../../data/models/GameEntity"
 import Selectable from "../../data/models/Selectable"
 
 class Overlay {
@@ -59,7 +60,10 @@ class Overlay {
 
         if (!units.size && buildings.size === 1) {
             console.log("Display the buildings controls")
+            const building = [...buildings.values()][0]
+            console.log(building)
             this.displaySelection(buildings, selectionDetails)
+            this.displayAvailableActions(building)
             return;
         }
 
@@ -70,11 +74,13 @@ class Overlay {
         this.displaySelection(units, selectionDetails)
     }
 
+    displayAvailableActions(entity) {
+        const actions = entity.getAvailableActions()
+        console.log(actions)
+    }
+
     displaySelection(selectionList, selectionDetails) {
         selectionList.forEach(unit => {
-            //if(!(unit instanceof Unit)){
-            //    throw new TypeError("not unit")
-            //}
             const hp = unit.getHealth()
             const maxHp = unit.getMaxHealth()
             const type = unit.getClassName()
