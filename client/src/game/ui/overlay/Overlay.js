@@ -34,8 +34,9 @@ class Overlay {
 
     displayUnitSelection(selectedList) {
         console.log(selectedList)
-        const units = new Set()
         this.#overlayDiv.innerHTML = "";
+
+        const units = new Set()
         const buildings = new Set()
         const selectionDetails = document.createElement("ul")
         selectionDetails.id = "selectionList"
@@ -53,18 +54,20 @@ class Overlay {
 
         })
         if (!units.size && !buildings.size) {
-            console.log("nothing is selected!")
+            return;
         }
-        if (units.size) {
-            this.displaySelection(units, selectionDetails)
-            if (buildings.size) {
-                this.displaySelection(buildings, selectionDetails)
-            }
-        }
+
         if (!units.size && buildings.size === 1) {
             console.log("Display the buildings controls")
             this.displaySelection(buildings, selectionDetails)
+            return;
         }
+
+        if (buildings.size) {
+            this.displaySelection(buildings, selectionDetails)
+        }
+
+        this.displaySelection(units, selectionDetails)
     }
 
     displaySelection(selectionList, selectionDetails) {
