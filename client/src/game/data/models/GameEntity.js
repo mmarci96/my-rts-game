@@ -44,13 +44,17 @@ class GameEntity {
 
     /**
     * @param { number} y
-    */   
+    */
     setY(y) {
         this.y = y;
     }
 
     getClassName() {
         return this.constructor.name;
+    }
+
+    getAvailableActions() {
+        return []
     }
 }
 

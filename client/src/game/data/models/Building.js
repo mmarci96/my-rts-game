@@ -22,6 +22,27 @@ class Building extends GameEntity {
         this.selectable = new Selectable(id, color);
         this.attackable = new Attackable(health);
         this.#sprite = sprite
+        this.activeActions = new Set()
+        this.staggerRefesh = 60;
+        this.refreshCount = 0
+    }
+
+    addAction(duration, actionName) {
+        const timer = new Action(actionName, duration)
+        this.activeActions.add(timer)
+    }
+
+    getActiveActions() {
+        return [...this.activeActions.values()]
+    }
+
+    updateActions() {
+        this.activeActions.forEach(activeAction => {
+            if (activeAction.isReady()) {
+                console.log("implement whats happenning here")
+                this.activeActions.delete(activeAction)
+            }
+        })
     }
 
     /**
@@ -32,6 +53,11 @@ class Building extends GameEntity {
     * @param {number} deltaTime 
     */
     draw(context, camera, x, y, deltaTime) {
+        this.refreshCount++
+        if (this.refreshCount >= this.staggerRefesh) {
+            this.refreshCount = 0;
+            this.updateActions();
+        }
         this.context = context
         this.camera = camera
         if (!(context instanceof CanvasRenderingContext2D)) {
@@ -103,6 +129,9 @@ class Building extends GameEntity {
     }
     getMaxHealth() {
         return 200;
+    }
+    getAvailableActions() {
+        return super.getAvailableActions()
     }
 
 }
