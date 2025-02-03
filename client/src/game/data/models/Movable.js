@@ -56,6 +56,9 @@ class Movable {
         return { x: tx, y: ty };
     }
 
+    /**
+    * @returns number
+    */
     isMoving() {
         return this.#isMoving;
     }

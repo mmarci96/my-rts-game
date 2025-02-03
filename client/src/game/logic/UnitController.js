@@ -2,7 +2,6 @@ import Unit from '../data/Unit.js';
 import Warrior from '../data/Warrior.js';
 import Worker from '../data/Worker.js';
 import AssetManager from '../ui/AssetManager.js';
-import Camera from '../ui/Camera.js';
 import GameMap from './GameMap.js';
 
 class UnitController {
@@ -11,9 +10,9 @@ class UnitController {
     #unitCanvas;
 
     /**
-     * The actual picture loader asset map
-     * @param { Promise<HTMLElement> } assets
-     */
+    * The actual picture loader asset map
+    * @param { Promise<HTMLElement> } assets
+    */
     constructor(assets) {
         if(!(assets instanceof AssetManager)) throw new TypeError('no pic')
         this.#assetManager = assets
@@ -43,6 +42,13 @@ class UnitController {
     }
 
     /**
+    * @returns { Array<Unit> }
+    */
+    getUnits(){
+        return [...this.#units.values()]
+    }
+
+    /**
     * Makes an array from the Map of units and filters them. 
     * @param { string } color  
     * @returns { Array<Unit>}
@@ -63,32 +69,6 @@ class UnitController {
     }
 
     /**
-    * Merges together logic to animate the sprites state and movement
-    * @param { Camera } camera 
-    */
-    animationLoop(camera) {
-        const canvas = this.#unitCanvas;
-        const context = canvas.getContext('2d');
-        let lastTime = Date.now();
-
-        const animate = () => {
-            const now = Date.now();
-            const deltaTime = (now - lastTime) / 1000
-            lastTime = now;
-            
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            [...this.#units.values()].forEach(unit => {
-                if (!(unit instanceof Unit)) {
-                    throw new Error('Unknown unit: ' + unit);
-                }
-                unit.draw(context, unit.getX(), unit.getY(), camera, deltaTime);
-            });
-            requestAnimationFrame(animate);
-        };
-        animate();
-    }
-
-    /**
     * They are still just js obj data with key / value pairs here
     * @param { Array<Unit>} data
     */
@@ -104,7 +84,7 @@ class UnitController {
             } else {
                 this.loadUnit({...unitData});
             }
-            // Mark this unit as processed
+
             existingUnitIds.delete(unitData["id"]);
         });
         [...existingUnitIds.keys()].forEach(unitId => {
@@ -113,7 +93,7 @@ class UnitController {
     }
 
     updateUnit({...props}){
-        const {type, id, health, x, y, state, color, targetX, targetY, speed } = props;
+        const {type, id, health, x, y, state } = props;
         if (!type || !id || !x || !y || health === null) {
             throw new Error(`Missing:name${type};health: ${health};position:x:${x},y:${y} id=${id}`);
         }

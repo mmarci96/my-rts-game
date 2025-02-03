@@ -11,13 +11,16 @@ class MouseEventHandler {
     #units
     #assets
     #enemyUnits
+    #buildingController
+    #playerBuildings
+    #selectables = []
 
     /**
-     *
-     * @param { Camera }camera
-     * @param { SelectionBox } selectionBox
-     */
-    constructor(camera, selectionBox, assets) {
+    *
+    * @param { Camera }camera
+    * @param { SelectionBox } selectionBox
+    */
+    constructor(camera, selectionBox, assets, buildingController) {
         if (!(selectionBox instanceof SelectionBox)) {
             throw new TypeError('SelectionBox requires selectionBox');
         }
@@ -34,6 +37,7 @@ class MouseEventHandler {
         this.setCursor('default');
         this.hoveredEnemy = null;
         this.selectionActive = false;
+        this.#buildingController = buildingController
     }
     
     updateSelection(controller, color){
@@ -43,13 +47,14 @@ class MouseEventHandler {
 
         this.#units = controller.getUnitsByColor(color);
         this.#enemyUnits = controller.getEnemyUnits(color);
+        this.#playerBuildings = this.#buildingController.getBuildingsByColor(color);
     }
 
     /**
-     *
-     * @param { Array<Unit> } units
-     * @param { function } mouseControl
-     */
+    *
+    * @param { Array<Unit> } units
+    * @param { function } mouseControl
+    */
     drawSelection(mouseControl) {
         const ctx = this.#canvas.getContext('2d');
         let isSelecting = false;
@@ -63,8 +68,8 @@ class MouseEventHandler {
             startY = e.clientY - rect.top;
             isSelecting = true;
         });
+                
         this.#canvas.addEventListener('mousemove', e => {
-            // Handle selection drawing if currently selecting
             if (isSelecting) {
                 this.onSelecting(e.clientX, e.clientY, startX, startY, ctx);
             }
@@ -84,14 +89,15 @@ class MouseEventHandler {
             this.#selectionBox.drawBox(startX, startY, finalX, finalY);
             ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
             isSelecting = false;
+            this.#selectables.push(...this.#units, ...this.#playerBuildings);
 
-            const selectedUnits = this.#selectionBox.handleSelecting(this.#units, this.#camera);
+            const selectedUnits = this.#selectionBox.handleSelecting(this.#selectables, this.#camera);
+            this.#selectables = []
             if(selectedUnits.length > 0){
                 this.selectionActive = true;
             } else {
                 this.selectionActive = false;
             }
-            console.log('units selected: ', selectedUnits);
         });
         this.#canvas.addEventListener('mousedown', e => {
             if (e.button === 2) {
@@ -100,6 +106,14 @@ class MouseEventHandler {
             }
         });
     }
+
+    /**
+    * @param {CanvasRenderingContext2D} ctx 
+    * @param {number} startX
+    * @param {number} startY 
+    * @param {number} clientX
+    * @param {number} clientY 
+    */
     onSelecting(clientX, clientY, startX, startY, ctx){
         const rect = this.#canvas.getBoundingClientRect();
         const screenX = clientX - rect.left;
@@ -115,6 +129,11 @@ class MouseEventHandler {
         ctx.strokeRect(startX, startY, width, height);
 
     }
+    
+    /**
+    * @param {number} clientX
+    * @param {number} clientY 
+    */
     handleHover(clientX, clientY){
         const hovering = this.#enemyUnits.find(eunit => {
             const { worldX, worldY } = this.convertCursorPosition(clientX, clientY);
@@ -138,12 +157,22 @@ class MouseEventHandler {
             this.setCursor('default');
         }
     }
+
+    /**
+    * @param {number} clientX
+    * @param {number} clientY 
+    */
     commandUnit(clientX, clientY){
         if(this.hoveredEnemy != null){
             const target = this.getTargetPosition(this.#units, clientX, clientY)
             mouseControl(target);
         }
     }
+
+    /**
+    * @param {string} unitId
+    * @param {string} targetUnit 
+    */
     createAttackCommand(targetUnit, unitId){
         const action = 'attack';
         return {
@@ -154,6 +183,12 @@ class MouseEventHandler {
             targetId: targetUnit.getId()
         }
     }
+
+    /**
+    * @param {string} unitId
+    * @param {number} targetX 
+    * @param {number} targetY 
+    */
     createMoveUnitCommand(targetX, targetY, unitId){
         const action = 'moving';
         return {
@@ -220,6 +255,9 @@ class MouseEventHandler {
         return { targetX, targetY };
     }
 
+    /**
+    * @param {string} name 
+    */
     setCursor(name){
         const defaultCursor = this.#assets.getImage(`${name}_cursor`);
         if (defaultCursor instanceof HTMLImageElement) {
@@ -230,6 +268,12 @@ class MouseEventHandler {
             console.warn('Default cursor is not a valid image or URL.');
         }   
     }
+
+    /**
+    * @param {number} clientX 
+    * @param {number} clientY 
+    * @returns { object }
+    */
     convertCursorPosition(clientX, clientY){
         const rect = this.#canvas.getBoundingClientRect();
         return VectorTransformer.getPositionFromCanvas({

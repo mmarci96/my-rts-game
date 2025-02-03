@@ -24,8 +24,10 @@ const socketHandler = (socket, game, userId, gameId) => {
 
     socket.on('gameState', data => {
         if(data.units.length > 1){
-            game.refreshUnitData(data.units)
+            const { units, buildings } = data
+            game.refreshGameData({ units, buildings })
         }
+        
     })
 
     const commandInterval = setInterval(() => {

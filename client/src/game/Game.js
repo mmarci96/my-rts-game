@@ -4,13 +4,13 @@ import GameLogic from './logic/GameLogic.js';
 class Game {
     #gameLogic;
     /**
-	  * An array of string will be the parameter we receive from endpoint/ws
-	  * @param { Array<string> } map
+    * An array of string will be the parameter we receive from endpoint/ws
+    * @param { Array<string> } map
     * @param { Array } units 
     * @param { Map } assets
     * @param { Player } player
     * @param { Function } createCommand 
-	  */
+    */
     constructor(map, assets, player, createCommand) {
         this.player = player
         if (!(map instanceof Array)) {
@@ -26,10 +26,11 @@ class Game {
     setupPain(){
         this.#gameLogic.setupGame();
     }
-    
-    refreshUnitData(units) {
+    refreshGameData({units, buildings}){    
         this.#gameLogic.updateUnits(units)
+        this.#gameLogic.updateBuildings(buildings)
     }
+
     stopGame(){
         this.#gameLogic.stopGame();
     }

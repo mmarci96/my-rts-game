@@ -3,6 +3,9 @@ import Selectable from "./Selectable.js";
 import VectorTransformer from "../../utils/VectorTransformer.js";
 
 class AnimatedSprite {
+    /**
+    * @param { CanvasImageSource } spriteSheet
+    */
     constructor(spriteSheet) {
         this.spriteSheet = spriteSheet;
         this.frameWidth = 1152 / 6;
@@ -78,6 +81,10 @@ class AnimatedSprite {
             );
         }
     }
+
+    /**
+     * @param {CanvasImageSource} deathSprite 
+     */
     setDeathAnimation(deathSprite){
         this.staggerFrames = 8
         this.skullFrames = 0; 
@@ -87,6 +94,9 @@ class AnimatedSprite {
         this.spriteSheet = deathSprite;
     }
 
+    /**
+     * @returns number 
+     */
     getSkullFrames(){
         return this.skullFrames;
     }

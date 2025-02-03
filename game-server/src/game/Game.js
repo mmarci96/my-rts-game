@@ -3,9 +3,10 @@ const GameLogic = require("./logic/GameLogic")
 module.exports = class Game {
     #gameId
     #gameLogic
-    constructor(gameId, units, map){
+
+    constructor(gameId, units, map, resources, buildings){
         this.#gameId = gameId;
-        this.#gameLogic = new GameLogic(units, map);
+        this.#gameLogic = new GameLogic(units, map, resources, buildings);
         this.running = false;
     }
 
@@ -14,7 +15,7 @@ module.exports = class Game {
     }
 
     loadGame(map, units){
-        console.log("load the game", map, units)
+        //console.log("load the game", map, units)
         //this.#gameLogic.loadMap(map)
         //this.#gameLogic.loadUnits(units)
     }
@@ -22,6 +23,8 @@ module.exports = class Game {
     getGameState(){
         return {
             units: this.#gameLogic.getUnits(),
+            buildings: this.#gameLogic.getBuildings(),
+            resources: this.#gameLogic.getResources(),
             map: []
         }
     }
@@ -36,7 +39,7 @@ module.exports = class Game {
         console.log("Starting game loop...")
         let lastTime = Date.now();
         const interval = 50;
-        console.log(this.#gameLogic.getPlayers())
+        //console.log(this.#gameLogic.getPlayers())
 
         this.gameLoopInterval = setInterval(() => {
             if(this.#gameLogic.isGameOver()){
