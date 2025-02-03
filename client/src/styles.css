@@ -74,3 +74,16 @@ form {
     color: #ffffff;
     display: flex;
 }
+
+#overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 92%;
+    background: rgba(0, 0, 0, 0.5); /* Adjust transparency as needed */
+    color: white; /* Ensures text inside is visible */
+    padding: 10px; /* Optional: Adds some spacing */
+    border: solid 2px black;
+    margin: 16px;
+    display: none;
+}
