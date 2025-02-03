@@ -11,23 +11,20 @@ class House extends Building {
         return super.getId()
     }
     getAvailableActions() {
-        const actions = {}
-        actions["makeUnit"] = {
-            warrior: {
+        const actions = [
+            {
+                name: 'createWarrior',
                 cost: 10,
-                duration: 3
+                duration: 3,
+                label: "Warrior"
             },
-            worker: {
+            {
+                name: 'createWorker',
                 cost: 5,
-                duration: 3
+                duration: 3,
+                label: "Worker"
             }
-        }
-        actions["upgrade"] = {
-            warriorUpdate: {
-                cost: 50,
-                duraton: 20
-            }
-        }
+        ]
         return actions
     }
     updateActions() {

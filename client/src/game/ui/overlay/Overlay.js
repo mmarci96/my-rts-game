@@ -63,7 +63,7 @@ class Overlay {
             const building = [...buildings.values()][0]
             console.log(building)
             this.displaySelection(buildings, selectionDetails)
-            this.displayAvailableActions(building)
+            this.displayAvailableActions(building, selectionDetails)
             return;
         }
 
@@ -74,8 +74,14 @@ class Overlay {
         this.displaySelection(units, selectionDetails)
     }
 
-    displayAvailableActions(entity) {
+    displayAvailableActions(entity, selectionDetails) {
         const actions = entity.getAvailableActions()
+        actions.forEach(element => {
+            console.log(element)
+            const actionCard = this.createActionCard(element, element.duration)
+            console.log(actionCard)
+            selectionDetails.appendChild(actionCard)
+        });
         console.log(actions)
     }
 
@@ -89,10 +95,33 @@ class Overlay {
         })
     }
 
+    createActionCard(action, duration) {
+        const card = this.actionCard(action["label"])
+        return card;
+    }
+
+    actionCard(actionText) {
+        const unitCard = document.createElement("li");
+        unitCard.classList.add("unit-card");
+        const text = document.createElement("p")
+        text.style.fontSize = '12px'
+        text.textContent = actionText;
+
+        const actionIcon = "+"
+        const icon = document.createElement('button')
+        icon.textContent = actionIcon
+        icon.style.fontSize = "16px"
+        icon.style.width = '28px'
+        icon.style.height = "28px"
+
+        unitCard.appendChild(icon)
+        unitCard.appendChild(text)
+        return unitCard;
+    }
 
     createUnitCard(unitType, currentHp, maxHp) {
         const unitCard = document.createElement("li");
-        unitCard.classList.add("unit-card"); // Add a class for styling
+        unitCard.classList.add("unit-card");
 
         const healthContainer = document.createElement("div");
         healthContainer.classList.add("health-container");
