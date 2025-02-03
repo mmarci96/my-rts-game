@@ -48,6 +48,10 @@ class GameEntity {
     setY(y) {
         this.y = y;
     }
+
+    getClassName() {
+        return this.constructor.name;
+    }
 }
 
 export default GameEntity;

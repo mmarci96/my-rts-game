@@ -121,6 +121,10 @@ class Unit extends GameEntity {
         return this.selectable.getColor();
     }
 
+    getMaxHealth(){
+        return 0;
+    }
+
 }
 
 export default Unit;

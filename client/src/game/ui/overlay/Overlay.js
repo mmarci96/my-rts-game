@@ -35,6 +35,7 @@ class Overlay {
     displayUnitSelection(selectedList){
         console.log(selectedList)
         const units = new Set()
+        this.#overlayDiv.innerHTML = "";
         const buildings = new Set()
         selectedList.forEach(selectedEntity => {
             if(!(selectedEntity.selectable instanceof Selectable)){
@@ -45,11 +46,10 @@ class Overlay {
             } else if (selectedEntity instanceof Building){
                 buildings.add(selectedEntity)
             }
-            
+
         })
         if(!units.size && !buildings.size){
             console.log("nothing is selected!")
-            this.#overlayDiv.innerHTML = "";
         }
         if(units.size && !buildings.size){
             console.log("only units are selected!")
@@ -61,11 +61,54 @@ class Overlay {
                 if(!(unit instanceof Unit)){
                     throw new TypeError("not unit")
                 }
-                const unitElement = document.createElement("li")
+                const hp = unit.getHealth()
+                const maxHp = unit.getMaxHealth()
+                const type = unit.getClassName()  
+                const unitElement = this.createUnitCard(type, hp, maxHp)
                 selectionDetails.appendChild(unitElement)
-                unitElement.textContent = "Health: " + unit.getHealth()
             })
         }
+    }
+
+
+    createUnitCard(unitType, currentHp, maxHp) {
+        const unitCard = document.createElement("li");
+        unitCard.classList.add("unit-card"); // Add a class for styling
+
+        // Health container
+        const healthContainer = document.createElement("div");
+        healthContainer.classList.add("health-container");
+
+        // Health text
+        const healthText = document.createElement("span");
+        healthText.textContent = `HP: ${currentHp}/${maxHp}`;
+        healthText.classList.add("health-text");
+
+        // Full health bar (background)
+        const healthBarContainer = document.createElement("div");
+        healthBarContainer.classList.add("health-bar-container");
+
+        // Actual health bar (fills up based on percentage)
+        const healthBar = document.createElement("div");
+        healthBar.classList.add("health-bar");
+
+        // Calculate width percentage
+        const healthPercentage = (currentHp / maxHp) * 100;
+        healthBar.style.width = `${healthPercentage}%`;
+
+        // Append health elements
+        healthBarContainer.appendChild(healthBar);
+        healthContainer.appendChild(healthText);
+        healthContainer.appendChild(healthBarContainer);
+        unitCard.appendChild(healthContainer);
+
+        // Unit type text
+        const typeText = document.createElement("div");
+        typeText.classList.add("unit-type");
+        typeText.textContent = unitType;
+        unitCard.appendChild(typeText);
+
+        return unitCard;
     }
 
 
