@@ -1,7 +1,6 @@
 import Camera from "../../ui/Camera.js";
 import Selectable from "./Selectable.js";
 import VectorTransformer from "../../utils/VectorTransformer.js";
-import AssetManager from "../../ui/AssetManager.js";
 
 class AnimatedSprite {
     /**
