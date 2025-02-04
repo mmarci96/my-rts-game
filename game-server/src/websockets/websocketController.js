@@ -21,7 +21,7 @@ const loadGameState = async gameId => {
     const mapData = await MapService.getMapById(gameData.mapId)
     //console.log('Current games:\n',games, '\n')
     if(games[gameId] !== 'undefined'){
-        const game = new Game(gameId,units,mapData, resources, buildings);
+        const game = new Game(gameId,units,mapData, resources, buildings, sessionId);
         games[gameId] = {
             gameData,
             game

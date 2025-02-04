@@ -58,6 +58,10 @@ module.exports = class GameEntity {
         }
     }
 
+    getActions(){
+        console.error("abtract method");
+    }
+
     printPosition() {
         console.log(`Position: (${this.#x}, ${this.#y})`);
     }

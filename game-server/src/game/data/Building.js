@@ -30,4 +30,18 @@ module.exports = class Building extends GameEntity {
     getHealth(){
         return this.damagalbe.getHealth()
     }
+
+    getActions(){
+        return [];
+    }
+
+    trainUnit(type){
+        console.error("astract method");
+        
+    }
+    getReadyActions(){
+        console.error("abstract method");
+        
+    }
+
 }

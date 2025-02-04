@@ -1,13 +1,16 @@
+const UnitFactory = require("../service/unitFactory.service")
 const GameLogic = require("./logic/GameLogic")
 
 module.exports = class Game {
     #gameId
     #gameLogic
+    #sessionId
 
-    constructor(gameId, units, map, resources, buildings){
+    constructor(gameId, units, map, resources, buildings, sessionId){
         this.#gameId = gameId;
-        this.#gameLogic = new GameLogic(units, map, resources, buildings);
+        this.#gameLogic = new GameLogic(units, map, resources, buildings, sessionId);
         this.running = false;
+        this.#sessionId = sessionId
     }
 
     getId(){
@@ -53,6 +56,7 @@ module.exports = class Game {
             uptime += deltaTime;
 
             this.#gameLogic.updateUnits(deltaTime);
+            this.#gameLogic.updateBuildings(deltaTime)
         }, interval);
     }
 

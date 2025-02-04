@@ -42,4 +42,20 @@ module.exports = class BuildingController {
             }))
     }
 
+    updateBuildings(){
+        [...this.#buildings.values()].forEach(building => {
+            if(!(building instanceof Building)){
+                throw new TypeError("not building!")
+            }
+            if (building.getReadyActions().length >= 1){
+                const actions = building.getReadyActions().map((action) => {
+                    if(action?.name === 'createWarrior'){
+                        
+                    }
+                })
+
+            }
+        })
+    }
+
 }
