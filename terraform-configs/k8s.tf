@@ -30,7 +30,7 @@ resource "kubernetes_deployment" "rts_game_flask_app" {
       spec {
         container {
           name  = "rts-game-flask-app"
-          image = "${aws_ecr_repository.repositories["flask-repository"].repository_url}:latest"
+          image = "${aws_ecr_repository.repositories["flask-app"].repository_url}:latest"
           env {
             name  = "MONGO_URI"
             value = var.mongodb-uri-value
@@ -122,7 +122,7 @@ resource "kubernetes_deployment" "rts_game_client" {
       spec {
         container {
           name  = "rts-game-client"
-          image = "${aws_ecr_repository.repositories["client-repository"].repository_url}:latest"
+          image = "${aws_ecr_repository.repositories["client"].repository_url}:latest"
 
           resources {
             requests = {
@@ -196,7 +196,7 @@ resource "kubernetes_deployment" "rts_game_server" {
       spec {
         container {
           name  = "rts-game-server"
-          image = "${aws_ecr_repository.repositories["game-server-repository"].repository_url}:latest"
+          image = "${aws_ecr_repository.repositories["game-server"].repository_url}:latest"
 
           env {
             name  = "MONGO_URI"

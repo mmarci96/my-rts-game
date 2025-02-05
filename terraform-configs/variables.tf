@@ -30,7 +30,6 @@ variable "ecr_repositories" {
     "client"        = "client-repository"
     "flask-app"     = "flask-app-repository"
     "game-server"   = "game-server-repository"
-    "mongo-db"      = "mongo-db-repository"
   }
 }
 
@@ -42,21 +41,17 @@ variable "docker_images" {
   }))
   default = {
     "client" = {
-      directory       = "client"
+      directory       = "../client"
       repository_name = "client-repository"
     },
     "flask-app" = {
-      directory       = "flask-app"
+      directory       = "../flask-app"
       repository_name = "flask-app-repository"
     },
     "game-server" = {
-      directory       = "game-server"
+      directory       = "../game-server"
       repository_name = "game-server-repository"
     },
-    "mongo-db-local" = {
-      directory       = "mongo-db-local"
-      repository_name = "mongo-db-repository"
-    }
   }
 }
 
