@@ -68,15 +68,12 @@ class KeyEventHandler {
         };
 
         const enforceBounds = (cameraX, cameraY) => {
-            const cameraWidth = this.#camera.getWidth();
-            const cameraHeight = this.#camera.getHeight();
-
             const { mapWidth, mapHeight } = gameMap.getMapSize();
 
-            const minX = cameraWidth;
-            const maxX = mapWidth - cameraWidth;
-            const minY = cameraHeight;
-            const maxY = mapHeight - cameraHeight;
+            const minX = 0;
+            const maxX = mapWidth;
+            const minY = 0;
+            const maxY = mapHeight;
 
             const clampedX = Math.max(minX, Math.min(cameraX, maxX));
             const clampedY = Math.max(minY, Math.min(cameraY, maxY));
@@ -104,7 +101,7 @@ class KeyEventHandler {
             enforceBounds(this.#camera.getX(), this.#camera.getY());
             gameMap.drawMap();
         };
-        setupMovementListeners({onUp, onDown, onLeft, onRight});
+        setupMovementListeners({ onUp, onDown, onLeft, onRight });
     }
 }
 

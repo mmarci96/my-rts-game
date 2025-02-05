@@ -3,6 +3,7 @@ import Camera from "../Camera.js";
 import VectorTransformer from "../../utils/VectorTransformer.js";
 import Unit from "../../data/Unit.js";
 import UnitController from "../../logic/UnitController.js";
+import Overlay from "../overlay/Overlay.js";
 
 class MouseEventHandler {
     #canvas;
@@ -14,19 +15,24 @@ class MouseEventHandler {
     #buildingController
     #playerBuildings
     #selectables = []
+    #uiOverlay
 
     /**
     *
     * @param { Camera }camera
     * @param { SelectionBox } selectionBox
     */
-    constructor(camera, selectionBox, assets, buildingController) {
+    constructor(camera, selectionBox, assets, buildingController, uiOverlay) {
         if (!(selectionBox instanceof SelectionBox)) {
             throw new TypeError('SelectionBox requires selectionBox');
         }
         if (!(camera instanceof Camera)) {
             throw new TypeError('Camera requires camera');
         }
+        if(!(uiOverlay instanceof Overlay)){
+            throw new TypeError('Must be overlay')
+        }
+        this.#uiOverlay = uiOverlay;
         this.#assets = assets;
         this.#camera = camera;
         this.#selectionBox = selectionBox;
@@ -95,9 +101,12 @@ class MouseEventHandler {
             this.#selectables = []
             if(selectedUnits.length > 0){
                 this.selectionActive = true;
+                this.#uiOverlay.setVisible()
             } else {
                 this.selectionActive = false;
+                this.#uiOverlay.setInvisible()
             }
+            this.#uiOverlay.displayUnitSelection(selectedUnits)
         });
         this.#canvas.addEventListener('mousedown', e => {
             if (e.button === 2) {

@@ -7,8 +7,10 @@ import MouseEventHandler from "../ui/control/MouseEventHandler.js";
 import Player from "../data/Player.js";
 import BuildingController from "./BuildingController.js";
 import DrawGameCanvas from "../ui/DrawGameCanvas.js";
+import Overlay from "../ui/overlay/Overlay.js";
 
 class GameLogic {
+    static CAMERA_SIZE = Math.round(window.innerWidth / 32)
     #camera;
     #gameMap;
     #keyHandler;
@@ -22,25 +24,29 @@ class GameLogic {
     #player
     isInitialized = false;
     #gameCanvas;
+    #uiOverlay
 
     /**
     * @param { string [] } map 
-    */ 
+    */
     constructor(map, assets, player, commandHandler) {
-        if(!(player instanceof Player)){
+        if (!(player instanceof Player)) {
             throw new TypeError('Invalid player')
         }
         this.isRunning = false;
         this.#commandHandler = commandHandler
         this.#player = player
         this.#mapData = map;
-        this.#camera = new Camera(16, 16, 14, 14);
+
+        this.#camera = new Camera(16, 16, GameLogic.CAMERA_SIZE, GameLogic.CAMERA_SIZE);
         this.#assets = assets;
         this.#gameMap = new GameMap(this.#mapData, this.#camera, this.#assets)
+        this.#uiOverlay = new Overlay(player);
 
-        if(player.getColor() === 'blue'){
-            const camOffSet = Math.sqrt(map.length*map.length)
-            this.#camera.moveCamera(camOffSet/2, camOffSet/2)
+
+        if (player.getColor() === 'blue') {
+            const camOffSet = Math.sqrt(map.length * map.length)
+            this.#camera.moveCamera(camOffSet / 2, camOffSet / 2)
         }
 
         this.#gameCanvas = new DrawGameCanvas(this.#camera)
@@ -51,55 +57,56 @@ class GameLogic {
         this.#keyHandler = new KeyEventHandler(this.#camera);
         this.#selectionBox = new SelectionBox();
         this.#mouseHandler = new MouseEventHandler(
-            this.#camera, 
-            this.#selectionBox, 
+            this.#camera,
+            this.#selectionBox,
             this.#assets,
-            this.#buildingController
+            this.#buildingController,
+            this.#uiOverlay
         );
     }
 
-    setupGame(){
+    setupGame() {
         this.loadMap();
         this.setupControl();
         this.isRunning = true;
     }
 
-    stopGame(){
+    stopGame() {
         this.isRunning = false
     }
 
     loadMap() {
         this.#gameMap.drawMap()
         this.#keyHandler = new KeyEventHandler(this.#camera);
-        this.#keyHandler.setupCameraControl(this.#gameMap);	
+        this.#keyHandler.setupCameraControl(this.#gameMap);
     }
 
-    setupControl(){
+    setupControl() {
         this.#mouseHandler.drawSelection(this.#commandHandler)
     }
 
-    getUnitData(){
+    getUnitData() {
         return units = this.#unitController.getAllUnits()
     }
 
-    updateUnits(units){
-        if(this.isRunning){
+    updateUnits(units) {
+        if (this.isRunning) {
             this.#unitController.refreshUnits(units)
             this.#mouseHandler.updateSelection(this.#unitController, this.#player.getColor())
             this.updateAnimations()
         }
     }
 
-    updateBuildings(buildings){
-        if(this.isRunning){
-            this.#buildingController.loadBuildings(buildings) 
+    updateBuildings(buildings) {
+        if (this.isRunning) {
+            this.#buildingController.loadBuildings(buildings)
         }
     }
 
-    updateAnimations(){
+    updateAnimations() {
         const units = this.#unitController.getUnits();
         const buildings = this.#buildingController.getBuildings();
-        const entities =  Array.of(...units, ...buildings)
+        const entities = Array.of(...units, ...buildings)
         this.#gameCanvas.updateGameEntities(entities)
     }
 

@@ -16,7 +16,7 @@ class GameMap {
     * @param {Camera} camera - The camera instance.
     * @param {AssetManager} assets - Preloaded assets.
     */
-    constructor(map, camera, assets, ) {
+    constructor(map, camera, assets,) {
         if (!(camera instanceof Camera)) {
             throw new TypeError('Not a valid camera!');
         }
@@ -58,23 +58,23 @@ class GameMap {
                 if (x < 0 || x >= row.length) {
                     continue;
                 }
-                const {px, py} = VectorTransformer.positionToCanvas({posX:x,posY:y,cameraX,cameraY});
+                const { px, py } = VectorTransformer.positionToCanvas({ posX: x, posY: y, cameraX, cameraY });
                 const name = row[x].tile; //this.#tileMapper(row[x])
 
                 if (!name) continue
 
                 const tilesetImage = this.#assets.getImage(name);
-                const position = { z: row[x].z*128 }
-                if(name !== 'water1'){
-                    position.z = position.z*2
+                const position = { z: row[x].z * 128 }
+                if (name !== 'water1') {
+                    position.z = position.z * 2
                 }
 
                 ctx.drawImage(tilesetImage, px, py - position.z);
             }
-        }        
+        }
     }
 
-    getMapSize(){
+    getMapSize() {
         const mapHeight = this.#map.length;
         const mapWidth = this.#map[0].length;
         return { mapWidth, mapHeight };

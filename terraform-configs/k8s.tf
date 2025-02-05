@@ -1,11 +1,5 @@
 provider "kubernetes" {
   config_path = "~/.kube/config"
-  # config_context = "arn:aws:eks:eu-north-1:390403884602:cluster/rts-game-cluster"
-  # exec {
-  #   command     = "aws"
-  #   args        = ["eks", "update-kubeconfig", "--name", "rts-game-cluster", "--region", var.region]
-  #   api_version = "client.authentication.k8s.io/v1alpha1"
-  # }
 }
 
 resource "kubernetes_deployment" "rts_game_flask_app" {
@@ -36,7 +30,7 @@ resource "kubernetes_deployment" "rts_game_flask_app" {
       spec {
         container {
           name  = "rts-game-flask-app"
-          image = "${aws_ecr_repository.repositories["rts-game-flask-ecr"].repository_url}:latest"
+          image = "${aws_ecr_repository.repositories["flask-app"].repository_url}:latest"
           env {
             name  = "MONGO_URI"
             value = var.mongodb-uri-value
@@ -128,7 +122,7 @@ resource "kubernetes_deployment" "rts_game_client" {
       spec {
         container {
           name  = "rts-game-client"
-          image = "${aws_ecr_repository.repositories["rts-game-client-ecr"].repository_url}:latest"
+          image = "${aws_ecr_repository.repositories["client"].repository_url}:latest"
 
           resources {
             requests = {
@@ -202,7 +196,7 @@ resource "kubernetes_deployment" "rts_game_server" {
       spec {
         container {
           name  = "rts-game-server"
-          image = "${aws_ecr_repository.repositories["rts-game-server-ecr"].repository_url}:latest"
+          image = "${aws_ecr_repository.repositories["game-server"].repository_url}:latest"
 
           env {
             name  = "MONGO_URI"

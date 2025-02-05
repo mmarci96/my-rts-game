@@ -1,14 +1,34 @@
 import Building from "./models/Building";
 
 class House extends Building {
-    constructor(x, y, width, height, id, color, sprite){
-        super(x, y, width, height, id, color, sprite)
+    constructor({ x, y, width, height, id, color, sprite, health }) {
+        super({ x, y, width, height, id, color, sprite, health })
     }
-    draw(ctx, camera){
+    draw(ctx, camera) {
         super.draw(ctx, camera)
     }
-    getId(){
+    getId() {
         return super.getId()
+    }
+    getAvailableActions() {
+        const actions = [
+            {
+                name: 'createWarrior',
+                cost: 10,
+                duration: 3,
+                label: "Warrior"
+            },
+            {
+                name: 'createWorker',
+                cost: 5,
+                duration: 3,
+                label: "Worker"
+            }
+        ]
+        return actions
+    }
+    updateActions() {
+
     }
 }
 

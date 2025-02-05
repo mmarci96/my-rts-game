@@ -1,52 +1,72 @@
+import House from "../data/House";
 import Building from "../data/models/Building";
 import AssetManager from "../ui/AssetManager";
 
 class BuildingController {
     #buildings;
     #assets
-    constructor(assets){
-        if(!(assets instanceof AssetManager)){
+    constructor(assets) {
+        if (!(assets instanceof AssetManager)) {
             throw new TypeError("not assets manager")
         }
         this.#buildings = new Map();
         this.#assets = assets;
     }
 
-    getBuildings(){
+    getBuildings() {
         return [...this.#buildings.values()]
     }
 
-    loadBuildings(buildingList){
+    loadBuildings(buildingList) {
         buildingList?.forEach(building => {
-            if(!this.#buildings.has(building.id)){
-                const created = new Building({
-                    x: building.x,
-                    y: building.y,
-                    id: building.id,
-                    width: 128,
-                    height: 196,
-                    color: building.color,
-                    sprite: this.#assets.getImage(`house_${building.color}`)
-                })
+            if (!this.#buildings.has(building.id)) {
+                let created;
+                if (building.type === 'main') {
+                    created = new House({
+                        x: building.x,
+                        y: building.y,
+                        id: building.id,
+                        width: 128,
+                        height: 196,
+                        color: building.color,
+                        sprite: this.#assets.getImage(`house_${building.color}`),
+                        health: building.health
+                    })
+                } else {
+                    created = new Building({
+                        x: building.x,
+                        y: building.y,
+                        id: building.id,
+                        width: 128,
+                        height: 196,
+                        color: building.color,
+                        sprite: this.#assets.getImage(`house_${building.color}`),
+                        health: building.health
+                    })
+                }
+                if (!created) {
+                    console.error("not created");
+                    return
+                };
                 this.#buildings.set(
                     created.getId(), created
                 )
             }
-            
+
         });
     }
 
-    getBuildingsByColor(color){
-       return this.getBuildings().filter(building => building.getColor() === color);
+    getBuildingsByColor(color) {
+        return this.getBuildings().filter(building => building.getColor() === color);
     }
 
     getEnemyBuildings(color) {
         return this.getBuildings().filter(building => building.getColor() !== color)
     }
 
-    refreshBuilding(){
+    refreshBuilding() {
         this.getBuildings().forEach(building => {
-            if(!(building instanceof Building)){
+            if (!(building instanceof Building)) {
                 throw new TypeError('not build')
             }
             building.refresh();
