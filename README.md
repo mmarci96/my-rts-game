@@ -112,7 +112,5 @@ A huge thanks to Pixelfrog for their amazing free game assets! Their pixel art b
 You can check out more of their work here
 #### Artist: Pixelfrog - Click below:
 <a href="https://pixelfrog-assets.itch.io"> ![ichdotio](https://img.shields.io/badge/Itch.io-FA5C5C?style=for-the-badge&logo=itchdotio&logoColor=white)
-<img src="https://raw.githubusercontent.com/mmarci96/my-rts-game/development/demo.gif"
-style="border-radius: 16px; border-style: solid; border-width: 1px; border-color: #5C81CE; margin: 8px;"/>
 </a>
-
+![demo-gif](https://raw.githubusercontent.com/mmarci96/my-rts-game/development/demo.gif) 
