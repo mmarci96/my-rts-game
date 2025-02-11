@@ -75,12 +75,15 @@ Planning to upgrade to Redis to share the game's state instead of Js OOP.
 
 #### Deployment is automated with Terraform, which pulls the latest updates, builds Docker images, and provisions AWS resources. Once the EKS cluster is ready, Kubernetes manages deployment and ensures high availability of the game servers.
 
-<div align="center"><table><tr>General setup</tr><tr><td>
-<img src="https://raw.githubusercontent.com/mmarci96/my-rts-game/development/general-setup.png" 
-             style="border-radius: 16px; border-style: solid; border-width: 1px; border-color: #5C81CE; margin: 8px;"/></td><td>
-</table></div>
+![game-setup](https://raw.githubusercontent.com/mmarci96/my-rts-game/development/general-setup.png) 
 
+## [![Deployment](https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=24&pause=6000&width=435&lines=Deployment)](https://git.io/typing-svg)
+Most of my config has many default variables. 
 
+At this point I left the issue unresolved when running ```terraform plan``` , ```terraforn apply``` after init or after destroy setting up Kubernetes will not find the eks.
+You need to load the Kube config ```aws eks --region <region> update-kubeconfig --name <cluster-name>``` as I found as the easiest way to leave it since many experiment failed for now. After that ```terraform plan``` && ```terraform apply``` should set up the cluster to serve the game with AWS.
+
+---
 
 ## [![objectives](https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=24&pause=4000&width=435&lines=Objectives)](https://git.io/typing-svg)
 #### The game should be doing what a you expect from an oldschool RTS like Dune2000, AoE, Warcraft, Starcraft.
@@ -99,13 +102,6 @@ Optional:
  - Fog of war [x]
  - Variety of units: Meele [✅] | Ranged [x] | AOE/Projectile User [x] | Healer [x] | Carrier [x]
 
-## [![Deployment](https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=24&pause=6000&width=435&lines=Deployment)](https://git.io/typing-svg)
-Most of my config has many default variables. 
-
-At this point I left the issue unresolved when running ```terraform plan``` , ```terraforn apply``` after init or after destroy setting up Kubernetes will not find the eks.
-You need to load the Kube config ```aws eks --region <region> update-kubeconfig --name <cluster-name>``` as I found as the easiest way to leave it since many experiment failed for now. After that ```terraform plan``` && ```terraform apply``` should set up the cluster to serve the game with AWS.
-
----
 
 ## [![Art](https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=24&pause=9000&width=435&lines=Art)](https://git.io/typing-svg)
 A huge thanks to Pixelfrog for their amazing free game assets! Their pixel art brings my game to life.
