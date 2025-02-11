@@ -4,9 +4,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/mmarci96/my-rts-game?style=for-the-badge)
 ![GitHub license](https://img.shields.io/github/license/mmarci96/my-rts-game?style=for-the-badge)
 
-# &lt;clipboard-copy&gt; element
-
-## Table Of Content
+## [![Table-Of-Content](https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=24&pause=1000&width=435&lines=Table+of+Content)](https://git.io/typing-svg)
 
 <div align="block">
 <a href="#overview"><kbd>Overview</kbd></a>&ensp;&ensp;
@@ -17,11 +15,12 @@
 <a href="#art"><kbd> Art </kbd></a>&ensp;&ensp;
 </div>
 
-## [![Typing SVG](https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=24&pause=1000&width=435&lines=Overview)](https://git.io/typing-svg)
+## [![overview](https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=24&pause=9000&width=435&lines=Overview)](https://git.io/typing-svg)
 
 
-#### I aim to create a game where you can do what in most RTS game. I wanted to understand animations and websockets, as well attemting to write the code that animation frameworks or game engines abstract aways from the developer. I assembled my stack accordingly:
-
+#### I aim to create a game where you can do what in most RTS game. I choose isometric view to display the game to give some depth. The game easy to setup in Docker composer but if you can host your frontend on dev run and unblock the firewall you can play together. You can give commands to your units to move or attack after you select them.
+The project is still in development and currently buildings appear on the map and you can select and see available commands its not tested and implemented yet.
+#### The last player with available units win the game simple as that. On local network I had to refresh the page sometimes.
 
 ## [![quick-start](https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=24&pause=3000&width=435&lines=Quick+Start)](https://git.io/typing-svg)  
 
@@ -76,6 +75,13 @@ Planning to upgrade to Redis to share the game's state instead of Js OOP.
 
 #### Deployment is automated with Terraform, which pulls the latest updates, builds Docker images, and provisions AWS resources. Once the EKS cluster is ready, Kubernetes manages deployment and ensures high availability of the game servers.
 
+<div align="center"><table><tr>General setup</tr><tr><td>
+<img src="https://raw.githubusercontent.com/mmarci96/my-rts-game/development/general-setup.png" 
+             style="border-radius: 16px; border-style: solid; border-width: 1px; border-color: #5C81CE; margin: 8px;"/></td><td>
+</table></div>
+
+
+
 ## [![objectives](https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=24&pause=4000&width=435&lines=Objectives)](https://git.io/typing-svg)
 #### The game should be doing what a you expect from an oldschool RTS like Dune2000, AoE, Warcraft, Starcraft.
 Requiremens:
@@ -106,7 +112,7 @@ A huge thanks to Pixelfrog for their amazing free game assets! Their pixel art b
 You can check out more of their work here
 #### Artist: Pixelfrog - Click below:
 <a href="https://pixelfrog-assets.itch.io"> ![ichdotio](https://img.shields.io/badge/Itch.io-FA5C5C?style=for-the-badge&logo=itchdotio&logoColor=white)
-
-![preview](https://img.itch.zone/aW1nLzEwNDkxNTQ1LmdpZg==/original/k%2BhWls.gif)
+<img src="https://img.itch.zone/aW1nLzEwNDkxNTQ1LmdpZg==/original/k%2BhWls.gif"
+style="border-radius: 16px; border-style: solid; border-width: 1px; border-color: #5C81CE; margin: 8px;"/>
 </a>
 
