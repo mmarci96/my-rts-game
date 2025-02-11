@@ -7,10 +7,41 @@
 
 
 ## Overview
-After feeling the pain of writing a game from scratch in Java, then experienced the boredom of creating one in Unity, I left unsatisfied.
-So I decided to make an RTS game without the least amount of framework (especially the UI).
-Techs I had to use so far: NodeJS, Vite, Express, Socketio, Docker, Git, Nginx.
-Things I added for fun: Flask, MongoDB, Terraform, Kubernetes.
+
+I aim to create a game where you can do what in most RTS game. I wanted to understand animations and websockets, as well attemting to write the code that animation frameworks or game engines abstract aways from the developer. I assembled my stack accordingly:
+
+### GameUI
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-FFD129?style=for-the-badge&logo=vite&logoColor=64A5FF)
+![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
+
+Created animations to display the game and UI for the user to command units to move, attack and die.
+
+### Server
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white) 
+![Socket.io](https://img.shields.io/badge/Socket.io-2496ED?style=for-the-badge&logo=socket.io&logoColor=white)
+
+Connects players to websocket and starts the game loop loading the state from the db as well as saving it regularly, stopping the game on disconnect.
+Planning to upgrade to Redis to share the game's state instead of Js OOP.
+
+### Website 
+![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
+![Python](https://img.shields.io/badge/Python-232F3E?style=for-the-badge&logo=python&logoColor=326CE5)
+
+Python offers many great libraries for development. This project I wanted to implement random map creation with Perlim noise. Since I found this in Python I just made the webapp for game lobbies and potentially leaderboars in the future.
+
+### Database 
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+MongoDB is quick for development. Mongoose gives some type safety for experimantal development.
+
+### Deployment
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-623CE4?style=for-the-badge&logo=terraform&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
+
+Deployment is automated with Terraform, which pulls the latest updates, builds Docker images, and provisions AWS resources. Once the EKS cluster is ready, Kubernetes manages deployment and ensures high availability of the game servers.
 
 ## Objectives
 The game should be doing what a you expect from an oldschool RTS like Dune2000, AoE, Warcraft, Starcraft.
@@ -29,32 +60,6 @@ Optional:
  - Fog of war [x]
  - Variety of units: Meele [✅] | Ranged [x] | AOE/Projectile User [x] | Healer [x] | Carrier [x]
  - Using OOP principles [~]
-
-## Setup - Technologies and Decisions
-The whole stack for now consists of 4 main components: Game - the UI to display the game, Website - to create the games, Server - to connect users,  Database - to store states and connect services reliably.
-
-#### Game - NodeJs, Vite, Nginx
-I also wanted to make my own animations but it was a pleasant surprise to find all the built in api-s in Javascript. I'm using the canvas element 2d context and its built in methods to paint the game map while transforming the games x,y,z coordinates to and isometric view for a more interesting user experience. Running a loop to make the animations smooth by requesting the frame rate. 
-The ui should only display data from the server and should not have any controll on how fast or strong the units are to prevent people from cheating by simplye editing the games code in their browser.
-To actually run the game and to enjoy fast refresh I used vite to build my image and the serving it statically from an Nginx image I build with docker serving as a reverse proxy to connect players to the websocket server.
-
-#### Website - Python, Flask
-I was not aiming for anything fancy here and I wanted to leave my native server not to serve more purpose then running the gamelogic itself (more on that later...). So after using React for everything I wanted to take it easy and learn another simple way of doing things when the website is just a way to connect the users to setup the game. For now it server static html files with some rendered content from the users and the database states. Many of the validations when making a lobby are poorly designed and can lead to error when a user is either fueled by harmful thoughts or not understanding my thoughts behind it.
-Inside the gamelobby there are some js scripts to request lobby updates when being in one making the Play button only available when both players made their status ready to go.
-To create the map for now I use a fixed perlim noise, but its ready to be set up with custom parameters loading in randomly to make the game map feel curvy.
-Then the code also stores the default setup states of the games itslef. 
-
-#### Server - NodeJs, Express, Socket-io
-To make my junior life easy I decided to make the server and the games logic in the language I used the most. I did not have my mind on scaling since my project was aiming to create the engine to display the game, and write the logics to pathfinding, obsticle behaivors, clumped units or just in general the annoying part of making a game.
-To connect users I at point felt like I had to use Socketio. It makes easy to reconnect users, add new streams quickly, better error messeges, converting to js from json.
-The game itself is written in following some and braking other OOP principles. The focus so far was on making a game to connect and give commands or recieve updates.
-As I add more logic to the game it is falling into those desing patterns naturally while showing me a great example.
-
-#### Database - MongoDB
-For development working with Js MongoDb is a solid choice making validations with the treesitter in my development environment makes changing things fast quick and easy.
-I use it to save all my game states so it can be reloaded quickly if the game disconnects or just connected the actual states between my services in general.
-
-Since the game itself was the challenge the db worth no debate.
 
 ## Quick Start - Docker on localhost
 
