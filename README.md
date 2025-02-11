@@ -1,4 +1,11 @@
-# my-rts-game
+# My RTS game
+
+![GitHub repo size](https://img.shields.io/github/repo-size/mmarci96/my-rts-game?style=for-the-badge)
+![GitHub contributors](https://img.shields.io/github/contributors/mmarci96/my-rts-game?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/mmarci96/my-rts-game?style=for-the-badge)
+![GitHub license](https://img.shields.io/github/license/mmarci96/my-rts-game?style=for-the-badge)
+
+
 ## Overview
 After feeling the pain of writing a game from scratch in Java, then experienced the boredom of creating one in Unity, I left unsatisfied.
 So I decided to make an RTS game without the least amount of framework (especially the UI).
