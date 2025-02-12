@@ -162,11 +162,7 @@ def start():
     if not all(player['isReady'] for player in game['players']):
         return "Not all players are ready", 400
 
-    mongo_uri = os.getenv("MONGO_URI", "local")
-
     connection_url = f"/play/{game_id}/{user_id}" 
-
-
     if game['status'] != "waiting":
         return redirect(connection_url)
 
