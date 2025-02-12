@@ -4,9 +4,9 @@ import random
 def create_map_with_params(size, scale, octaves, persistence, lacunarity):
     # Define size presets
     size_options = {
-        "small": 64,
-        "medium": 96,
-        "large": 128
+        "small": 96,
+        "medium": 128,
+        "large": 256
     }
     width = size_options.get(size, 64)  # Default to 'small' if size is invalid
     height = width  # Ensure square map
@@ -98,23 +98,26 @@ def group_water_tiles(map_data, width, height):
 
 
 def generate_random_map(size):
-    # Define size presets
     size_options = {
-        "small": 64,
-        "medium": 96,
-        "large": 128
+        "small": 96,
+        "medium": 128,
+        "large": 256
     }
-    width = size_options.get(size, 64)  # Default to 'small' if size is invalid
+    width = size_options.get(size, 96)  # Default to 'small' if size is invalid
     height = width  # Ensure square map
 
     # Define tile types
     available_tiles = ['grass1', 'pavement1', 'pavement2', 'stone', 'stone2', 'water1']
 
+    randomScale = random.uniform(34, 38)
+    randomOctaves = random.uniform(3,5)
+    randomPersistence = random.uniform(4, 8) / 10
+    randomLacunarity = random.uniform(18, 25) /10
     # Perlin noise parameters
-    scale = 36.0  # Larger scale creates smoother transitions
-    octaves = 4
-    persistence = 0.5
-    lacunarity = 2.0
+    scale = randomScale
+    octaves = int(randomOctaves)
+    persistence = randomPersistence
+    lacunarity = randomLacunarity
 
     map_data = []
 

@@ -32,7 +32,6 @@
     <button type="submit">Leave Game</button>
 </form>
 
-<!-- Existing content -->
 <form method="POST" action="{{ url_for('game.start') }}">
     <input name="game_id" type="hidden" value="{{ game['_id'] }}" />
     <button type="submit" id="start-game-button" style="display: none;">Start Game</button>
@@ -55,7 +54,7 @@
 
     const updateDom = (data) => {
         const playersList = document.querySelector("ul#players-list");
-        playersList.innerHTML = ""; // Clear the current list
+        playersList.innerHTML = ""; 
 
         data.players.forEach(p => {
             const li = document.createElement("li");
@@ -64,21 +63,19 @@
             playersList.appendChild(li);
         });
 
-        // Update the visibility of the Start Game button
         const startGameButton = document.getElementById("start-game-button");
-        if (data.allReady) {
+        if (data.allReady && data.players.length > 1 ) {
             startGameButton.style.display = "block";
         } else {
             startGameButton.style.display = "none";
         }
     };
 
-    // Periodically fetch and update the lobby data
     const updateInterval = setInterval(async () => {
         const data = await updateLobby();
         if (data) {
             updateDom(data);
         }
-    }, 1000); // Fetch every 1 second
+    }, 1000);
 </script>
 {% endblock %}

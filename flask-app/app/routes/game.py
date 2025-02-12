@@ -56,7 +56,6 @@ def lobby(game_id):
         user = mongo.db.users.find_one({"username": username})
         user_id = user["_id"]
 
-        # Check if color is already taken
         if any(player['color'] == player_color for player in game['players']):
             return redirect(url_for('game.lobby', game_id=game_id))
 
@@ -142,7 +141,7 @@ def lobby_data(game_id):
     for player in players:
         update_data.append({
             "username": player["username"],
-            "userId": str(player["userId"]),  # Convert ObjectId to string
+            "userId": str(player["userId"]),  
             "color": player["color"],
             "isReady": player["isReady"]
             })
@@ -153,34 +152,26 @@ def lobby_data(game_id):
 def start():
     mongo = g.mongo
 
-    # Fetch username and get user details from the session
     username = session["username"]
     user = mongo.db.users.find_one({"username": username})
-    user_id = user["_id"]  # Correct user_id
+    user_id = user["_id"]
 
-    # Get the game details
     game_id = request.form['game_id']
     game = mongo.db.games.find_one({"_id": ObjectId(game_id)})
 
-    # Verify all players are ready
     if not all(player['isReady'] for player in game['players']):
         return "Not all players are ready", 400
 
-    # Ensure user_id is being used in the URL
     mongo_uri = os.getenv("MONGO_URI", "local")
 
-    # Construct the connection URL with correct variables
     connection_url = f"/play/{game_id}/{user_id}" 
 
 
     if game['status'] != "waiting":
-        # Perform redirect
         return redirect(connection_url)
 
-    # If game status is "waiting", continue with game setup
     colors = [p["color"] for p in game["players"]]
 
-    # Generate the map and game session
     game_map = {
         "type": "random_map",
         "tiles": generate_random_map(game["mapSize"]),
@@ -195,7 +186,6 @@ def start():
         "createdAt": datetime.now(),
     }
 
-    # Create units and store them in the database
     units = create_units(len(game_map["tiles"]), colors)
     for unit in units:
         unit_id = mongo.db.units.insert_one(unit).inserted_id
@@ -211,11 +201,9 @@ def start():
         resource_id = mongo.db.resources.insert_one(wheat_field).inserted_id
         game_session["resources"].append(resource_id)
 
-    # Save the map and session
     map_id = mongo.db.maps.insert_one(game_map).inserted_id
     session_id = mongo.db.sessions.insert_one(game_session).inserted_id
 
-    # Update the game status to "in-progress"
     mongo.db.games.update_one(
         {"_id": ObjectId(game["_id"])},
         {"$set": {
@@ -225,5 +213,4 @@ def start():
         }}
     )
 
-    # Now redirect the user to the updated game page
     return redirect(connection_url)
