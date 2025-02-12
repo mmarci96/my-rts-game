@@ -1,22 +1,22 @@
 def create_units(size, colors):
-    warriorCount = 4
+    warriorCount = 16
     start_x = 0
     start_y = 0
     units = []
 
     for color in colors:
         if color == 'red':
-            start_x = 6
-            start_y = 5
+            start_x = 8
+            start_y = 8
         elif color == 'blue':
-            start_x = size - 8
-            start_y = size - 8
+            start_x = size - 16
+            start_y = size - 16
         elif color == 'yellow':
-            start_y = size - 8
+            start_y = size - 16
             start_x = 8
         elif color == 'purple':
-            start_x = size - 8
-            start_y = 6
+            start_x = size - 16
+            start_y = 8
         
         worker = {
                 "x": start_x,
@@ -50,17 +50,17 @@ def create_buildings(size, colors):
 
     for color in colors:
         if color == 'red':
-            start_x = 6
-            start_y = 5
+            start_x = 8
+            start_y = 8
         elif color == 'blue':
-            start_x = size - 8
-            start_y = size - 8
+            start_x = size - 16
+            start_y = size - 16
         elif color == 'yellow':
-            start_y = size - 8
+            start_y = size - 16
             start_x = 8
         elif color == 'purple':
-            start_x = size - 8
-            start_y = 6
+            start_x = size - 16
+            start_y = 8
 
         building = {
                 "x": start_x+6,
