@@ -6,6 +6,8 @@ settings:
 
 importers:
 
+  .: {}
+
   packages/client:
     dependencies:
       dotenv:
@@ -21,6 +23,9 @@ importers:
 
   packages/server:
     dependencies:
+      '@game/shared':
+        specifier: workspace:^
+        version: link:../shared
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7

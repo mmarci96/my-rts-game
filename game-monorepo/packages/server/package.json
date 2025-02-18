@@ -13,6 +13,7 @@
     "license": "ISC",
     "packageManager": "pnpm@10.4.1",
     "dependencies": {
+        "@game/shared": "workspace:^",
         "dotenv": "^16.4.7",
         "express": "^4.21.2",
         "http": "0.0.1-security",
