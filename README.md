@@ -20,6 +20,8 @@
 
 #### I aim to create a game where you can do what in most RTS game. I choose isometric view to display the game to give some depth. The game easy to setup in Docker composer but if you can host your frontend on dev run and unblock the firewall you can play together. You can give commands to your units to move or attack after you select them.
 The project is still in development and currently buildings appear on the map and you can select and see available commands its not tested and implemented yet.
+NOTE: I have a new repository for this project where I create a monorepo with pnpm extending the maintainablity with TypeScript and working on scaling the app horizontally. 
+Link: https://github.com/mmarci96/rts-game-monorepo
 #### The last player with available units win the game simple as that. On local network I had to refresh the page sometimes.
 
 ## [![quick-start](https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=24&pause=3000&width=435&lines=Quick+Start)](https://git.io/typing-svg)  
